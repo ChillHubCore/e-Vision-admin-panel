@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'Vazir';
+  src: url('/font/Vazir.woff2') format('woff2');
+}
+
+body {
+  font-family: 'Vazir', fallback;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
