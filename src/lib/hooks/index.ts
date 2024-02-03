@@ -1,3 +1,4 @@
 import useFetch from './useFetch';
+import useSubmit from './useSubmit';
 
-export { useFetch };
+export { useFetch, useSubmit };

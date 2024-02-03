@@ -7,14 +7,28 @@ import {
   LoginForm,
   ShowUserPage,
 } from './pages';
-import { AdminProtected } from './components/Authentication';
+import { AdminProtected, NoAuth } from './components/Authentication';
 import SignupPage from './pages/Signup.page';
 
 export const PublicRoutes = (
   <>
     <Route path="/" element={<HomePage />} />
-    <Route path="/login" element={<LoginForm />} />
-    <Route path="/signup" element={<SignupPage />} />
+    <Route
+      path="/login"
+      element={
+        <NoAuth>
+          <LoginForm />
+        </NoAuth>
+      }
+    />
+    <Route
+      path="/signup"
+      element={
+        <NoAuth>
+          <SignupPage />
+        </NoAuth>
+      }
+    />
   </>
 );
 

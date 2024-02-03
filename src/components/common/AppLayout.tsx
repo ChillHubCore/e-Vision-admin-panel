@@ -15,9 +15,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       Sign Out
     </UnstyledButton>
   ) : (
-    <UnstyledButton component={Link} to="/login" className={classes.control}>
-      Login
-    </UnstyledButton>
+    <>
+      <UnstyledButton component={Link} to="/login" className={classes.control}>
+        Login
+      </UnstyledButton>
+      {' | '}
+      <UnstyledButton component={Link} to="/signup" className={classes.control}>
+        Signup
+      </UnstyledButton>
+    </>
   );
   const renderCreatorDashboardDropdown =
     userInfo?.token && userInfo.isCreator ? (
