@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { LoadingOverlay } from '@mantine/core';
 import { useFetch } from '@/lib/hooks';
 
 interface AdminProtectedProps {
@@ -9,16 +11,17 @@ interface AdminProtectedProps {
 
 const AdminProtected: React.FC<AdminProtectedProps> = ({ children }) => {
   const navigate = useNavigate();
-  const { data } = useFetch({ requestQuery: '/user/check/admin' });
+  const { isLoading, error } = useFetch({ requestQuery: '/user/check/admin' });
 
   useEffect(() => {
-    if (data && data === true) {
-      // Render children if data is true
-    } else {
-      // Navigate to / if data is not true
+    if (error) {
+      toast.error('You are not authorized!');
+      console.error(error);
       navigate('/');
     }
-  }, [data, navigate]);
+  }, [error, navigate]);
+
+  if (isLoading) return <LoadingOverlay />;
 
   return <>{children}</>;
 };
