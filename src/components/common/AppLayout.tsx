@@ -27,8 +27,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   );
   const renderCreatorDashboardDropdown =
     userInfo?.token && userInfo.isCreator ? (
-      <UnstyledButton component={Link} to="/creator" className={classes.control}>
+      <UnstyledButton component={Link} to="/dashboard/creator" className={classes.control}>
         Creator Dashboard
+      </UnstyledButton>
+    ) : (
+      <></>
+    );
+
+  const renderAdminDashboardDropdown =
+    userInfo?.token && userInfo.isAdmin ? (
+      <UnstyledButton component={Link} to="/dashboard/admin" className={classes.control}>
+        Admin Dashboard
       </UnstyledButton>
     ) : (
       <></>
@@ -47,6 +56,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Link to="/">e-Vision Dashboard</Link>
             <Group ml="xl" gap={0} visibleFrom="sm">
               {renderCreatorDashboardDropdown}
+              <Divider orientation="vertical" />
+              {renderAdminDashboardDropdown}
               <Divider orientation="vertical" />
               <ColorSchemeToggle />
               <Divider orientation="vertical" />
