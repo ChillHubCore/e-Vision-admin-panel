@@ -1,14 +1,17 @@
 import { Route } from 'react-router-dom';
 import {
+  AdminDashboardPage,
   CreateUserPage,
+  CreatorDashboardPage,
   EditUserPage,
   HomePage,
   ListUsersPage,
   LoginForm,
   ShowUserPage,
 } from './pages';
-import { AdminProtected, NoAuth } from './components/Authentication';
+import { AdminProtected, CreatorProtected, NoAuth } from './components/Authentication';
 import SignupPage from './pages/Signup.page';
+import AdminLayout from './lib/HOC/AdminLayout';
 
 export const PublicRoutes = (
   <>
@@ -35,15 +38,28 @@ export const PublicRoutes = (
 export const AdminRoutes = (
   <>
     <Route
-      path="/user"
+      path="/admin/dashboard"
       element={
         <AdminProtected>
-          <ListUsersPage />
+          <AdminLayout>
+            <AdminDashboardPage />
+          </AdminLayout>
+        </AdminProtected>
+      }
+    />
+    {/* users crud */}
+    <Route
+      path="/admin/dashboard/users"
+      element={
+        <AdminProtected>
+          <AdminLayout>
+            <ListUsersPage />
+          </AdminLayout>
         </AdminProtected>
       }
     />
     <Route
-      path="/user/create"
+      path="/admin/dashboard/users/create"
       element={
         <AdminProtected>
           <CreateUserPage />
@@ -51,7 +67,7 @@ export const AdminRoutes = (
       }
     />
     <Route
-      path="/user/show/:id"
+      path="/admin/dashboard/users/show/:id"
       element={
         <AdminProtected>
           <ShowUserPage />
@@ -59,7 +75,7 @@ export const AdminRoutes = (
       }
     />
     <Route
-      path="/user/edit/:id"
+      path="/admin/dashboard/users/edit/:id"
       element={
         <AdminProtected>
           <EditUserPage />
@@ -67,4 +83,15 @@ export const AdminRoutes = (
       }
     />
   </>
+);
+
+export const CreatorRoutes = (
+  <Route
+    path="/creator/dashboard"
+    element={
+      <CreatorProtected>
+        <CreatorDashboardPage />
+      </CreatorProtected>
+    }
+  />
 );

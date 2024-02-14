@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { theme } from './theme';
 import 'react-toastify/dist/ReactToastify.css';
 import { AppLayout } from './components/common';
-import { AdminRoutes, PublicRoutes } from './Router';
+import { AdminRoutes, CreatorRoutes, PublicRoutes } from './Router';
 import store from './lib/redux/Store';
 import '@/lib/styles/global.module.scss';
 
@@ -23,6 +23,7 @@ export default function App() {
                 <Routes>
                   {PublicRoutes}
                   {AdminRoutes}
+                  {CreatorRoutes}
                 </Routes>
               </main>
               <ToastContainer />
