@@ -1,3 +1,9 @@
 .tableData {
   width: fit-content;
 }
+
+.iconButton {
+  &:hover {
+    cursor: pointer;
+  }
+}

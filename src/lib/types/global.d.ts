@@ -21,10 +21,8 @@ interface UserState {
 type CustomError = {
   message: string;
   response?: {
-    data:
-      | {
-          message: string;
-        }
-      | undefined;
+    data: {
+      message: string;
+    };
   };
 };

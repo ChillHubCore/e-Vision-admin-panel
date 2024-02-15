@@ -1,21 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import {
   Button,
-  CloseButton,
   Container,
   Flex,
+  Group,
   Input,
+  Loader,
   LoadingOverlay,
+  Modal,
+  NativeSelect,
   Pagination,
   Table,
   UnstyledButton,
 } from '@mantine/core';
-import { IconCheck, IconEdit, IconX } from '@tabler/icons-react';
+import { IconCheck, IconEdit, IconEye, IconX } from '@tabler/icons-react';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useDisclosure } from '@mantine/hooks';
 import { getData } from '@/lib/utils/getData';
-import classes from '@/lib/styles/User.module.scss';
+import { eAxios } from '@/lib/utils';
 
-export interface UserProps {
+export interface UserEntityProps {
+  _id: string;
   firstName: string;
   lastName: string;
   username: string;
@@ -25,16 +32,19 @@ export interface UserProps {
   isPhoneVerified: boolean;
   isCreator: boolean;
   isAdmin: boolean;
-  addresses: {
-    address: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    isPrimary: boolean;
-  }[];
+  addresses: AddressProps[];
   watchList: string[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface AddressProps {
+  address: string;
+  country: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  isPrimary: boolean;
 }
 
 export default function ListUsersPage() {
@@ -42,38 +52,51 @@ export default function ListUsersPage() {
   const [lastNameSearchInput, setLastNameSearchInput] = useState<string>('');
   const [phoneSearchInput, setPhoneSearchInput] = useState<string>('');
   const [emailSearchInput, setEmailSearchInput] = useState<string>('');
-  const [primaryCitySearchInput, setPrimaryCitySearchInput] = useState<string>('');
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+  const [limit, setLimit] = useState<number>(10);
+  const [userId, setUserId] = useState<string>('');
+  const [opened, { open, close }] = useDisclosure(false);
 
-  const Users = useQuery(
-    'all-users',
-    () =>
-      getData(
-        `/user?pageNumber=${pageNumber}&firstName=${nameSearchInput}&lastName=${lastNameSearchInput}&phone=${phoneSearchInput}&email=${emailSearchInput}&primaryCity=${primaryCitySearchInput}`
-      ),
-    {
-      cacheTime: 1 * 60000, // Cache data for 1 minute (adjust the value as needed)
-    }
+  const navigate = useNavigate();
+
+  const Users = useQuery('search-users', () =>
+    getData(
+      `/user?pageNumber=${pageNumber}&firstName=${nameSearchInput}&lastName=${lastNameSearchInput}&phone=${phoneSearchInput}&email=${emailSearchInput}&limit=${limit}`
+    )
   );
+
+  useEffect(() => {
+    Users.refetch();
+  }, [pageNumber, nameSearchInput, lastNameSearchInput, phoneSearchInput, emailSearchInput, limit]);
+
+  const handlePageChange = (event: number) => {
+    setPageNumber(event);
+  };
 
   if (Users.isLoading) return <LoadingOverlay />;
 
-  const rows = Users.data.map((element: UserProps) => (
+  async function DeleteOneUser({ id }: { id: string }) {
+    setDeleteLoading(true);
+    try {
+      const response = await eAxios.delete(`/user/${id}`);
+      toast.success(response.data.message);
+      Users.refetch();
+    } catch (error) {
+      toast.error((error as CustomError)?.response?.data.message);
+    } finally {
+      setDeleteLoading(false);
+    }
+  }
+
+  const rows = Users.data.users.map((element: UserEntityProps) => (
     <Table.Tr key={element.phone}>
       <Table.Td>{element.firstName}</Table.Td>
       <Table.Td>{element.lastName}</Table.Td>
       <Table.Td>{element.username}</Table.Td>
       <Table.Td>{element.email}</Table.Td>
       <Table.Td>{element.phone}</Table.Td>
-      <Table.Td>
-        <Flex>
-          {element.addresses.map((address) => (
-            <div key={address.address} className={classes.primaryCity}>
-              {address.isPrimary ? address.city : ''}
-            </div>
-          ))}
-        </Flex>
-      </Table.Td>
+
       <Table.Td>
         <UnstyledButton
           style={{
@@ -97,10 +120,31 @@ export default function ListUsersPage() {
       <Table.Td>{new Date(element.createdAt).toLocaleString()}</Table.Td>
       <Table.Td>{new Date(element.updatedAt).toLocaleString()}</Table.Td>
       <Table.Td>
+        <>
+          <Modal opened={opened} onClose={close} title="Alert">
+            <p>You are About to Delete a User Are You Sure? This is Unrecoverable!</p>
+            <Group>
+              <Button
+                onClick={() => {
+                  DeleteOneUser({ id: userId });
+                  close();
+                }}
+              >
+                Yes
+              </Button>
+              <Button onClick={close}>No</Button>
+            </Group>
+          </Modal>
+        </>
         <UnstyledButton
+          disabled={deleteLoading}
           style={{
             display: 'flex',
             alignItems: 'center',
+          }}
+          onClick={() => {
+            setUserId(element._id);
+            open();
           }}
         >
           <IconX color="red" />
@@ -112,15 +156,29 @@ export default function ListUsersPage() {
             display: 'flex',
             alignItems: 'center',
           }}
+          onClick={() => navigate(`/admin/dashboard/users/edit/${element._id}`)}
         >
           <IconEdit color="blue" />
+        </UnstyledButton>
+      </Table.Td>
+      <Table.Td>
+        <UnstyledButton
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+          onClick={() => navigate(`/admin/dashboard/users/show/${element._id}`)}
+        >
+          <IconEye color="green" />
         </UnstyledButton>
       </Table.Td>
     </Table.Tr>
   ));
 
-  return (
-    <Container>
+  return Users.isLoading ? (
+    <Loader />
+  ) : (
+    <Container size="lg">
       <Flex gap="md" wrap="wrap" my="sm">
         <Button
           my="md"
@@ -128,6 +186,7 @@ export default function ListUsersPage() {
             display: 'flex',
             alignItems: 'center',
           }}
+          onClick={() => navigate('/admin/dashboard/users/create')}
         >
           Create New User
         </Button>
@@ -144,13 +203,6 @@ export default function ListUsersPage() {
           }}
           rightSectionPointerEvents="all"
           mt="md"
-          rightSection={
-            <CloseButton
-              aria-label="Clear input"
-              onClick={() => setNameSearchInput('')}
-              style={{ display: nameSearchInput ? undefined : 'none' }}
-            />
-          }
         />
         <Input
           placeholder="Search By Last Name"
@@ -165,13 +217,6 @@ export default function ListUsersPage() {
           }}
           rightSectionPointerEvents="all"
           mt="md"
-          rightSection={
-            <CloseButton
-              aria-label="Clear input"
-              onClick={() => setLastNameSearchInput('')}
-              style={{ display: lastNameSearchInput ? undefined : 'none' }}
-            />
-          }
         />
         <Input
           placeholder="Search By Phone"
@@ -186,13 +231,6 @@ export default function ListUsersPage() {
           }}
           rightSectionPointerEvents="all"
           mt="md"
-          rightSection={
-            <CloseButton
-              aria-label="Clear input"
-              onClick={() => setPhoneSearchInput('')}
-              style={{ display: phoneSearchInput ? undefined : 'none' }}
-            />
-          }
         />
         <Input
           placeholder="Search By Email"
@@ -207,19 +245,13 @@ export default function ListUsersPage() {
           }}
           rightSectionPointerEvents="all"
           mt="md"
-          rightSection={
-            <CloseButton
-              aria-label="Clear input"
-              onClick={() => setEmailSearchInput('')}
-              style={{ display: emailSearchInput ? undefined : 'none' }}
-            />
-          }
         />
-        <Input
-          placeholder="Search By Primary City"
-          value={primaryCitySearchInput}
+        <p>Page Size</p>
+        <NativeSelect
+          placeholder="Limit"
+          value={limit}
           onChange={(event) => {
-            setPrimaryCitySearchInput(event.currentTarget.value);
+            setLimit(Number(event.currentTarget.value));
           }}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
@@ -228,14 +260,14 @@ export default function ListUsersPage() {
           }}
           rightSectionPointerEvents="all"
           mt="md"
-          rightSection={
-            <CloseButton
-              aria-label="Clear input"
-              onClick={() => setPrimaryCitySearchInput('')}
-              style={{ display: primaryCitySearchInput ? undefined : 'none' }}
-            />
-          }
+          data={[
+            { label: '10', value: '10' },
+            { label: '20', value: '20' },
+            { label: '50', value: '50' },
+            { label: '100', value: '100' },
+          ]}
         />
+
         <Button
           my="md"
           style={{
@@ -255,24 +287,22 @@ export default function ListUsersPage() {
             <Table.Th>Username</Table.Th>
             <Table.Th>Email</Table.Th>
             <Table.Th>Phone</Table.Th>
-            <Table.Th>Primary City</Table.Th>
             <Table.Th>Admin</Table.Th>
             <Table.Th>Creator</Table.Th>
             <Table.Th>Created At</Table.Th>
             <Table.Th>Updated At</Table.Th>
-            <Table.Th>Remove</Table.Th>
+            <Table.Th>Delete</Table.Th>
             <Table.Th>Edit</Table.Th>
+            <Table.Th>View</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
       </Table>
       <Pagination
-        total={Users.data.length - 1}
+        disabled={Users.isLoading}
+        total={Users.data.length / limit}
         value={pageNumber}
-        onChange={(event) => {
-          setPageNumber(event);
-          Users.refetch();
-        }}
+        onChange={(event) => handlePageChange(event)}
         mt="sm"
       />
     </Container>
