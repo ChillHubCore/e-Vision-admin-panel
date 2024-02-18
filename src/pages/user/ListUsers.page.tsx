@@ -11,6 +11,7 @@ import {
   Modal,
   NativeSelect,
   Pagination,
+  Switch,
   Table,
   UnstyledButton,
 } from '@mantine/core';
@@ -18,6 +19,7 @@ import { IconCheck, IconEdit, IconEye, IconX } from '@tabler/icons-react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
+import { DatePickerInput } from '@mantine/dates';
 import { getData } from '@/lib/utils/getData';
 import { eAxios } from '@/lib/utils';
 
@@ -56,19 +58,39 @@ export default function ListUsersPage() {
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
   const [limit, setLimit] = useState<number>(10);
   const [userId, setUserId] = useState<string>('');
+  const [timeCreatedSearchInputGTE, setTimeCreatedSearchInputGTE] = useState<Date | null>();
+  const [timeCreatedSearchInputLTE, setTimeCreatedSearchInputLTE] = useState<Date | null>();
+  const [desc, setDesc] = useState<boolean>(true);
   const [opened, { open, close }] = useDisclosure(false);
 
   const navigate = useNavigate();
 
-  const Users = useQuery('search-users', () =>
-    getData(
-      `/user?pageNumber=${pageNumber}&firstName=${nameSearchInput}&lastName=${lastNameSearchInput}&phone=${phoneSearchInput}&email=${emailSearchInput}&limit=${limit}`
-    )
+  const Users = useQuery(
+    'search-users',
+    () =>
+      getData(
+        `/user?pageNumber=${pageNumber}&firstName=${nameSearchInput}&lastName=${lastNameSearchInput}&phone=${phoneSearchInput}&email=${emailSearchInput}&limit=${limit}&timeCreatedGTE=${
+          timeCreatedSearchInputGTE ? timeCreatedSearchInputGTE?.toISOString() : ''
+        }&timeCreatedLTE=${
+          timeCreatedSearchInputLTE ? timeCreatedSearchInputLTE?.toISOString() : ''
+        }&desc=${desc}`
+      ),
+    { cacheTime: 0 }
   );
 
   useEffect(() => {
     Users.refetch();
-  }, [pageNumber, nameSearchInput, lastNameSearchInput, phoneSearchInput, emailSearchInput, limit]);
+  }, [
+    pageNumber,
+    nameSearchInput,
+    lastNameSearchInput,
+    phoneSearchInput,
+    emailSearchInput,
+    limit,
+    timeCreatedSearchInputGTE,
+    timeCreatedSearchInputLTE,
+    desc,
+  ]);
 
   const handlePageChange = (event: number) => {
     setPageNumber(event);
@@ -180,18 +202,8 @@ export default function ListUsersPage() {
   ) : (
     <Container size="lg">
       <Flex gap="md" wrap="wrap" my="sm">
-        <Button
-          my="md"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-          }}
-          onClick={() => navigate('/admin/dashboard/users/create')}
-        >
-          Create New User
-        </Button>
         <Input
-          placeholder="Search By Name"
+          placeholder="Search By First Name"
           value={nameSearchInput}
           onChange={(event) => {
             setNameSearchInput(event.currentTarget.value);
@@ -246,8 +258,11 @@ export default function ListUsersPage() {
           rightSectionPointerEvents="all"
           mt="md"
         />
-        <p>Page Size</p>
+      </Flex>
+
+      <Group my="sm">
         <NativeSelect
+          w="fit-content"
           placeholder="Limit"
           value={limit}
           onChange={(event) => {
@@ -267,7 +282,25 @@ export default function ListUsersPage() {
             { label: '100', value: '100' },
           ]}
         />
+        <Switch label="Descending" checked={desc} onChange={() => setDesc(!desc)} mt="md" />
+      </Group>
 
+      <Group my="sm">
+        <DatePickerInput
+          value={timeCreatedSearchInputGTE}
+          onChange={setTimeCreatedSearchInputGTE}
+          placeholder="Created After Date input"
+          rightSection={<IconX onClick={() => setTimeCreatedSearchInputGTE(null)} />}
+        />
+        <DatePickerInput
+          value={timeCreatedSearchInputLTE}
+          onChange={setTimeCreatedSearchInputLTE}
+          placeholder="Created Before Date input"
+          rightSection={<IconX onClick={() => setTimeCreatedSearchInputLTE(null)} />}
+        />
+      </Group>
+
+      <Group>
         <Button
           my="md"
           style={{
@@ -278,7 +311,18 @@ export default function ListUsersPage() {
         >
           Filter
         </Button>
-      </Flex>
+        <Button
+          my="md"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+          onClick={() => navigate('/admin/dashboard/users/create')}
+        >
+          Create New User
+        </Button>
+      </Group>
+
       <Table withTableBorder withColumnBorders style={{ padding: '2rem' }}>
         <Table.Thead style={{ height: 'max-content' }}>
           <Table.Tr>

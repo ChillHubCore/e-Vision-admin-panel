@@ -1,12 +1,18 @@
 import { Route } from 'react-router-dom';
+import { Suspense } from 'react';
+import { Center, Loader } from '@mantine/core';
 import {
   AdminDashboardPage,
+  CreateProductPage,
   CreateUserPage,
   CreatorDashboardPage,
+  EditProductPage,
   EditUserPage,
   HomePage,
+  ListProductsPage,
   ListUsersPage,
   LoginForm,
+  ShowProductPage,
   ShowUserPage,
 } from './pages';
 import { AdminProtected, CreatorProtected, NoAuth } from './components/Authentication';
@@ -20,7 +26,15 @@ export const PublicRoutes = (
       path="/login"
       element={
         <NoAuth>
-          <LoginForm />
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <LoginForm />
+          </Suspense>
         </NoAuth>
       }
     />
@@ -28,7 +42,15 @@ export const PublicRoutes = (
       path="/signup"
       element={
         <NoAuth>
-          <SignupPage />
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <SignupPage />
+          </Suspense>
         </NoAuth>
       }
     />
@@ -42,7 +64,15 @@ export const AdminRoutes = (
       element={
         <AdminProtected>
           <AdminLayout>
-            <AdminDashboardPage />
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <AdminDashboardPage />
+            </Suspense>
           </AdminLayout>
         </AdminProtected>
       }
@@ -53,7 +83,15 @@ export const AdminRoutes = (
       element={
         <AdminProtected>
           <AdminLayout>
-            <ListUsersPage />
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <ListUsersPage />
+            </Suspense>
           </AdminLayout>
         </AdminProtected>
       }
@@ -62,7 +100,15 @@ export const AdminRoutes = (
       path="/admin/dashboard/users/create"
       element={
         <AdminProtected>
-          <CreateUserPage />
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <CreateUserPage />
+          </Suspense>
         </AdminProtected>
       }
     />
@@ -70,7 +116,15 @@ export const AdminRoutes = (
       path="/admin/dashboard/users/show/:id"
       element={
         <AdminProtected>
-          <ShowUserPage />
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <ShowUserPage />
+          </Suspense>
         </AdminProtected>
       }
     />
@@ -79,6 +133,73 @@ export const AdminRoutes = (
       element={
         <AdminProtected>
           <EditUserPage />
+        </AdminProtected>
+      }
+    />
+    {/* products crud */}
+    <Route
+      path="/admin/dashboard/products"
+      element={
+        <AdminProtected>
+          <AdminLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <ListProductsPage />
+            </Suspense>
+          </AdminLayout>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/products/create"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <CreateProductPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/products/show/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <ShowProductPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/products/edit/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <EditProductPage />
+          </Suspense>
         </AdminProtected>
       }
     />
