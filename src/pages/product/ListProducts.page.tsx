@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+import { ProductGenerator } from '@/components/Dashboard';
 
-export default function ListProductsPage() {
-  return <div>ListProductsPage</div>;
+export default function CreateProductPage() {
+  return (
+    <Suspense>
+      <ProductGenerator />
+    </Suspense>
+  );
 }
