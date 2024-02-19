@@ -12,6 +12,7 @@ import { AdminRoutes, CreatorRoutes, PublicRoutes } from './Router';
 import store from './lib/redux/Store';
 import '@/lib/styles/global.module.scss';
 import '@mantine/dates/styles.css';
+import '@mantine/tiptap/styles.css';
 
 export default function App() {
   const queryClient = new QueryClient();

@@ -1,10 +1,13 @@
-import React, { Suspense } from 'react';
-import { ProductGenerator } from '@/components/Dashboard';
+import { Button } from '@mantine/core';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-export default function CreateProductPage() {
+export default function ListProductsPage() {
   return (
-    <Suspense>
-      <ProductGenerator />
-    </Suspense>
+    <div>
+      <Button component={Link} to="/admin/dashboard/products/create">
+        Create New Product
+      </Button>
+    </div>
   );
 }
