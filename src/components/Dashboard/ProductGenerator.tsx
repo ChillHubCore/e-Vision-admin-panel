@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   Container,
+  Divider,
   FileInput,
   Flex,
   Grid,
@@ -14,20 +15,22 @@ import {
   Modal,
   Stack,
   Switch,
+  Table,
   Text,
   TextInput,
   Textarea,
   Title,
 } from '@mantine/core';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
+import { toast } from 'react-toastify';
 import { useSubmit, useUpload } from '@/lib/hooks';
 import { RTE } from '../common/RTE';
 import blackBG from '@/assets/black-bg.png';
 
 export interface ProductVariantProps {
   images: string[];
-  sharedDetails: {
+  details: {
     key: string;
     value: string;
   }[];
@@ -44,13 +47,14 @@ export interface ProductEntityProps {
   _id: string;
   name: string;
   slug: string;
+  brand: string;
   category: string;
   description: {
     short: string;
     full: string;
   };
   variants: ProductVariantProps[];
-  relatedProducts: string[];
+  relatedProducts?: string[];
   creator: string;
   sharedDetails: {
     key: string;
@@ -71,6 +75,7 @@ export default function ProductGenerator({
     initialValues: {
       name: ProductData?.name || '',
       slug: ProductData?.slug || '',
+      brand: ProductData?.brand || '',
       category: ProductData?.category || '',
       description: ProductData?.description || {
         short: '',
@@ -78,16 +83,17 @@ export default function ProductGenerator({
       },
       variants: ProductData?.variants || [],
       relatedProducts: ProductData?.relatedProducts || [],
-      creator: ProductData?.creator || '',
+      // creator: ProductData?.creator || '',
       sharedDetails: ProductData?.sharedDetails || [],
     },
     validate: {
       name: hasLength({ min: 3, max: 255 }, 'Name must be 3-255 characters long'),
-      slug: hasLength({ min: 2, max: 255 }, 'Slug must be 3-255 characters long'),
+      slug: hasLength({ min: 2, max: 1023 }, 'Slug must be 3-255 characters long'),
+      brand: hasLength({ min: 3, max: 255 }, 'Brand must be 3-255 characters long'),
       category: hasLength({ min: 3, max: 255 }, 'Category must be 3-255 characters long'),
       description: {
         short: hasLength({ min: 3, max: 255 }, 'Short Description must be 3-255 characters long'),
-        full: hasLength({ min: 3, max: 255 }, 'Full Description must be 3-255 characters long'),
+        full: hasLength({ min: 3, max: 10000 }, 'Full Description must be 3-255 characters long'),
       },
       variants: (value: ProductVariantProps[]) => {
         if (Array.isArray(value)) {
@@ -101,7 +107,7 @@ export default function ProductGenerator({
         }
         return 'Type of Value is Wrong!';
       },
-      creator: hasLength({ min: 3, max: 255 }, 'Creator must be 3-255 characters long'),
+      // creator: hasLength({ min: 3, max: 255 }, 'Creator must be 3-255 characters long'),
       sharedDetails: (value) => {
         if (Array.isArray(value)) {
           return null;
@@ -113,12 +119,7 @@ export default function ProductGenerator({
   const VariantGeneratorForm = useForm({
     initialValues: {
       images: [blackBG],
-      sharedDetails: [
-        {
-          key: '',
-          value: '',
-        },
-      ],
+      details: [] as { key: string; value: string }[],
       SKU: '',
       price: {
         regularPrice: 0,
@@ -135,7 +136,7 @@ export default function ProductGenerator({
         }
         return 'Type of Value is Wrong!';
       },
-      sharedDetails: (value) => {
+      details: (value) => {
         if (Array.isArray(value)) {
           return null;
         }
@@ -180,9 +181,22 @@ export default function ProductGenerator({
   const FormActions = useSubmit();
   const navigate = useNavigate();
   const uploadHandle = useUpload();
-  const RichTextEditorRef = useRef();
+  const RichTextEditorRef = useRef(null);
+  const [sharedDetail, setSharedDetail] = useState({
+    key: '',
+    value: '',
+  });
+  const [variantDetail, setVariantDetail] = useState({
+    key: '',
+    value: '',
+  });
 
   const handleSubmit = () => {
+    console.log('#traceback195', ' im called');
+    const fullDescription = (RichTextEditorRef.current as any)?.getHTML() || '';
+    ProductGeneratorForm.setFieldValue('description.full', fullDescription);
+
+    console.log('#traceback199', ProductGeneratorForm.values);
     if (editFlag) {
       FormActions.sendRequest(
         `/product/${ProductData?._id}`,
@@ -203,8 +217,6 @@ export default function ProductGenerator({
       );
     }
   };
-
-  console.log('tracecode#pg207', uploadHandle.data);
 
   const VariantInputModal = (
     <Modal opened={opened} onClose={close} title="Add New Variant">
@@ -274,6 +286,75 @@ export default function ProductGenerator({
               );
             })}
         </Group>
+        <Box>
+          <Group>
+            <TextInput
+              labelProps={{ my: 'md' }}
+              label="Detail Key"
+              placeholder="Enter Key"
+              required
+              value={variantDetail.key}
+              onChange={(e) => setVariantDetail({ ...variantDetail, key: e.target.value })}
+            />
+            <TextInput
+              labelProps={{ my: 'md' }}
+              label="Detail Value"
+              placeholder="Enter Value"
+              required
+              value={variantDetail.value}
+              onChange={(e) => setVariantDetail({ ...variantDetail, value: e.target.value })}
+            />
+          </Group>
+          <Button
+            my="lg"
+            onClick={() => {
+              if (variantDetail.key.trim() === '' || variantDetail.value.trim() === '') {
+                toast.error('Key or value cannot be empty');
+              } else {
+                VariantGeneratorForm.setFieldValue('details', [
+                  ...VariantGeneratorForm.values.details,
+                  variantDetail,
+                ]);
+                setVariantDetail({ key: '', value: '' });
+              }
+            }}
+          >
+            Add Detail
+          </Button>
+          {VariantGeneratorForm.values.details.length > 0 ? (
+            <Table>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Key</Table.Th>
+                  <Table.Th>Value</Table.Th>
+                  <Table.Th>Remove</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {VariantGeneratorForm.values.details.map((item) => (
+                  <Table.Tr key={item.key}>
+                    <Table.Td>{item.key}</Table.Td>
+                    <Table.Td>{item.value}</Table.Td>
+                    <Table.Td>
+                      <Button
+                        onClick={() =>
+                          VariantGeneratorForm.setFieldValue(
+                            'details',
+                            VariantGeneratorForm.values.details.filter((i) => i.key !== item.key)
+                          )
+                        }
+                      >
+                        Remove
+                      </Button>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          ) : (
+            <Text>No Details Added Yet!</Text>
+          )}
+        </Box>
         <Switch label="Availability" {...VariantGeneratorForm.getInputProps('availability')} />
         <Button
           onClick={() => {
@@ -346,6 +427,12 @@ export default function ProductGenerator({
           {...ProductGeneratorForm.getInputProps('slug')}
         />
         <TextInput
+          label="Brand"
+          placeholder="Enter Product Brand"
+          required
+          {...ProductGeneratorForm.getInputProps('brand')}
+        />
+        <TextInput
           label="Category"
           placeholder="Enter Product Category"
           required
@@ -363,30 +450,92 @@ export default function ProductGenerator({
           </Title>
           <RTE ref={RichTextEditorRef} />
         </Box>
-        <Box>
+        <Divider />
+        <Box my="lg">
           <Stack>
-            <Group my="sm">
-              <TextInput
-                labelProps={{ my: 'xs' }}
-                label="Product Variant Key"
-                placeholder="Enter Product Variant Key"
-                required
-              />
-              <TextInput
-                labelProps={{ my: 'xs' }}
-                label="Product Variant Value"
-                placeholder="Enter Product Variant Value"
-                required
-              />
-            </Group>
-
-            <Button w="fit-content" my="md" onClick={open}>
+            <Button w="fit-content" my="lg" onClick={open}>
               Add
             </Button>
             {VariantInputModal}
           </Stack>
           <Grid>{renderVariants}</Grid>
         </Box>
+        <Divider />
+        <Box>
+          <Group>
+            <TextInput
+              labelProps={{ my: 'md' }}
+              label="Shared Detail Key"
+              placeholder="Enter Key"
+              // required
+              value={sharedDetail.key}
+              onChange={(e) => setSharedDetail({ ...sharedDetail, key: e.target.value })}
+            />
+            <TextInput
+              labelProps={{ my: 'md' }}
+              label="Shared Detail Value"
+              placeholder="Enter Value"
+              // required
+              value={sharedDetail.value}
+              onChange={(e) => setSharedDetail({ ...sharedDetail, value: e.target.value })}
+            />
+          </Group>
+          <Button
+            my="lg"
+            onClick={() => {
+              if (sharedDetail.key.trim() === '' || sharedDetail.value.trim() === '') {
+                toast.error('Key or value cannot be empty');
+              } else {
+                ProductGeneratorForm.setFieldValue('sharedDetails', [
+                  ...ProductGeneratorForm.values.sharedDetails,
+                  sharedDetail,
+                ]);
+                setSharedDetail({ key: '', value: '' });
+              }
+            }}
+          >
+            Add Shared Detail
+          </Button>
+          {ProductGeneratorForm.values.sharedDetails.length > 0 ? (
+            <Table>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Key</Table.Th>
+                  <Table.Th>Value</Table.Th>
+                  <Table.Th>Remove</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {ProductGeneratorForm.values.sharedDetails.map((item) => (
+                  <Table.Tr key={item.key}>
+                    <Table.Td>{item.key}</Table.Td>
+                    <Table.Td>{item.value}</Table.Td>
+                    <Table.Td>
+                      <Button
+                        onClick={() =>
+                          ProductGeneratorForm.setFieldValue(
+                            'sharedDetails',
+                            ProductGeneratorForm.values.sharedDetails.filter(
+                              (i) => i.key !== item.key
+                            )
+                          )
+                        }
+                      >
+                        Remove
+                      </Button>
+                    </Table.Td>
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          ) : (
+            <Text>No Shared Details Added Yet!</Text>
+          )}
+        </Box>
+        <Divider />
+        <Button type="submit" color="blue" size="lg" radius="md">
+          {editFlag ? 'Edit Product' : 'Create Product'}
+        </Button>
       </Box>
     </Container>
   );

@@ -21,7 +21,20 @@ import AdminLayout from './lib/HOC/AdminLayout';
 
 export const PublicRoutes = (
   <>
-    <Route path="/" element={<HomePage />} />
+    <Route
+      path="/"
+      element={
+        <Suspense
+          fallback={
+            <Center>
+              <Loader color="green" />
+            </Center>
+          }
+        >
+          <HomePage />
+        </Suspense>
+      }
+    />
     <Route
       path="/login"
       element={
@@ -132,7 +145,15 @@ export const AdminRoutes = (
       path="/admin/dashboard/users/edit/:id"
       element={
         <AdminProtected>
-          <EditUserPage />
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <EditUserPage />
+          </Suspense>
         </AdminProtected>
       }
     />
@@ -211,7 +232,15 @@ export const CreatorRoutes = (
     path="/creator/dashboard"
     element={
       <CreatorProtected>
-        <CreatorDashboardPage />
+        <Suspense
+          fallback={
+            <Center>
+              <Loader color="green" />
+            </Center>
+          }
+        >
+          <CreatorDashboardPage />
+        </Suspense>
       </CreatorProtected>
     }
   />

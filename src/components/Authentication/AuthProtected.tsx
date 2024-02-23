@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
-
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LoadingOverlay } from '@mantine/core';
 import { toast } from 'react-toastify';
-import { useFetch } from '@/lib/hooks';
+import { useSelector } from 'react-redux';
+import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 
 interface AuthProtectedProps {
   children: React.ReactNode;
@@ -11,17 +10,13 @@ interface AuthProtectedProps {
 
 const AuthProtected: React.FC<AuthProtectedProps> = ({ children }) => {
   const navigate = useNavigate();
-  const { isLoading, error } = useFetch({ requestQuery: '/user/check/auth' });
+  const userInfo = useSelector(selectUserInfo);
 
-  useEffect(() => {
-    if (error) {
-      toast.error('You are not authorized!');
-      console.error(error);
-      navigate('/');
-    }
-  }, [error, navigate]);
+  if (!userInfo) {
+    toast.error('You are not authorized!');
 
-  if (isLoading) return <LoadingOverlay />;
+    navigate('/');
+  }
 
   return <>{children}</>;
 };
