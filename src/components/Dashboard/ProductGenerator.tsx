@@ -21,7 +21,7 @@ import {
   Textarea,
   Title,
 } from '@mantine/core';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'react-toastify';
 import { useSubmit, useUpload } from '@/lib/hooks';
@@ -191,10 +191,13 @@ export default function ProductGenerator({
     value: '',
   });
 
-  const handleSubmit = () => {
-    console.log('#traceback195', ' im called');
+  useEffect(() => {
     const fullDescription = (RichTextEditorRef.current as any)?.getHTML() || '';
     ProductGeneratorForm.setFieldValue('description.full', fullDescription);
+  }, [RichTextEditorRef.current]);
+
+  const handleSubmit = () => {
+    console.log('#traceback195', ' im called');
 
     console.log('#traceback199', ProductGeneratorForm.values);
     if (editFlag) {
