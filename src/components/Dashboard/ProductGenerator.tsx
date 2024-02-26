@@ -1,10 +1,8 @@
 import { hasLength, useForm } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
 import {
-  Badge,
   Box,
   Button,
-  Card,
   Container,
   Divider,
   FileInput,
@@ -20,49 +18,28 @@ import {
   TextInput,
   Textarea,
   Title,
+  UnstyledButton,
 } from '@mantine/core';
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'react-toastify';
-import { useSubmit, useUpload } from '@/lib/hooks';
-import { RTE } from '../common/RTE';
+import { IconX } from '@tabler/icons-react';
+import { Editor, useEditor } from '@tiptap/react';
+import Highlight from '@tiptap/extension-highlight';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import Superscript from '@tiptap/extension-superscript';
+import SubScript from '@tiptap/extension-subscript';
+import TextStyle from '@tiptap/extension-text-style';
+import Color from '@tiptap/extension-color';
+import { Image as TiptapImage } from '@tiptap/extension-image';
+import Link from '@tiptap/extension-link';
+import { ProductEntityProps, ProductVariantProps } from './types';
+import VariantCard from '../common/VariantCard';
 import blackBG from '@/assets/black-bg.png';
-
-export interface ProductVariantProps {
-  images: string[];
-  details: {
-    key: string;
-    value: string;
-  }[];
-  SKU: string;
-  price: {
-    regularPrice: number;
-    discountedPrice?: number;
-  };
-  inStock: number;
-  availability: boolean;
-}
-
-export interface ProductEntityProps {
-  _id: string;
-  name: string;
-  slug: string;
-  brand: string;
-  category: string;
-  description: {
-    short: string;
-    full: string;
-  };
-  variants: ProductVariantProps[];
-  relatedProducts?: string[];
-  creator: string;
-  sharedDetails: {
-    key: string;
-    value: string;
-  }[];
-  createdAt: string;
-  updatedAt: string;
-}
+import { RTE } from '../common/RTE';
+import { useSubmit, useUpload } from '@/lib/hooks';
 
 export default function ProductGenerator({
   ProductData,
@@ -77,14 +54,13 @@ export default function ProductGenerator({
       slug: ProductData?.slug || '',
       brand: ProductData?.brand || '',
       category: ProductData?.category || '',
-      description: ProductData?.description || {
-        short: '',
-        full: '',
+      description: {
+        short: ProductData?.description.short || '',
+        full: ProductData?.description.full || '',
       },
-      variants: ProductData?.variants || [],
-      relatedProducts: ProductData?.relatedProducts || [],
-      // creator: ProductData?.creator || '',
-      sharedDetails: ProductData?.sharedDetails || [],
+      variants: ProductData?.variants || ([] as ProductVariantProps[]),
+      relatedProducts: ProductData?.relatedProducts || ([] as string[]),
+      sharedDetails: ProductData?.sharedDetails || ([] as { key: string; value: string }[]),
     },
     validate: {
       name: hasLength({ min: 3, max: 255 }, 'Name must be 3-255 characters long'),
@@ -121,6 +97,7 @@ export default function ProductGenerator({
       images: [blackBG],
       details: [] as { key: string; value: string }[],
       SKU: '',
+      soldAmount: 0,
       price: {
         regularPrice: 0,
         discountedPrice: 0,
@@ -190,16 +167,31 @@ export default function ProductGenerator({
     key: '',
     value: '',
   });
+  const [variantEditFlag, setVariantEditFlag] = useState(false);
 
-  useEffect(() => {
-    const fullDescription = (RichTextEditorRef.current as any)?.getHTML() || '';
-    ProductGeneratorForm.setFieldValue('description.full', fullDescription);
-  }, [RichTextEditorRef.current]);
+  const content = ProductGeneratorForm.values.description.full;
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      Link,
+      Superscript,
+      SubScript,
+      Highlight,
+      TextStyle,
+      Color,
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      TiptapImage.configure({
+        inline: true,
+        allowBase64: true,
+      }),
+    ],
+    content,
+  });
 
   const handleSubmit = () => {
-    console.log('#traceback195', ' im called');
-
-    console.log('#traceback199', ProductGeneratorForm.values);
+    console.log('#traceback170', ProductGeneratorForm.values);
     if (editFlag) {
       FormActions.sendRequest(
         `/product/${ProductData?._id}`,
@@ -250,6 +242,13 @@ export default function ProductGenerator({
           required
           {...VariantGeneratorForm.getInputProps('inStock')}
         />
+        <TextInput
+          label="Sold Amount"
+          type="number"
+          placeholder="Enter Product Sold Amount ( Default is 0 )"
+          required
+          {...VariantGeneratorForm.getInputProps('soldAmount')}
+        />
         <Group>
           <FileInput
             disabled={uploadHandle.isLoading}
@@ -278,14 +277,26 @@ export default function ProductGenerator({
             VariantGeneratorForm.values.images.map((image) => {
               console.log(image);
               return (
-                <Image
-                  key={image}
-                  src={image as string}
-                  h={100}
-                  w={100}
-                  alt="product image"
-                  style={{ objectFit: 'cover' }}
-                />
+                <>
+                  <Image
+                    key={image}
+                    src={image as string}
+                    h={100}
+                    w={100}
+                    alt="product image"
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <UnstyledButton
+                    onClick={() => {
+                      VariantGeneratorForm.setFieldValue(
+                        'images',
+                        VariantGeneratorForm.values.images.filter((i) => i !== image)
+                      );
+                    }}
+                  >
+                    <IconX color="red" />
+                  </UnstyledButton>
+                </>
               );
             })}
         </Group>
@@ -361,10 +372,21 @@ export default function ProductGenerator({
         <Switch label="Availability" {...VariantGeneratorForm.getInputProps('availability')} />
         <Button
           onClick={() => {
-            ProductGeneratorForm.setFieldValue('variants', [
-              ...ProductGeneratorForm.values.variants,
-              VariantGeneratorForm.values,
-            ]);
+            if (variantEditFlag) {
+              const index = ProductGeneratorForm.values.variants.findIndex(
+                (i) => i.SKU === VariantGeneratorForm.values.SKU
+              );
+              ProductGeneratorForm.setFieldValue('variants', [
+                ...ProductGeneratorForm.values.variants.slice(0, index),
+                VariantGeneratorForm.values,
+                ...ProductGeneratorForm.values.variants.slice(index + 1),
+              ]);
+            } else {
+              ProductGeneratorForm.setFieldValue('variants', [
+                ...ProductGeneratorForm.values.variants,
+                VariantGeneratorForm.values,
+              ]);
+            }
             VariantGeneratorForm.reset();
             close();
           }}
@@ -378,34 +400,50 @@ export default function ProductGenerator({
     ProductGeneratorForm.values.variants.length > 0 ? (
       ProductGeneratorForm.values.variants.map((variant: ProductVariantProps) => (
         <Grid.Col key={variant.SKU} span={{ base: 12, md: 6, lg: 3 }}>
-          <Card shadow="sm" padding="lg" radius="md" withBorder>
-            <Card.Section>
-              <Image
-                src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-                height={160}
-                alt="Norway"
-              />
-            </Card.Section>
-
-            <Group justify="space-between" mt="md" mb="xs">
-              <Text fw={500}>Norway Fjord Adventures</Text>
-              <Badge color="pink">On Sale</Badge>
-            </Group>
-
-            <Text size="sm" c="dimmed">
-              With Fjord Tours you can explore more of the magical fjord landscapes with tours and
-              activities on and around the fjords of Norway
-            </Text>
-
-            <Button color="blue" fullWidth mt="md" radius="md">
-              Book classic tour now
-            </Button>
-          </Card>
+          <Suspense>
+            <Stack>
+              <VariantCard VariantData={variant} />
+              <Group>
+                <Button
+                  onClick={() => {
+                    ProductGeneratorForm.setFieldValue(
+                      'variants',
+                      ProductGeneratorForm.values.variants.filter((i) => i.SKU !== variant.SKU)
+                    );
+                  }}
+                >
+                  Remove
+                </Button>
+                <Button
+                  onClick={() => {
+                    setVariantEditFlag(true);
+                    VariantGeneratorForm.setValues({
+                      ...variant,
+                      price: {
+                        ...variant.price,
+                        discountedPrice: variant.price.discountedPrice || 0, // Assign a default value of 0 if discountedPrice is undefined
+                        specialOffers: [],
+                      },
+                    });
+                    open();
+                  }}
+                >
+                  Edit
+                </Button>
+              </Group>
+            </Stack>
+          </Suspense>
         </Grid.Col>
       ))
     ) : (
       <Text>No Variants Added Yet!</Text>
     );
+
+  useEffect(() => {
+    if (editFlag) {
+      editor?.commands.setContent(ProductGeneratorForm.values.description.full);
+    }
+  }, []);
 
   return (
     <Container size="lg">
@@ -415,7 +453,7 @@ export default function ProductGenerator({
         style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
       >
         <Title order={2} style={{ textAlign: 'center', marginBottom: '1rem' }}>
-          {editFlag ? 'Edit Product' : 'Create New Product'}
+          {editFlag ? `Edit Product ${ProductData?.name}` : 'Create New Product'}
         </Title>
         <TextInput
           label="Name"
@@ -451,7 +489,7 @@ export default function ProductGenerator({
           <Title mb="lg" ta="center" order={3}>
             Write a Full Description For The Product.
           </Title>
-          <RTE ref={RichTextEditorRef} />
+          <RTE ref={RichTextEditorRef} editor={editor as Editor} />
         </Box>
         <Divider />
         <Box my="lg">
@@ -536,7 +574,15 @@ export default function ProductGenerator({
           )}
         </Box>
         <Divider />
-        <Button type="submit" color="blue" size="lg" radius="md">
+        <Button
+          onClick={() =>
+            ProductGeneratorForm.setFieldValue('description.full', editor?.getHTML() || '')
+          }
+          type="submit"
+          color="blue"
+          size="lg"
+          radius="md"
+        >
           {editFlag ? 'Edit Product' : 'Create Product'}
         </Button>
       </Box>
