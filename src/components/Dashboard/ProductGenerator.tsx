@@ -10,6 +10,7 @@ import {
   Grid,
   Group,
   Image,
+  Loader,
   Modal,
   Stack,
   Switch,
@@ -23,7 +24,7 @@ import {
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'react-toastify';
-import { IconX } from '@tabler/icons-react';
+import { IconFileLike, IconX } from '@tabler/icons-react';
 import { Editor, useEditor } from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
@@ -270,6 +271,7 @@ export default function ProductGenerator({
                 }
               )
             }
+            rightSection={uploadHandle.isLoading ? <Loader size="xs" /> : <IconFileLike />}
             label="Choose a Picture to Upload"
           />
 
@@ -494,7 +496,14 @@ export default function ProductGenerator({
         <Divider />
         <Box my="lg">
           <Stack>
-            <Button w="fit-content" my="lg" onClick={open}>
+            <Button
+              w="fit-content"
+              my="lg"
+              onClick={() => {
+                VariantGeneratorForm.reset();
+                open();
+              }}
+            >
               Add
             </Button>
             {VariantInputModal}

@@ -8,6 +8,8 @@ export interface SignupFormProps {
   username: string;
   firstName: string;
   lastName: string;
+  countryCode: string;
+  phone: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -19,6 +21,7 @@ const SignupPage: React.FC = () => {
       username: '',
       firstName: '',
       lastName: '',
+      countryCode: '',
       phone: '',
       email: '',
       password: '',
@@ -28,6 +31,7 @@ const SignupPage: React.FC = () => {
       username: hasLength({ min: 4, max: 255 }, 'Username must be 4-10 characters long'),
       firstName: hasLength({ min: 2, max: 255 }, 'First Name must be 2-10 characters long'),
       lastName: hasLength({ min: 2, max: 255 }, 'Last Name must be 2-10 characters long'),
+      countryCode: hasLength({ min: 2, max: 255 }, 'Country Code must be 2-10 characters long'),
       email: isEmail('Invalid email'),
       password: matches(/^(?=.*[a-z])(?=.*[A-Z]).{8,}$/, 'Password is too weak'),
       confirmPassword: matchesField('password', 'Passwords are not the same'),
@@ -86,6 +90,14 @@ const SignupPage: React.FC = () => {
           label="Username"
           placeholder="Enter your username"
           {...SignUpForm.getInputProps('username')}
+          required
+        />
+
+        <TextInput
+          disabled={FormActions.isLoading}
+          label="Country Code"
+          placeholder="Enter your country code"
+          {...SignUpForm.getInputProps('countryCode')}
           required
         />
 

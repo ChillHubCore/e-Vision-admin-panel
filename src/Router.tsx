@@ -3,15 +3,20 @@ import { Suspense } from 'react';
 import { Center, Loader } from '@mantine/core';
 import {
   AdminDashboardPage,
+  CreateOrderPage,
   CreateProductPage,
   CreateUserPage,
   CreatorDashboardPage,
+  EditOrderPage,
   EditProductPage,
   EditUserPage,
+  GeneralSettingsPage,
   HomePage,
+  ListOrdersPage,
   ListProductsPage,
   ListUsersPage,
   LoginForm,
+  ShowOrderPage,
   ShowProductPage,
   ShowUserPage,
 } from './pages';
@@ -85,6 +90,24 @@ export const AdminRoutes = (
               }
             >
               <AdminDashboardPage />
+            </Suspense>
+          </AdminLayout>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/shop-settings"
+      element={
+        <AdminProtected>
+          <AdminLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <GeneralSettingsPage />
             </Suspense>
           </AdminLayout>
         </AdminProtected>
@@ -220,6 +243,73 @@ export const AdminRoutes = (
             }
           >
             <EditProductPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    {/* orders crud */}
+    <Route
+      path="/admin/dashboard/orders"
+      element={
+        <AdminProtected>
+          <AdminLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <ListOrdersPage />
+            </Suspense>
+          </AdminLayout>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/orders/create"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <CreateOrderPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/orders/show/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <ShowOrderPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/orders/edit/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <EditOrderPage />
           </Suspense>
         </AdminProtected>
       }

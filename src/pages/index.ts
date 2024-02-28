@@ -13,3 +13,8 @@ export const EditProductPage = lazy(() => import('./product/EditProduct.page'));
 export const CreateProductPage = lazy(() => import('./product/CreateProduct.page'));
 export const ShowProductPage = lazy(() => import('./product/ShowProduct.page'));
 export const ListProductsPage = lazy(() => import('./product/ListProducts.page'));
+export const GeneralSettingsPage = lazy(() => import('./shop/GeneralSettings.page'));
+export const EditOrderPage = lazy(() => import('./order/EditOrder.page'));
+export const ListOrdersPage = lazy(() => import('./order/ListOrders.page'));
+export const ShowOrderPage = lazy(() => import('./order/ShowOrder.page'));
+export const CreateOrderPage = lazy(() => import('./order/CreateOrder.page'));

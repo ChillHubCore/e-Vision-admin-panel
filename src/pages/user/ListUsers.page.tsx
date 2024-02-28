@@ -29,6 +29,7 @@ export interface UserEntityProps {
   lastName: string;
   username: string;
   email: string;
+  countryCode: string;
   phone: string;
   isEmailVerified: boolean;
   isPhoneVerified: boolean;
@@ -54,6 +55,7 @@ export default function ListUsersPage() {
   const [lastNameSearchInput, setLastNameSearchInput] = useState<string>('');
   const [phoneSearchInput, setPhoneSearchInput] = useState<string>('');
   const [emailSearchInput, setEmailSearchInput] = useState<string>('');
+  const [countryCodeSearchInput, setCountryCodeSearchInput] = useState<string>('');
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
   const [limit, setLimit] = useState<number>(10);
@@ -73,7 +75,7 @@ export default function ListUsersPage() {
           timeCreatedSearchInputGTE ? timeCreatedSearchInputGTE?.toISOString() : ''
         }&timeCreatedLTE=${
           timeCreatedSearchInputLTE ? timeCreatedSearchInputLTE?.toISOString() : ''
-        }&desc=${desc}`
+        }&desc=${desc}&countryCode=${countryCodeSearchInput}`
       ),
     { cacheTime: 0 }
   );
@@ -90,6 +92,7 @@ export default function ListUsersPage() {
     timeCreatedSearchInputGTE,
     timeCreatedSearchInputLTE,
     desc,
+    countryCodeSearchInput,
   ]);
 
   const handlePageChange = (event: number) => {
@@ -117,6 +120,7 @@ export default function ListUsersPage() {
       <Table.Td>{element.lastName}</Table.Td>
       <Table.Td>{element.username}</Table.Td>
       <Table.Td>{element.email}</Table.Td>
+      <Table.Td>+ {element.countryCode}</Table.Td>
       <Table.Td>{element.phone}</Table.Td>
 
       <Table.Td>
@@ -258,6 +262,20 @@ export default function ListUsersPage() {
           rightSectionPointerEvents="all"
           mt="md"
         />
+        <Input
+          placeholder="Search By Country Code"
+          value={countryCodeSearchInput}
+          onChange={(event) => {
+            setCountryCodeSearchInput(event.currentTarget.value);
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              Users.refetch();
+            }
+          }}
+          rightSectionPointerEvents="all"
+          mt="md"
+        />
       </Flex>
 
       <Group my="sm">
@@ -330,6 +348,7 @@ export default function ListUsersPage() {
             <Table.Th>Last Name</Table.Th>
             <Table.Th>Username</Table.Th>
             <Table.Th>Email</Table.Th>
+            <Table.Th>Country Code</Table.Th>
             <Table.Th>Phone</Table.Th>
             <Table.Th>Admin</Table.Th>
             <Table.Th>Creator</Table.Th>

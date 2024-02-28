@@ -1,5 +1,5 @@
 import { Box, Button, Center, PasswordInput, Switch, TextInput, Title } from '@mantine/core';
-import { hasLength, isEmail, matches, matchesField, useForm } from '@mantine/form';
+import { hasLength, isEmail, isNotEmpty, matches, matchesField, useForm } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useSubmit } from '@/lib/hooks';
@@ -18,6 +18,7 @@ export default function UserGenerator({
       lastName: UserData?.lastName || '',
       username: UserData?.username || '',
       email: UserData?.email || '',
+      countryCode: UserData?.countryCode || '',
       phone: UserData?.phone || '',
       password: '',
       confirmPassword: '',
@@ -30,6 +31,8 @@ export default function UserGenerator({
       username: hasLength({ min: 4, max: 255 }, 'Username must be 4-10 characters long'),
       firstName: hasLength({ min: 2, max: 255 }, 'First Name must be 2-10 characters long'),
       lastName: hasLength({ min: 2, max: 255 }, 'Last Name must be 2-10 characters long'),
+      countryCode: isNotEmpty('Country Code is required'),
+      phone: isNotEmpty('Phone is required'),
       email: isEmail('Invalid email'),
       password: editFlag
         ? (value, fieldValues) => {
@@ -130,6 +133,14 @@ export default function UserGenerator({
           label="username"
           placeholder="Client username"
           {...UserGeneratorForm.getInputProps('username')}
+          required={!editFlag}
+        />
+
+        <TextInput
+          disabled={FormActions.isLoading}
+          label="Country Code"
+          placeholder="Client country code"
+          {...UserGeneratorForm.getInputProps('countryCode')}
           required={!editFlag}
         />
 
