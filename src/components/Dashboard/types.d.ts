@@ -1,5 +1,5 @@
 export interface ProductVariantProps {
-  id?: string;
+  _id?: string;
   images: string[];
   details: {
     key: string;

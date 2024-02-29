@@ -1,19 +1,56 @@
 import { useDisclosure } from '@mantine/hooks';
-import { AppShell, Burger, Divider, Group, UnstyledButton } from '@mantine/core';
+import {
+  AppShell,
+  Burger,
+  Divider,
+  Group,
+  Indicator,
+  Popover,
+  Text,
+  UnstyledButton,
+} from '@mantine/core';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { IconShoppingBag } from '@tabler/icons-react';
 import classes from '@/lib/styles/MobileNavbar.module.scss';
 import { selectUserInfo, signOut } from '@/lib/redux/User/UserSlice';
 import { ColorSchemeToggle } from '@/components';
+import { selectShoppingCart } from '@/lib/redux/ShoppingCart/ShoppingCart';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
   const userInfo = useSelector(selectUserInfo);
+  const shoppingCart = useSelector(selectShoppingCart);
   const dispatch = useDispatch();
   const renderLoginLogoutButton = userInfo?.token ? (
-    <UnstyledButton onClick={() => dispatch(signOut())} className={classes.control}>
-      Sign Out
-    </UnstyledButton>
+    <>
+      <UnstyledButton onClick={() => dispatch(signOut())} className={classes.control}>
+        Sign Out
+      </UnstyledButton>
+
+      <Popover width={200} position="bottom" withArrow shadow="md">
+        <Popover.Target>
+          <Indicator color={shoppingCart.shoppingCart.cartItems.length > 0 ? 'cyan' : 'gray'}>
+            <UnstyledButton>
+              <IconShoppingBag />
+            </UnstyledButton>
+          </Indicator>
+        </Popover.Target>
+        <Popover.Dropdown>
+          {shoppingCart.shoppingCart.cartItems.length > 0 ? (
+            <Group align="middle" px="sm" py="md">
+              <Text size="sm">{shoppingCart.shoppingCart.cartItems.length} items in your cart</Text>
+              <Link to="/cart">View Cart</Link>
+            </Group>
+          ) : (
+            <Group align="middle" px="sm" py="md">
+              <Text size="sm">Your cart is empty</Text>
+              <Link to="/admin/dashboard/products">Start Shopping</Link>
+            </Group>
+          )}
+        </Popover.Dropdown>
+      </Popover>
+    </>
   ) : (
     <>
       <UnstyledButton component={Link} to="/login" className={classes.control}>
@@ -25,6 +62,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </UnstyledButton>
     </>
   );
+
   const renderCreatorDashboardDropdown =
     userInfo?.token && userInfo.isCreator ? (
       <UnstyledButton component={Link} to="/creator/dashboard" className={classes.control}>
@@ -36,9 +74,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const renderAdminDashboardDropdown =
     userInfo?.token && userInfo.isAdmin ? (
-      <UnstyledButton component={Link} to="/admin/dashboard" className={classes.control}>
-        Admin Dashboard
-      </UnstyledButton>
+      <>
+        <UnstyledButton component={Link} to="/admin/dashboard" className={classes.control}>
+          Admin Dashboard
+        </UnstyledButton>
+      </>
     ) : (
       <></>
     );

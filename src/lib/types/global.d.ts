@@ -26,3 +26,28 @@ type CustomError = {
     };
   };
 };
+
+interface shippingAddressProps {
+  reciverName: string;
+  reciverPhone: string;
+  address: string;
+  country: string;
+  province: string;
+  city: string;
+  postalCode: string;
+  shippingMethod: string;
+}
+
+interface ShoppingCartType {
+  shoppingCart: {
+    cartItems: ProductType[];
+    paymentMethod: string;
+    shippingAddress: shippingAddressProps;
+  };
+}
+
+interface ShoppingCartPayloadProps {
+  variant: ProductVariantProps;
+  product: ProductEntityProps;
+  quantity: number;
+}

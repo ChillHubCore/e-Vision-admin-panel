@@ -9,25 +9,29 @@ import {
   Modal,
   NativeSelect,
   Pagination,
+  ScrollArea,
   Switch,
   Table,
+  Tooltip,
   UnstyledButton,
 } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { IconCheck, IconEdit, IconEye, IconX } from '@tabler/icons-react';
+import { IconCheck, IconEdit, IconEye, IconPlus, IconX } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'react-toastify';
 import { DatePickerInput } from '@mantine/dates';
 import { getData } from '@/lib/utils/getData';
 import { eAxios } from '@/lib/utils';
 import { ProductEntityProps } from '@/components/Dashboard/types';
+import { VariantCard } from '@/components/common';
 
 export default function ListProductsPage() {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
   const [opened, { open, close }] = useDisclosure(false);
+  const [selectOpened, { open: selectOpen, close: selectClose }] = useDisclosure(false);
   const [productId, setProductId] = useState<string>('');
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -37,6 +41,7 @@ export default function ListProductsPage() {
   const [nameSearchInput, setNameSearchInput] = useState<string>('');
   const [brandSearchInput, setBrandSearchInput] = useState<string>('');
   const [categorySearchInput, setCategorySearchInput] = useState<string>('');
+  const [selectedProduct, setSelectedProduct] = useState<ProductEntityProps | null>(null);
 
   const Products = useQuery(
     'search-product',
@@ -164,6 +169,36 @@ export default function ListProductsPage() {
           <IconEye color="green" />
         </UnstyledButton>
       </Table.Td>
+      <Table.Td>
+        <UnstyledButton
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+          onClick={() => {
+            setSelectedProduct(element);
+            selectOpen();
+          }}
+        >
+          <Tooltip label="Add To Cart">
+            <IconPlus />
+          </Tooltip>
+        </UnstyledButton>
+        <Modal opened={selectOpened} onClose={selectClose} title="Select Variants" centered>
+          <ScrollArea h="35rem">
+            <Flex direction="column" gap="sm">
+              {selectedProduct?.variants.map((variant) => (
+                <VariantCard
+                  key={variant._id}
+                  VariantData={variant}
+                  addFlag
+                  ProductData={selectedProduct}
+                />
+              ))}
+            </Flex>
+          </ScrollArea>
+        </Modal>
+      </Table.Td>
     </Table.Tr>
   ));
 
@@ -289,6 +324,7 @@ export default function ListProductsPage() {
               <Table.Th>Delete</Table.Th>
               <Table.Th>Edit</Table.Th>
               <Table.Th>Show</Table.Th>
+              <Table.Th>Add To Cart</Table.Th>
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>{rows}</Table.Tbody>
