@@ -9,6 +9,7 @@ import {
   Group,
   Image,
   Loader,
+  NumberInput,
   ScrollArea,
   TextInput,
   Textarea,
@@ -34,6 +35,7 @@ export default function GeneralSettingsPage() {
       extraCurrenciesSupported: [] as string[],
       description: '',
       logo: '',
+      taxRate: '',
       userStatus: [] as string[],
       contactAddresses: {
         physical: '',
@@ -59,6 +61,7 @@ export default function GeneralSettingsPage() {
       },
       description: hasLength({ min: 3, max: 255 }, 'Description must be 3-255 characters long'),
       logo: isNotEmpty('Logo is required'),
+      taxRate: isNotEmpty('Tax rate is required'),
       userStatus: (value) => {
         if (Array.isArray(value)) {
           return null;
@@ -288,6 +291,14 @@ export default function GeneralSettingsPage() {
             style={{ borderRadius: '1rem' }}
           />
         </Group>
+        <NumberInput
+          min={0}
+          max={100}
+          label="Tax Rate"
+          placeholder="Enter Tax Rate"
+          required
+          {...GeneralSettingsForm.getInputProps('taxRate')}
+        />
         <TextInput
           label="User Status"
           placeholder="Enter User Status"

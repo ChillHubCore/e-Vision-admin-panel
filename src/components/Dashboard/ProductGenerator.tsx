@@ -101,7 +101,7 @@ export default function ProductGenerator({
       soldAmount: 0,
       price: {
         regularPrice: 0,
-        discountedPrice: 0,
+        discountedPrice: false as false | number,
         specialOffers: [],
       },
       inStock: 0,
@@ -129,7 +129,7 @@ export default function ProductGenerator({
           return 'Type of Value is Wrong!';
         },
         discountedPrice: (value) => {
-          if (typeof value === 'number') {
+          if (typeof value === 'number' || value === false) {
             return null;
           }
           return 'Type of Value is Wrong!';
@@ -159,6 +159,7 @@ export default function ProductGenerator({
   const FormActions = useSubmit();
   const navigate = useNavigate();
   const uploadHandle = useUpload();
+  const [discountFlag, setDiscountFlag] = useState(false);
   const RichTextEditorRef = useRef(null);
   const [sharedDetail, setSharedDetail] = useState({
     key: '',
@@ -230,12 +231,29 @@ export default function ProductGenerator({
           required
           {...VariantGeneratorForm.getInputProps('price.regularPrice')}
         />
-        <TextInput
-          label="Discounted Price"
-          type="number"
-          placeholder="Enter Product Discounted Price"
-          {...VariantGeneratorForm.getInputProps('price.discountedPrice')}
+        <Switch
+          label="Does This Product Has a Discounted Price?"
+          defaultChecked={discountFlag}
+          onChange={() => {
+            setDiscountFlag(!discountFlag);
+            if (!discountFlag) {
+              VariantGeneratorForm.setFieldValue(
+                'price.discountedPrice',
+                VariantGeneratorForm.values.price.regularPrice
+              );
+            } else {
+              VariantGeneratorForm.setFieldValue('price.discountedPrice', false);
+            }
+          }}
         />
+        {discountFlag && (
+          <TextInput
+            label="Discounted Price"
+            type="number"
+            placeholder="Enter Product Discounted Price"
+            {...VariantGeneratorForm.getInputProps('price.discountedPrice')}
+          />
+        )}
         <TextInput
           label="In Stock"
           type="number"
@@ -371,7 +389,11 @@ export default function ProductGenerator({
             <Text>No Details Added Yet!</Text>
           )}
         </Box>
-        <Switch label="Availability" {...VariantGeneratorForm.getInputProps('availability')} />
+        <Switch
+          defaultChecked={VariantGeneratorForm.values.availability}
+          label="Availability"
+          {...VariantGeneratorForm.getInputProps('availability')}
+        />
         <Button
           onClick={() => {
             if (variantEditFlag) {
@@ -399,12 +421,12 @@ export default function ProductGenerator({
     </Modal>
   );
   const renderVariants =
-    ProductGeneratorForm.values.variants.length > 0 ? (
+    ProductGeneratorForm.values.variants.length > 0 && ProductData ? (
       ProductGeneratorForm.values.variants.map((variant: ProductVariantProps) => (
         <Grid.Col key={variant.SKU} span={{ base: 12, md: 6, lg: 3 }}>
           <Suspense>
             <Stack>
-              <VariantCard VariantData={variant} />
+              <VariantCard VariantData={variant} ProductData={ProductData} />
               <Group>
                 <Button
                   onClick={() => {
@@ -423,10 +445,11 @@ export default function ProductGenerator({
                       ...variant,
                       price: {
                         ...variant.price,
-                        discountedPrice: variant.price.discountedPrice || 0, // Assign a default value of 0 if discountedPrice is undefined
+                        discountedPrice: variant.price.discountedPrice || false, // Assign a default value of 0 if discountedPrice is undefined
                         specialOffers: [],
                       },
                     });
+                    setDiscountFlag(!!variant.price.discountedPrice);
                     open();
                   }}
                 >

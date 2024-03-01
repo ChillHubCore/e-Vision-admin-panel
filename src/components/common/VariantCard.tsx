@@ -39,6 +39,9 @@ export default function VariantCard({
         <Text size="sm" c="dimmed">
           Price : {VariantData.price.regularPrice.toLocaleString()}
         </Text>
+        <Text size="sm" c="dimmed">
+          Discounted Price : {VariantData.price.discountedPrice?.toLocaleString()}
+        </Text>
       </Stack>
       {addFlag && (
         <Button

@@ -24,18 +24,24 @@ export const shoppingCartSlice = createSlice({
     addToCart: (state, action: PayloadAction<ShoppingCartPayloadProps>) => {
       const { variant, product, quantity } = action.payload;
       const itemPayload = {
-        productId: product._id,
-        variantId: variant._id,
+        product,
+        variant,
         quantity,
       };
       const newState = state;
       const existingItemIndex = newState.shoppingCart.cartItems.findIndex(
-        (item: ShoppingCartPayloadProps) =>
-          item.product._id === product._id && item.variant._id === variant._id
+        (item: ShoppingCartPayloadProps) => item.variant._id === variant._id
       );
 
       if (existingItemIndex !== -1) {
-        newState.shoppingCart.cartItems[existingItemIndex].quantity += quantity;
+        const newQuantity = newState.shoppingCart.cartItems[existingItemIndex].quantity + quantity;
+        const { inStock } = newState.shoppingCart.cartItems[existingItemIndex].variant;
+
+        if (newQuantity <= inStock) {
+          newState.shoppingCart.cartItems[existingItemIndex].quantity = newQuantity;
+        } else {
+          toast.error('Not enough stock available');
+        }
       } else {
         newState.shoppingCart.cartItems.push(itemPayload);
       }
@@ -45,14 +51,17 @@ export const shoppingCartSlice = createSlice({
       }
     },
     removeFromCart: (state, action: PayloadAction<ShoppingCartPayloadProps>) => {
-      const { variant, product, quantity } = action.payload;
+      const { variant, quantity } = action.payload;
       const newState = state;
       const existingItemIndex = newState.shoppingCart.cartItems.findIndex(
-        (item: ShoppingCartPayloadProps) =>
-          item.product._id === product._id && item.variant._id === variant._id
+        (item: ShoppingCartPayloadProps) => item.variant._id === variant._id
       );
       if (existingItemIndex !== -1) {
-        newState.shoppingCart.cartItems[existingItemIndex].quantity -= quantity;
+        if (newState.shoppingCart.cartItems[existingItemIndex].quantity <= quantity) {
+          newState.shoppingCart.cartItems.splice(existingItemIndex, 1);
+        } else {
+          newState.shoppingCart.cartItems[existingItemIndex].quantity -= quantity;
+        }
       } else {
         toast.error('Item not found');
       }

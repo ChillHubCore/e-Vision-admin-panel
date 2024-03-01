@@ -40,7 +40,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {shoppingCart.shoppingCart.cartItems.length > 0 ? (
             <Group align="middle" px="sm" py="md">
               <Text size="sm">{shoppingCart.shoppingCart.cartItems.length} items in your cart</Text>
-              <Link to="/cart">View Cart</Link>
+              <Link to="/admin/dashboard/orders/create">View Cart</Link>
             </Group>
           ) : (
             <Group align="middle" px="sm" py="md">
