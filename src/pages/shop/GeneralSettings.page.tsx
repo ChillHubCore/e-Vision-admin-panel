@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Chip,
   Container,
   Divider,
@@ -9,8 +10,10 @@ import {
   Group,
   Image,
   Loader,
+  Modal,
   NumberInput,
   ScrollArea,
+  Text,
   TextInput,
   Textarea,
   Title,
@@ -22,6 +25,7 @@ import { Icon3dCubeSphere, IconFileLike, IconPlus } from '@tabler/icons-react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useQuery } from 'react-query';
+import { useDisclosure } from '@mantine/hooks';
 import { useSubmit, useUpload } from '@/lib/hooks';
 import { getData } from '@/lib/utils/getData';
 import { ShopSettingsProps } from './types';
@@ -46,6 +50,12 @@ export default function GeneralSettingsPage() {
       },
       postalOptions: [] as string[],
       paymentOptions: [] as string[],
+      CardToCard: [] as unknown as {
+        cardNumber: string;
+        cardShabaNumber: string;
+        cardOwner: string;
+        available: boolean;
+      }[],
     },
     validate: {
       name: hasLength({ min: 3, max: 255 }, 'Name must be 3-255 characters long'),
@@ -94,6 +104,13 @@ export default function GeneralSettingsPage() {
   const [PostalOptionsInputValue, setPostalOptionsInputValue] = useState('');
   const [PaymentOptionsInputValue, setPaymentOptionsInputValue] = useState('');
   const [versionSelected, setVersionSelected] = useState('+');
+  const [opened, { open, close }] = useDisclosure(false);
+  const [CardInfoInputs, setCardInfoInputs] = useState({
+    cardNumber: '',
+    cardShabaNumber: '',
+    cardOwner: '',
+    available: false,
+  });
   const uploadHandle = useUpload();
   const FormActions = useSubmit();
   const ShopSettingsData = useQuery('general-settings', () => getData('/app'), {
@@ -524,6 +541,107 @@ export default function GeneralSettingsPage() {
             <p>No Payment Options</p>
           )}
         </Box>
+
+        <Divider my="md" />
+        <Text my="sm">Manage Card Information For Card-To-Card Payment Option.</Text>
+        <Box my="sm">
+          <Button onClick={open}>Add a Card Information</Button>
+          <Modal opened={opened} onClose={close} title="Add New Card Information">
+            <Flex direction="column" gap="md">
+              <p>Fill The Card Information</p>
+              <TextInput
+                label="Card Number"
+                placeholder="Enter Card Number"
+                required
+                value={CardInfoInputs.cardNumber}
+                onChange={(e) =>
+                  setCardInfoInputs({ ...CardInfoInputs, cardNumber: e.currentTarget.value })
+                }
+              />
+              <TextInput
+                label="Card Shaba Number"
+                placeholder="Enter Card Shaba Number"
+                required
+                value={CardInfoInputs.cardShabaNumber}
+                onChange={(e) =>
+                  setCardInfoInputs({ ...CardInfoInputs, cardShabaNumber: e.currentTarget.value })
+                }
+              />
+              <TextInput
+                label="Card Owner"
+                placeholder="Enter Card Owner"
+                required
+                value={CardInfoInputs.cardOwner}
+                onChange={(e) =>
+                  setCardInfoInputs({ ...CardInfoInputs, cardOwner: e.currentTarget.value })
+                }
+              />
+              <Checkbox
+                label="Available"
+                checked={CardInfoInputs.available}
+                onChange={(e) =>
+                  setCardInfoInputs({ ...CardInfoInputs, available: e.currentTarget.checked })
+                }
+              />
+              <Button
+                onClick={() => {
+                  const existingCard = GeneralSettingsForm.values.CardToCard.find(
+                    (card) => card.cardNumber === CardInfoInputs.cardNumber
+                  );
+                  if (existingCard) {
+                    // Display error toast
+                    toast.error('Card with same card number already exists');
+                  } else {
+                    GeneralSettingsForm.setFieldValue('CardToCard', [
+                      ...GeneralSettingsForm.values.CardToCard,
+                      CardInfoInputs,
+                    ]);
+                    setCardInfoInputs({
+                      cardNumber: '',
+                      cardShabaNumber: '',
+                      cardOwner: '',
+                      available: false,
+                    });
+                    close();
+                  }
+                }}
+              >
+                Submit
+              </Button>
+            </Flex>
+          </Modal>
+        </Box>
+
+        <Divider my="md" />
+        {GeneralSettingsForm.values.CardToCard.length > 0 && (
+          <Box>
+            {GeneralSettingsForm.values.CardToCard.map(
+              (card: {
+                cardNumber: string;
+                cardShabaNumber: string;
+                cardOwner: string;
+                available: boolean;
+              }) => (
+                <Group key={card.cardNumber} justify="space-between" align="center">
+                  <p>{card.cardNumber}</p>
+                  <p>{card.cardShabaNumber}</p>
+                  <p>{card.cardOwner}</p>
+                  <p>{card.available ? 'Available' : 'Not Available'}</p>
+                  <Button
+                    onClick={() => {
+                      GeneralSettingsForm.setFieldValue(
+                        'CardToCard',
+                        GeneralSettingsForm.values.CardToCard.filter((c) => c !== card)
+                      );
+                    }}
+                  >
+                    Remove
+                  </Button>
+                </Group>
+              )
+            )}
+          </Box>
+        )}
 
         <Divider my="md" />
         <Button type="submit" style={{ alignSelf: 'flex-end' }}>

@@ -5,14 +5,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getData } from '@/lib/utils/getData';
 import { useSubmit } from '@/lib/hooks';
 
-export interface TransactionEntityProps {
-  user: string;
-  order: string;
-  status: 'pending' | 'in-process' | 'success' | 'failed';
-  description: string;
-  paymentResult?: object;
-}
-
 export default function CreateTransactionPage() {
   const { id } = useParams();
 
@@ -43,7 +35,7 @@ export default function CreateTransactionPage() {
       () => navigate('/admin/dashboard/transactions')
     );
   };
-  return !id ? (
+  return id === undefined ? (
     <Button component={Link} to="/admin/dashboard/orders">
       Please Choose an Order First Before Making a Transaction!
     </Button>
@@ -64,6 +56,7 @@ export default function CreateTransactionPage() {
           />
           <Button
             type="submit"
+            my="md"
             loading={FormActions.isLoading}
             onClick={() => {
               CreateTransactionForm.setFieldValue('user', OrderData.data.user._id);

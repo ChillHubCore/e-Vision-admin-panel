@@ -193,7 +193,6 @@ export default function ProductGenerator({
   });
 
   const handleSubmit = () => {
-    console.log('#traceback170', ProductGeneratorForm.values);
     if (editFlag) {
       FormActions.sendRequest(
         `/product/${ProductData?._id}`,

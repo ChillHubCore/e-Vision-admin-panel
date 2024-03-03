@@ -338,6 +338,22 @@ export const AdminRoutes = (
       }
     />
     <Route
+      path="/admin/dashboard/transactions/create/"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <CreateTransactionPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
       path="/admin/dashboard/transactions/create/:id"
       element={
         <AdminProtected>

@@ -73,3 +73,16 @@ export interface OrderEntityProps {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface TransactionEntityProps {
+  _id: string;
+  user: { _id: string; username: string };
+  creator: { _id: string; username: string };
+  updatedBy: { _id: string; username: string };
+  order: string;
+  status: 'pending' | 'in-process' | 'success' | 'failed';
+  description: string;
+  paymentResult?: object;
+  createdAt: string;
+  updatedAt: string;
+}
