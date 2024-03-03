@@ -1,5 +1,33 @@
-import React from 'react';
+import { useQuery } from 'react-query';
+import { useParams } from 'react-router-dom';
+import { Alert, Loader, LoadingOverlay } from '@mantine/core';
+import { Suspense } from 'react';
+import { getData } from '@/lib/utils/getData';
+import { OrderGenerator } from '@/components/Dashboard';
+import { OrderEntityProps } from '@/components/Dashboard/types';
 
 export default function EditOrderPage() {
-  return <div>EditOrderPage</div>;
+  const { id } = useParams();
+
+  const OrderData = useQuery(`order-data-${id}`, () => getData(`/order/${id}`), { cacheTime: 0 });
+  const updatedCartItems = (OrderData.data as OrderEntityProps)?.cartItems.map((item) => {
+    const variant = item.product.variants.find(
+      (v) => v._id?.toString() === item.variant.toString()
+    );
+    return {
+      ...item,
+      variant,
+    };
+  });
+  const updatedOrderData = { ...OrderData.data, cartItems: updatedCartItems };
+
+  return OrderData.isLoading ? (
+    <LoadingOverlay />
+  ) : OrderData.isError ? (
+    <Alert color="red">Something Went Wrong</Alert>
+  ) : (
+    <Suspense fallback={<Loader />}>
+      <OrderGenerator cartItems={updatedCartItems} OrderData={updatedOrderData} editFlag />
+    </Suspense>
+  );
 }

@@ -37,6 +37,7 @@ export interface ProductEntityProps {
 }
 
 export interface OrderEntityProps {
+  _id: string;
   cartItems: {
     quantity: number;
     product: ProductEntityProps;
@@ -59,15 +60,9 @@ export interface OrderEntityProps {
   estimatedDeliveryDate?: Date;
   actualDeliveryDate?: Date;
   paymentMethod: 'Card-To-Card';
-  paymentResult?: {
-    id: string;
-    status: string;
-    update_time: string;
-    email_address: string;
-  };
   itemsPrice: number;
   taxPrice: number;
-  user: string;
+  user: string | { _id: string; username: string };
   isPaid: boolean;
   paidAt?: Date;
   isDelivered: boolean;

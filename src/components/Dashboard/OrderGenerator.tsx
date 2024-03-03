@@ -29,10 +29,12 @@ import { useSubmit } from '@/lib/hooks';
 
 export default function OrderGenerator({
   cartItems,
-  // OrderData,
+  OrderData,
+  editFlag,
 }: {
   cartItems: ShoppingCartPayloadProps[];
-  // OrderData?: OrderEntityProps;
+  OrderData?: OrderEntityProps;
+  editFlag?: boolean;
 }) {
   const dispatch = useDispatch();
   const [pageNumber, setPageNumber] = useState(1);
@@ -45,11 +47,13 @@ export default function OrderGenerator({
   const OrderGeneratorForm = useForm({
     initialValues: {
       cartItems: cartItems as ShoppingCartPayloadProps[],
-      shippingAddress: {} as OrderEntityProps['shippingAddress'],
-      notes: '',
-      paymentMethod: '',
-      user: '',
-      promotions: [] as string[],
+      shippingAddress: editFlag
+        ? OrderData?.shippingAddress
+        : ({} as OrderEntityProps['shippingAddress']),
+      notes: editFlag ? OrderData?.notes : '',
+      paymentMethod: editFlag ? OrderData?.paymentMethod : '',
+      user: editFlag ? (OrderData?.user as { _id: string; username: string })._id : '',
+      promotions: editFlag ? OrderData?.promotions : ([] as string[]),
     },
     validate: {},
   });
@@ -63,14 +67,23 @@ export default function OrderGenerator({
     setPageNumber(event);
   };
   const handleSubmit = () => {
-    FormActions.sendRequest(
-      '/order/admin',
-      OrderGeneratorForm,
-      'post',
-      'Order Created Successfully!',
-      'Failed to create order! Please try again.',
-      () => navigate('/admin/dashboard/orders')
-    );
+    editFlag
+      ? FormActions.sendRequest(
+          `/order/admin/${OrderData?._id}`,
+          OrderGeneratorForm,
+          'put',
+          'Order Edited Successfully!',
+          'Failed to edit order! Please try again.',
+          () => navigate('/admin/dashboard/orders')
+        )
+      : FormActions.sendRequest(
+          '/order/admin',
+          OrderGeneratorForm,
+          'post',
+          'Order Created Successfully!',
+          'Failed to create order! Please try again.',
+          () => navigate('/admin/dashboard/orders')
+        );
   };
   useEffect(() => {
     Users.refetch();
@@ -106,37 +119,26 @@ export default function OrderGenerator({
               my="md"
               p="xs"
             >
-              <UnstyledButton onClick={() => dispatch(addToCart({ ...item, quantity: 1 }))}>
-                <IconPlus color="green" />
-              </UnstyledButton>
+              {!editFlag && (
+                <UnstyledButton onClick={() => dispatch(addToCart({ ...item, quantity: 1 }))}>
+                  <IconPlus color="green" />
+                </UnstyledButton>
+              )}
               <Text ta="center">Quantity : {item.quantity}</Text>
-              <UnstyledButton onClick={() => dispatch(removeFromCart({ ...item, quantity: 1 }))}>
-                <IconMinus color="red" />
-              </UnstyledButton>
+              {!editFlag && (
+                <UnstyledButton onClick={() => dispatch(removeFromCart({ ...item, quantity: 1 }))}>
+                  <IconMinus color="red" />
+                </UnstyledButton>
+              )}
             </Flex>
           </Grid.Col>
         ))}
       </Grid>
-      <Text>
+
+      <Text my="sm">
         Total Price :{' '}
-        {cartItems.reduce(
-          (acc, item) =>
-            acc +
-            (item.variant.price.discountedPrice
-              ? item.variant.price.discountedPrice
-              : item.variant.price.regularPrice) *
-              item.quantity,
-          0
-        )}
-      </Text>
-      <Text>
-        Total Price (Without Discount):{' '}
-        {cartItems.reduce((acc, item) => acc + item.variant.price.regularPrice * item.quantity, 0)}
-      </Text>
-      <Text>
-        Total Discount :{' '}
-        {cartItems.reduce((acc, item) => acc + item.variant.price.regularPrice * item.quantity, 0) -
-          cartItems.reduce(
+        {cartItems
+          .reduce(
             (acc, item) =>
               acc +
               (item.variant.price.discountedPrice
@@ -144,10 +146,37 @@ export default function OrderGenerator({
                 : item.variant.price.regularPrice) *
                 item.quantity,
             0
-          )}
+          )
+          .toLocaleString()}
+      </Text>
+      <Text>
+        Total Price (Without Discount):{' '}
+        {cartItems
+          .reduce((acc, item) => acc + (item.variant.price.regularPrice ?? 0) * item.quantity, 0)
+          .toLocaleString()}
+      </Text>
+      <Text>
+        Total Discount :{' '}
+        {cartItems
+          .reduce(
+            (acc, item) =>
+              acc +
+              ((item.variant.price.regularPrice ?? 0) -
+                (item.variant.price.discountedPrice
+                  ? item.variant.price.discountedPrice
+                  : item.variant.price.regularPrice)) *
+                item.quantity,
+            0
+          )
+          .toLocaleString()}
       </Text>
       <Box component="form" onSubmit={OrderGeneratorForm.onSubmit(handleSubmit)}>
-        <Input value={searchString} onChange={(e) => setSearchString(e.target.value)} my="md" />
+        <Input
+          placeholder="Search In Users..."
+          value={searchString}
+          onChange={(e) => setSearchString(e.target.value)}
+          my="md"
+        />
         {Users.isLoading ? (
           <Loader />
         ) : Users.isError ? (
@@ -234,7 +263,7 @@ export default function OrderGenerator({
           <Textarea placeholder="Notes" {...OrderGeneratorForm.getInputProps('notes')} />
         </Box>
         <Button type="submit" my="md">
-          Create Order
+          {editFlag ? 'Update Order' : 'Create Order'}
         </Button>
       </Box>
     </Container>

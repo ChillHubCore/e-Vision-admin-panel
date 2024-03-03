@@ -18,3 +18,7 @@ export const EditOrderPage = lazy(() => import('./order/EditOrder.page'));
 export const ListOrdersPage = lazy(() => import('./order/ListOrders.page'));
 export const ShowOrderPage = lazy(() => import('./order/ShowOrder.page'));
 export const CreateOrderPage = lazy(() => import('./order/CreateOrder.page'));
+export const CreateTransactionPage = lazy(() => import('./transaction/CreateTransaction.page'));
+export const EditTransactionPage = lazy(() => import('./transaction/EditTransaction.page'));
+export const ListTransactionsPage = lazy(() => import('./transaction/ListTransactions.page'));
+export const ShowTransactionPage = lazy(() => import('./transaction/ShowTransaction.page'));

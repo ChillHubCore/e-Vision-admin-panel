@@ -11,6 +11,9 @@ const localStorageShoppingCart = {
   shippingAddress: localStorage.getItem('shoppingCart')
     ? JSON.parse(localStorage.getItem('shoppingCart') as string).shippingAddress
     : [],
+  cartItemsEditState: localStorage.getItem('shoppingCart')
+    ? JSON.parse(localStorage.getItem('shoppingCart') as string).cartItemsEditState
+    : false,
 };
 
 const initialState = {

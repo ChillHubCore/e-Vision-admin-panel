@@ -5,19 +5,23 @@ import {
   AdminDashboardPage,
   CreateOrderPage,
   CreateProductPage,
+  CreateTransactionPage,
   CreateUserPage,
   CreatorDashboardPage,
   EditOrderPage,
   EditProductPage,
+  EditTransactionPage,
   EditUserPage,
   GeneralSettingsPage,
   HomePage,
   ListOrdersPage,
   ListProductsPage,
+  ListTransactionsPage,
   ListUsersPage,
   LoginForm,
   ShowOrderPage,
   ShowProductPage,
+  ShowTransactionPage,
   ShowUserPage,
 } from './pages';
 import { AdminProtected, CreatorProtected, NoAuth } from './components/Authentication';
@@ -310,6 +314,73 @@ export const AdminRoutes = (
             }
           >
             <EditOrderPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    {/* transaction crud */}
+    <Route
+      path="/admin/dashboard/transactions"
+      element={
+        <AdminProtected>
+          <AdminLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <ListTransactionsPage />
+            </Suspense>
+          </AdminLayout>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/transactions/create/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <CreateTransactionPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/transactions/show/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <ShowTransactionPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/transactions/edit/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <EditTransactionPage />
           </Suspense>
         </AdminProtected>
       }
