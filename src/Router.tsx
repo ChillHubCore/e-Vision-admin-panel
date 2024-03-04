@@ -3,29 +3,33 @@ import { Suspense } from 'react';
 import { Center, Loader } from '@mantine/core';
 import {
   AdminDashboardPage,
+  CreateBlogPage,
   CreateOrderPage,
   CreateProductPage,
   CreateTransactionPage,
   CreateUserPage,
   CreatorDashboardPage,
+  EditBlogPage,
   EditOrderPage,
   EditProductPage,
   EditTransactionPage,
   EditUserPage,
   GeneralSettingsPage,
   HomePage,
+  ListBlogsPage,
   ListOrdersPage,
   ListProductsPage,
   ListTransactionsPage,
   ListUsersPage,
   LoginForm,
+  ShowBlogPage,
   ShowOrderPage,
   ShowProductPage,
   ShowTransactionPage,
   ShowUserPage,
+  SignupPage,
 } from './pages';
 import { AdminProtected, CreatorProtected, NoAuth } from './components/Authentication';
-import SignupPage from './pages/Signup.page';
 import AdminLayout from './lib/HOC/AdminLayout';
 
 export const PublicRoutes = (
@@ -397,6 +401,73 @@ export const AdminRoutes = (
             }
           >
             <EditTransactionPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    {/* blogs crud */}
+    <Route
+      path="/admin/dashboard/blogs"
+      element={
+        <AdminProtected>
+          <AdminLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <ListBlogsPage />
+            </Suspense>
+          </AdminLayout>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/blogs/create"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <CreateBlogPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/blogs/show/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <ShowBlogPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/blogs/edit/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <EditBlogPage />
           </Suspense>
         </AdminProtected>
       }

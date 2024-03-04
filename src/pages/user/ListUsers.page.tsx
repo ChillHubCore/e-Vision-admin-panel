@@ -122,7 +122,7 @@ export default function ListUsersPage() {
     }
   }
 
-  const rows = Users.data.users.map((element: UserEntityProps) => (
+  const rows = Users.data?.users?.map((element: UserEntityProps) => (
     <Table.Tr key={element.phone}>
       <Table.Td>{element.firstName}</Table.Td>
       <Table.Td>{element.lastName}</Table.Td>

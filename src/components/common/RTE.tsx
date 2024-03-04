@@ -26,7 +26,7 @@ export const RTE = forwardRef((props: RTEProps, ref) => {
   }));
 
   return (
-    <RichTextEditor editor={editor}>
+    <RichTextEditor editor={editor} style={{ minHeight: '20rem' }}>
       <RichTextEditor.Toolbar sticky stickyOffset={60}>
         <RichTextEditor.ControlsGroup>
           <RichTextEditor.ColorPicker

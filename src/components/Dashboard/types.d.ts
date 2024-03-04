@@ -86,3 +86,15 @@ export interface TransactionEntityProps {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface BlogEntityProps {
+  _id: string;
+  title: string;
+  content: string;
+  author: {
+    username: string;
+    _id: string;
+  };
+  updatedAt: string;
+  createdAt: string;
+}

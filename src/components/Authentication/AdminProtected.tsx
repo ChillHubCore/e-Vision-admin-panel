@@ -12,7 +12,7 @@ const AdminProtected: React.FC<AdminProtectedProps> = ({ children }) => {
   const navigate = useNavigate();
   const userInfo = useSelector(selectUserInfo);
 
-  if (!userInfo || !userInfo.isAdmin) {
+  if (!userInfo?.token || !userInfo.isAdmin) {
     toast.error('You are not authorized!');
 
     navigate('/');

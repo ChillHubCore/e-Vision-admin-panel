@@ -12,7 +12,7 @@ const AuthProtected: React.FC<AuthProtectedProps> = ({ children }) => {
   const navigate = useNavigate();
   const userInfo = useSelector(selectUserInfo);
 
-  if (!userInfo) {
+  if (!userInfo?.token) {
     toast.error('You are not authorized!');
 
     navigate('/');

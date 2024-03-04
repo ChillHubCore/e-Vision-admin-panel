@@ -22,3 +22,7 @@ export const CreateTransactionPage = lazy(() => import('./transaction/CreateTran
 export const EditTransactionPage = lazy(() => import('./transaction/EditTransaction.page'));
 export const ListTransactionsPage = lazy(() => import('./transaction/ListTransactions.page'));
 export const ShowTransactionPage = lazy(() => import('./transaction/ShowTransaction.page'));
+export const CreateBlogPage = lazy(() => import('./blog/CreateBlog.page'));
+export const EditBlogPage = lazy(() => import('./blog/EditBlog.page'));
+export const ListBlogsPage = lazy(() => import('./blog/ListBlogs.page'));
+export const ShowBlogPage = lazy(() => import('./blog/ShowBlog.page'));

@@ -12,7 +12,7 @@ const CreatorProtected: React.FC<CreatorProtectedProps> = ({ children }) => {
   const navigate = useNavigate();
   const userInfo = useSelector(selectUserInfo);
 
-  if (!userInfo || !userInfo.isCreator) {
+  if (!userInfo?.token || !userInfo.isCreator) {
     toast.error('You are not authorized!');
 
     navigate('/');
