@@ -1,7 +1,8 @@
-import { TextInput, PasswordInput, Button, Center, Box, Title } from '@mantine/core';
+import { TextInput, PasswordInput, Button, Center, Box, Title, Loader } from '@mantine/core';
 import { isEmail, isNotEmpty, useForm } from '@mantine/form';
 import { useDispatch } from 'react-redux';
 // import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSubmit } from '@/lib/hooks';
 import { signIn } from '@/lib/redux/User/UserSlice';
 
@@ -29,9 +30,16 @@ const LoginPage = () => {
       'Failed to sign in! Please try again.'
     );
   };
-  if (FormActions.success) dispatch(signIn(FormActions.data as UserInfo));
 
-  return (
+  useEffect(() => {
+    if (FormActions.success && FormActions.data) {
+      dispatch(signIn(FormActions.data as UserInfo));
+    }
+  }, [FormActions.data]);
+
+  return FormActions.isLoading ? (
+    <Loader />
+  ) : (
     <Center>
       <Box
         w={{ base: '100%', sm: '80%', md: '60%', lg: '40%', xl: '30%' }}

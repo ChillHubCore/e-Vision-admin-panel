@@ -22,10 +22,12 @@ import { IconCheck, IconEdit, IconEye, IconPlus, IconX } from '@tabler/icons-rea
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'react-toastify';
 import { DatePickerInput } from '@mantine/dates';
+import { useSelector } from 'react-redux';
 import { getData } from '@/lib/utils/getData';
 import { eAxios } from '@/lib/utils';
 import { ProductEntityProps } from '@/components/Dashboard/types';
 import { VariantCard } from '@/components/common';
+import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 
 export default function ListProductsPage() {
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -42,6 +44,7 @@ export default function ListProductsPage() {
   const [brandSearchInput, setBrandSearchInput] = useState<string>('');
   const [categorySearchInput, setCategorySearchInput] = useState<string>('');
   const [selectedProduct, setSelectedProduct] = useState<ProductEntityProps | null>(null);
+  const userInfo = useSelector(selectUserInfo);
 
   const Products = useQuery(
     'search-product',
@@ -51,7 +54,8 @@ export default function ListProductsPage() {
           timeCreatedSearchInputGTE ? timeCreatedSearchInputGTE?.toISOString() : ''
         }&timeCreatedLTE=${
           timeCreatedSearchInputLTE ? timeCreatedSearchInputLTE?.toISOString() : ''
-        }`
+        }`,
+        userInfo?.token
       ),
     { cacheTime: 0 }
   );
@@ -78,7 +82,11 @@ export default function ListProductsPage() {
   async function DeleteOneProduct({ id }: { id: string }) {
     setDeleteLoading(true);
     try {
-      const response = await eAxios.delete(`/product/${id}`);
+      const response = await eAxios.delete(`/product/${id}`, {
+        headers: {
+          Authorization: `Bearer ${userInfo?.token || localStorage.getItem('access_token')}`,
+        },
+      });
       toast.success(response.data.message);
       Products.refetch();
     } catch (error) {

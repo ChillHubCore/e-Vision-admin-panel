@@ -11,6 +11,8 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     signIn: (state, action: PayloadAction<UserInfo>) => {
+      console.log(action.payload);
+      console.log(state);
       const newState = state;
       newState.userInfo = action.payload;
       localStorage.setItem('userInfo', JSON.stringify(newState.userInfo));

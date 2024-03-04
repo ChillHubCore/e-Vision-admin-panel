@@ -2,13 +2,17 @@ import { Box, Button, Container, Input, LoadingOverlay, Title } from '@mantine/c
 import { isNotEmpty, useForm } from '@mantine/form';
 import { useQuery } from 'react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { getData } from '@/lib/utils/getData';
 import { useSubmit } from '@/lib/hooks';
+import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 
 export default function CreateTransactionPage() {
   const { id } = useParams();
-
-  const OrderData = useQuery(`order-data-${id}`, () => getData(`/order/${id}`), { cacheTime: 0 });
+  const userInfo = useSelector(selectUserInfo);
+  const OrderData = useQuery(`order-data-${id}`, () => getData(`/order/${id}`, userInfo?.token), {
+    cacheTime: 0,
+  });
 
   const CreateTransactionForm = useForm({
     initialValues: {

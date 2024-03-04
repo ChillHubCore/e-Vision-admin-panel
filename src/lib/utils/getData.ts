@@ -1,6 +1,7 @@
-const token = localStorage.getItem('access_token') ? localStorage.getItem('access_token') : '';
-
-export async function getData(query?: string) {
+export async function getData(query?: string, passedToken?: string) {
+  const token = localStorage.getItem('access_token')
+    ? localStorage.getItem('access_token')
+    : passedToken;
   const api = import.meta.env.VITE_API_URL || 'https://apiservices.chill-hub.ir';
   const res = await fetch((api + query) as string, {
     headers: {

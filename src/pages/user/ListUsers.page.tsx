@@ -20,8 +20,10 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
 import { DatePickerInput } from '@mantine/dates';
+import { useSelector } from 'react-redux';
 import { getData } from '@/lib/utils/getData';
 import { eAxios } from '@/lib/utils';
+import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 
 export interface UserEntityProps {
   _id: string;
@@ -64,6 +66,7 @@ export default function ListUsersPage() {
   const [timeCreatedSearchInputLTE, setTimeCreatedSearchInputLTE] = useState<Date | null>();
   const [desc, setDesc] = useState<boolean>(true);
   const [opened, { open, close }] = useDisclosure(false);
+  const userInfo = useSelector(selectUserInfo);
 
   const navigate = useNavigate();
 
@@ -75,7 +78,8 @@ export default function ListUsersPage() {
           timeCreatedSearchInputGTE ? timeCreatedSearchInputGTE?.toISOString() : ''
         }&timeCreatedLTE=${
           timeCreatedSearchInputLTE ? timeCreatedSearchInputLTE?.toISOString() : ''
-        }&desc=${desc}&countryCode=${countryCodeSearchInput}`
+        }&desc=${desc}&countryCode=${countryCodeSearchInput}`,
+        userInfo?.token
       ),
     { cacheTime: 0 }
   );
@@ -104,7 +108,11 @@ export default function ListUsersPage() {
   async function DeleteOneUser({ id }: { id: string }) {
     setDeleteLoading(true);
     try {
-      const response = await eAxios.delete(`/user/${id}`);
+      const response = await eAxios.delete(`/user/${id}`, {
+        headers: {
+          Authorization: `Bearer ${userInfo?.token || localStorage.getItem('access_token')}`,
+        },
+      });
       toast.success(response.data.message);
       Users.refetch();
     } catch (error) {

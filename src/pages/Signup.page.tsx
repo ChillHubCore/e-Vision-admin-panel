@@ -1,6 +1,7 @@
 import { TextInput, PasswordInput, Button, Box, Title, Center } from '@mantine/core';
 import { hasLength, isEmail, matches, matchesField, useForm } from '@mantine/form';
 import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import { useSubmit } from '@/lib/hooks';
 import { signIn } from '@/lib/redux/User/UserSlice';
 
@@ -51,7 +52,11 @@ const SignupPage: React.FC = () => {
     );
   };
 
-  if (FormActions.success) dispatch(signIn(FormActions.data as UserInfo));
+  useEffect(() => {
+    if (FormActions.success && FormActions.data) {
+      dispatch(signIn(FormActions.data as UserInfo));
+    }
+  }, [FormActions.data]);
 
   return (
     <Center>

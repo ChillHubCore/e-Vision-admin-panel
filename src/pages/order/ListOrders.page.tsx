@@ -24,9 +24,11 @@ import { DatePickerInput } from '@mantine/dates';
 import { IconCheck, IconEdit, IconEye, IconX } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 import { getData } from '@/lib/utils/getData';
 import { OrderEntityProps } from '@/components/Dashboard/types';
 import { eAxios } from '@/lib/utils';
+import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 
 export default function ListOrdersPage() {
   const [pageNumber, setPageNumber] = React.useState(1);
@@ -62,6 +64,7 @@ export default function ListOrdersPage() {
   const [opened, { open, close }] = useDisclosure(false);
   const [deleteLoading, setDeleteLoading] = React.useState(false);
   const [orderId, setOrderId] = React.useState('');
+  const userInfo = useSelector(selectUserInfo);
 
   const Orders = useQuery(
     'search-orders',
@@ -79,7 +82,8 @@ export default function ListOrdersPage() {
           shippingMethod !== 'all' ? shippingMethod : ''
         }&paymentMethod=${
           paymentMethod !== 'all' ? paymentMethod : ''
-        }&promotions=${promotionsUsed.join(',')}`
+        }&promotions=${promotionsUsed.join(',')}`,
+        userInfo?.token
       ),
     { cacheTime: 0 }
   );
@@ -91,7 +95,11 @@ export default function ListOrdersPage() {
   async function DeleteOneOrder({ id }: { id: string }) {
     setDeleteLoading(true);
     try {
-      const response = await eAxios.delete(`/order/${id}`);
+      const response = await eAxios.delete(`/order/${id}`, {
+        headers: {
+          Authorization: `Bearer ${userInfo?.token || localStorage.getItem('access_token')}`,
+        },
+      });
       toast.success(response.data.message);
       Orders.refetch();
     } catch (error) {

@@ -1,15 +1,18 @@
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { Alert, Loader, LoadingOverlay } from '@mantine/core';
-
 import { Suspense } from 'react';
+import { useSelector } from 'react-redux';
 import { getData } from '@/lib/utils/getData';
 import { UserGenerator } from '@/components/Dashboard';
+import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 
 export default function EditUserPage() {
   const { id } = useParams();
-
-  const UserData = useQuery(`user-data-${id}`, () => getData(`/user/${id}`), { cacheTime: 0 });
+  const userInfo = useSelector(selectUserInfo);
+  const UserData = useQuery(`user-data-${id}`, () => getData(`/user/${id}`, userInfo?.token), {
+    cacheTime: 0,
+  });
 
   return UserData.isLoading ? (
     <LoadingOverlay />

@@ -26,10 +26,12 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { useQuery } from 'react-query';
 import { useDisclosure } from '@mantine/hooks';
+import { useSelector } from 'react-redux';
 import { useSubmit, useUpload } from '@/lib/hooks';
 import { getData } from '@/lib/utils/getData';
 import { ShopSettingsProps } from './types';
 import blackBG from '@/assets/black-bg.png';
+import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 
 export default function GeneralSettingsPage() {
   const GeneralSettingsForm = useForm({
@@ -113,7 +115,8 @@ export default function GeneralSettingsPage() {
   });
   const uploadHandle = useUpload();
   const FormActions = useSubmit();
-  const ShopSettingsData = useQuery('general-settings', () => getData('/app'), {
+  const userInfo = useSelector(selectUserInfo);
+  const ShopSettingsData = useQuery('general-settings', () => getData('/app', userInfo?.token), {
     cacheTime: 0,
   });
   const handleSubmit = () => {

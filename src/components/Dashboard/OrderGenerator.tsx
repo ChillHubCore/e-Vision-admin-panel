@@ -16,16 +16,17 @@ import {
 } from '@mantine/core';
 import { Suspense, useEffect, useState } from 'react';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
 import { useForm } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
 import { VariantCard } from '../common';
-import { addToCart, removeFromCart } from '@/lib/redux/ShoppingCart/ShoppingCart';
+import { addToCart, clearCart, removeFromCart } from '@/lib/redux/ShoppingCart/ShoppingCart';
 import { getData } from '@/lib/utils/getData';
 import { UserEntityProps } from '@/pages/user/ListUsers.page';
 import { OrderEntityProps } from './types';
 import { useSubmit } from '@/lib/hooks';
+import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 
 export default function OrderGenerator({
   cartItems,
@@ -41,6 +42,7 @@ export default function OrderGenerator({
   const [searchString, setSearchString] = useState('');
   const FormActions = useSubmit();
   const navigate = useNavigate();
+  const userInfo = useSelector(selectUserInfo);
 
   if (cartItems.length === 0) return <Alert color="orange">Cart is Empty</Alert>;
 
@@ -60,7 +62,11 @@ export default function OrderGenerator({
 
   const Users = useQuery(
     'search-users',
-    () => getData(`/user?pageNumber=${pageNumber}&limit=${10}&searchString=${searchString}`),
+    () =>
+      getData(
+        `/user?pageNumber=${pageNumber}&limit=${10}&searchString=${searchString}`,
+        userInfo?.token
+      ),
     { cacheTime: 0 }
   );
   const handlePageChange = (event: number) => {
@@ -74,7 +80,10 @@ export default function OrderGenerator({
           'put',
           'Order Edited Successfully!',
           'Failed to edit order! Please try again.',
-          () => navigate('/admin/dashboard/orders')
+          () => {
+            navigate('/admin/dashboard/orders');
+            dispatch(clearCart());
+          }
         )
       : FormActions.sendRequest(
           '/order/admin',
@@ -82,7 +91,10 @@ export default function OrderGenerator({
           'post',
           'Order Created Successfully!',
           'Failed to create order! Please try again.',
-          () => navigate('/admin/dashboard/orders')
+          () => {
+            navigate('/admin/dashboard/orders');
+            dispatch(clearCart());
+          }
         );
   };
   useEffect(() => {

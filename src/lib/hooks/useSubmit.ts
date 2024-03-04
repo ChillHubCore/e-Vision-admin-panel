@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 import { eAxios } from '../utils';
+import { selectUserInfo } from '../redux/User/UserSlice';
 
 /**
  * Custom hook for submitting requests.
@@ -13,6 +15,7 @@ const useSubmit = <T>() => {
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<AxiosError>();
+  const userInfo = useSelector(selectUserInfo);
 
   /**
    * Sends a request to the server.
@@ -34,6 +37,9 @@ const useSubmit = <T>() => {
         url: requestQuery,
         method,
         data: body,
+        headers: {
+          Authorization: `Bearer ${userInfo?.token || localStorage.getItem('access_token')}`,
+        },
       });
       setData(response.data);
       setSuccess(true);

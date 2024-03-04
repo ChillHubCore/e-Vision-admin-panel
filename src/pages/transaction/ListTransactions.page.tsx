@@ -22,15 +22,18 @@ import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'react-toastify';
 import { DatePickerInput, DateTimePicker } from '@mantine/dates';
 import { isNotEmpty, useForm } from '@mantine/form';
+import { useSelector } from 'react-redux';
 import { getData } from '@/lib/utils/getData';
 import { TransactionEntityProps } from '@/components/Dashboard/types';
 import { eAxios } from '@/lib/utils';
 import { useSubmit } from '@/lib/hooks';
+import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 
 export default function ListTransactionsPage() {
   const [limit, setLimit] = React.useState(10);
   const [desc, setDesc] = React.useState(true);
   const [pageNumber, setPageNumber] = React.useState(1);
+  const userInfo = useSelector(selectUserInfo);
   const [timeCreatedSearchInputGTE, setTimeCreatedSearchInputGTE] = React.useState<Date | null>(
     null
   );
@@ -97,14 +100,18 @@ export default function ListTransactionsPage() {
 
   const CardToCardOptions = useQuery(
     'Card-To-Card-Options',
-    () => getData('/app/payment-options?type=Card-To-Card'),
+    () => getData('/app/payment-options?type=Card-To-Card', userInfo?.token),
     { cacheTime: 10 * 60 }
   );
 
   async function DeleteOneTransaction({ id }: { id: string }) {
     setDeleteLoading(true);
     try {
-      const response = await eAxios.delete(`/transaction/${id}`);
+      const response = await eAxios.delete(`/transaction/${id}`, {
+        headers: {
+          Authorization: `Bearer ${userInfo?.token || localStorage.getItem('access_token')}`,
+        },
+      });
       toast.success(response.data.message);
       Transactions.refetch();
     } catch (error) {
@@ -117,7 +124,11 @@ export default function ListTransactionsPage() {
   async function CreatePaymentProcess({ id }: { id: string }) {
     setPaymentLoading(true);
     try {
-      const response = await eAxios.post(`/transaction/${id}/payment-process`);
+      const response = await eAxios.post(`/transaction/${id}/payment-process`, {
+        headers: {
+          Authorization: `Bearer ${userInfo?.token || localStorage.getItem('access_token')}`,
+        },
+      });
       toast.success(response.data.message);
       Transactions.refetch();
     } catch (error) {

@@ -396,14 +396,12 @@ export default function ProductGenerator({
         <Button
           onClick={() => {
             if (variantEditFlag) {
-              const index = ProductGeneratorForm.values.variants.findIndex(
-                (i) => i.SKU === VariantGeneratorForm.values.SKU
+              ProductGeneratorForm.setFieldValue(
+                'variants',
+                ProductGeneratorForm.values.variants.map((i) =>
+                  i.SKU === VariantGeneratorForm.values.SKU ? VariantGeneratorForm.values : i
+                )
               );
-              ProductGeneratorForm.setFieldValue('variants', [
-                ...ProductGeneratorForm.values.variants.slice(0, index),
-                VariantGeneratorForm.values,
-                ...ProductGeneratorForm.values.variants.slice(index + 1),
-              ]);
             } else {
               ProductGeneratorForm.setFieldValue('variants', [
                 ...ProductGeneratorForm.values.variants,
@@ -420,12 +418,12 @@ export default function ProductGenerator({
     </Modal>
   );
   const renderVariants =
-    ProductGeneratorForm.values.variants.length > 0 && ProductData ? (
+    ProductGeneratorForm.values.variants.length > 0 ? (
       ProductGeneratorForm.values.variants.map((variant: ProductVariantProps) => (
         <Grid.Col key={variant.SKU} span={{ base: 12, md: 6, lg: 3 }}>
           <Suspense>
             <Stack>
-              <VariantCard VariantData={variant} ProductData={ProductData} />
+              <VariantCard VariantData={variant} ProductData={ProductData as ProductEntityProps} />
               <Group>
                 <Button
                   onClick={() => {
