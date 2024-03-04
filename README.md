@@ -16,7 +16,7 @@ With the e-Vision Admin Panel, you can efficiently manage your e-commerce busine
 
 The e-Vision Admin Panel is designed to meet the diverse needs of e-commerce businesses, providing a user-friendly interface and powerful features to streamline operations and drive growth.
 
-For more information and detailed documentation, please refer to the [e-Vision Admin Panel README](/c:/Users/south/Documents/github-repos/e-Vision-admin-panel/README.md).
+For more information and detailed documentation, please refer to the [e-Vision Admin Panel DOC( in-progress )]
 
 ## Additional Features
 
@@ -32,4 +32,10 @@ In addition to the core functionalities mentioned above, the e-Vision Admin Pane
 
 - **Campaign Management**: Merchants can create and manage marketing campaigns, including discounts, promotions, and special offers, to attract and retain customers.
 
-These additional features enhance the functionality of the e-Vision Admin Panel, providing a comprehensive solution for managing an e-commerce application.
+- **Multi-Level Permission System**: The system supports different user roles, such as admins and content creators, allowing for granular control over access and permissions.
+
+- **Ticket Management**: The e-Vision Admin Panel includes a ticketing system to handle customer inquiries, bug reports, and feedback. Support agents can efficiently track and resolve customer issues.
+
+- **Live Chat**: The User Interface provides a live chat feature that connects users with support agents in the admin panel. This enables real-time communication for immediate assistance.
+
+These additional features enhance the functionality of the e-Vision Admin Panel, providing comprehensive support for managing an e-commerce application.
