@@ -1,8 +1,10 @@
 import { hasLength, useForm } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
 import {
+  Badge,
   Box,
   Button,
+  Center,
   Container,
   Divider,
   FileInput,
@@ -19,12 +21,13 @@ import {
   TextInput,
   Textarea,
   Title,
+  Tooltip,
   UnstyledButton,
 } from '@mantine/core';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'react-toastify';
-import { IconFileLike, IconX } from '@tabler/icons-react';
+import { IconFileLike, IconPlus, IconX } from '@tabler/icons-react';
 import { Editor, useEditor } from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
@@ -51,6 +54,9 @@ export default function ProductGenerator({
 }) {
   const ProductGeneratorForm = useForm({
     initialValues: {
+      metaTitle: ProductData?.metaTitle || '',
+      metaDescription: ProductData?.metaDescription || '',
+      metaTags: ProductData?.name || ([] as string[]),
       name: ProductData?.name || '',
       slug: ProductData?.slug || '',
       brand: ProductData?.brand || '',
@@ -65,6 +71,17 @@ export default function ProductGenerator({
     },
     validate: {
       name: hasLength({ min: 3, max: 255 }, 'Name must be 3-255 characters long'),
+      metaTitle: hasLength({ min: 3, max: 255 }, 'Meta Title must be 3-255 characters long'),
+      metaDescription: hasLength(
+        { min: 3, max: 255 },
+        'Meta Description must be 3-255 characters long'
+      ),
+      metaTags: (value) => {
+        if (Array.isArray(value)) {
+          return null;
+        }
+        return 'Type of Value is Wrong!';
+      },
       slug: hasLength({ min: 2, max: 1023 }, 'Slug must be 3-255 characters long'),
       brand: hasLength({ min: 3, max: 255 }, 'Brand must be 3-255 characters long'),
       category: hasLength({ min: 3, max: 255 }, 'Category must be 3-255 characters long'),
@@ -170,6 +187,7 @@ export default function ProductGenerator({
     value: '',
   });
   const [variantEditFlag, setVariantEditFlag] = useState(false);
+  const [metaTagInput, setMetaTagInput] = useState('' as string);
 
   const content = ProductGeneratorForm.values.description.full;
 
@@ -296,9 +314,8 @@ export default function ProductGenerator({
             VariantGeneratorForm.values.images.map((image) => {
               console.log(image);
               return (
-                <>
+                <div key={image}>
                   <Image
-                    key={image}
                     src={image as string}
                     h={100}
                     w={100}
@@ -315,7 +332,7 @@ export default function ProductGenerator({
                   >
                     <IconX color="red" />
                   </UnstyledButton>
-                </>
+                </div>
               );
             })}
         </Group>
@@ -507,6 +524,80 @@ export default function ProductGenerator({
           required
           {...ProductGeneratorForm.getInputProps('description.short')}
         />
+
+        <Title my="md" order={4} style={{ textAlign: 'center', marginBottom: '1rem' }}>
+          Product Meta Data (SEO Optimization)
+        </Title>
+        <TextInput
+          label="Meta Title"
+          placeholder="Enter Product Meta Title"
+          required
+          {...ProductGeneratorForm.getInputProps('metaTitle')}
+        />
+        <Textarea
+          label="Meta Description"
+          placeholder="Enter Product Meta Description"
+          required
+          {...ProductGeneratorForm.getInputProps('metaDescription')}
+        />
+        <TextInput
+          name="metaTags"
+          label="Meta Tags"
+          placeholder="Enter Product Meta Tags, Press Enter to Add New Tag"
+          value={metaTagInput}
+          onChange={(e) => setMetaTagInput(e.target.value)}
+          rightSection={
+            <UnstyledButton
+              w="fit-content"
+              onClick={() => {
+                const isDuplicate = ProductGeneratorForm.values.metaTags.includes(metaTagInput);
+                if (isDuplicate) {
+                  toast.error('Duplicate meta tag');
+                } else {
+                  ProductGeneratorForm.setFieldValue('metaTags', [
+                    ...ProductGeneratorForm.values.metaTags,
+                    metaTagInput,
+                  ]);
+                  setMetaTagInput('');
+                }
+              }}
+            >
+              <Tooltip label="Add Meta Tag">
+                <IconPlus color="blue" style={{ marginTop: '0.4rem' }} />
+              </Tooltip>
+            </UnstyledButton>
+          }
+        />
+        {Array.isArray(ProductGeneratorForm.values.metaTags) &&
+          ProductGeneratorForm.values.metaTags.length > 0 && (
+            <Flex>
+              {ProductGeneratorForm.values.metaTags.map((tag, index) => (
+                <Badge
+                  key={index}
+                  variant="outline"
+                  style={{ marginRight: '0.5rem' }}
+                  rightSection={
+                    <UnstyledButton
+                      onClick={() =>
+                        ProductGeneratorForm.setFieldValue(
+                          'metaTags',
+                          (ProductGeneratorForm.values.metaTags as string[]).filter(
+                            (i) => i !== tag
+                          )
+                        )
+                      }
+                    >
+                      <Center>
+                        <IconX size={15} />
+                      </Center>
+                    </UnstyledButton>
+                  }
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </Flex>
+          )}
         <Box my="md">
           <Title mb="lg" ta="center" order={3}>
             Write a Full Description For The Product.

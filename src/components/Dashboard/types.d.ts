@@ -17,6 +17,9 @@ export interface ProductVariantProps {
 
 export interface ProductEntityProps {
   _id: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaTags: string[];
   name: string;
   slug: string;
   brand: string;
@@ -89,6 +92,9 @@ export interface TransactionEntityProps {
 
 export interface BlogEntityProps {
   _id: string;
+  metaTitle: string;
+  metaDescription: string;
+  metaTags: string[];
   title: string;
   content: string;
   author: {

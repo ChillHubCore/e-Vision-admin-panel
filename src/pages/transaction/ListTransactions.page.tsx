@@ -379,11 +379,6 @@ export default function ListTransactionsPage() {
             onChange={(event) => {
               setUsernameSearchInput(event.currentTarget.value);
             }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Transactions.refetch();
-              }
-            }}
             rightSectionPointerEvents="all"
             mt="md"
           />
@@ -395,11 +390,6 @@ export default function ListTransactionsPage() {
             value={limit}
             onChange={(event) => {
               setLimit(Number(event.currentTarget.value));
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Transactions.refetch();
-              }
             }}
             rightSectionPointerEvents="all"
             mt="md"

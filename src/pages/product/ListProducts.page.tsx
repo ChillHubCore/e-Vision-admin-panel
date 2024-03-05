@@ -224,11 +224,6 @@ export default function ListProductsPage() {
             onChange={(event) => {
               setNameSearchInput(event.currentTarget.value);
             }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Products.refetch();
-              }
-            }}
             rightSectionPointerEvents="all"
             mt="md"
           />
@@ -238,11 +233,6 @@ export default function ListProductsPage() {
             onChange={(event) => {
               setBrandSearchInput(event.currentTarget.value);
             }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Products.refetch();
-              }
-            }}
             rightSectionPointerEvents="all"
             mt="md"
           />
@@ -251,11 +241,6 @@ export default function ListProductsPage() {
             value={categorySearchInput}
             onChange={(event) => {
               setCategorySearchInput(event.currentTarget.value);
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Products.refetch();
-              }
             }}
             rightSectionPointerEvents="all"
             mt="md"
@@ -268,11 +253,6 @@ export default function ListProductsPage() {
             value={limit}
             onChange={(event) => {
               setLimit(Number(event.currentTarget.value));
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Products.refetch();
-              }
             }}
             rightSectionPointerEvents="all"
             mt="md"

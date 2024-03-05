@@ -220,11 +220,6 @@ export default function ListUsersPage() {
           onChange={(event) => {
             setNameSearchInput(event.currentTarget.value);
           }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              Users.refetch();
-            }
-          }}
           rightSectionPointerEvents="all"
           mt="md"
         />
@@ -233,11 +228,6 @@ export default function ListUsersPage() {
           value={lastNameSearchInput}
           onChange={(event) => {
             setLastNameSearchInput(event.currentTarget.value);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              Users.refetch();
-            }
           }}
           rightSectionPointerEvents="all"
           mt="md"
@@ -248,11 +238,6 @@ export default function ListUsersPage() {
           onChange={(event) => {
             setPhoneSearchInput(event.currentTarget.value);
           }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              Users.refetch();
-            }
-          }}
           rightSectionPointerEvents="all"
           mt="md"
         />
@@ -262,11 +247,6 @@ export default function ListUsersPage() {
           onChange={(event) => {
             setEmailSearchInput(event.currentTarget.value);
           }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              Users.refetch();
-            }
-          }}
           rightSectionPointerEvents="all"
           mt="md"
         />
@@ -275,11 +255,6 @@ export default function ListUsersPage() {
           value={countryCodeSearchInput}
           onChange={(event) => {
             setCountryCodeSearchInput(event.currentTarget.value);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              Users.refetch();
-            }
           }}
           rightSectionPointerEvents="all"
           mt="md"
@@ -293,11 +268,6 @@ export default function ListUsersPage() {
           value={limit}
           onChange={(event) => {
             setLimit(Number(event.currentTarget.value));
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              Users.refetch();
-            }
           }}
           rightSectionPointerEvents="all"
           mt="md"

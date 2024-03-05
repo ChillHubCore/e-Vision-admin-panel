@@ -217,11 +217,6 @@ export default function ListOrdersPage() {
             onChange={(event) => {
               setReciverNameSearchStr(event.currentTarget.value);
             }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Orders.refetch();
-              }
-            }}
             rightSectionPointerEvents="all"
             mt="md"
           />
@@ -230,11 +225,6 @@ export default function ListOrdersPage() {
             value={reciverPhoneSearchStr}
             onChange={(event) => {
               setReciverPhoneSearchStr(event.currentTarget.value);
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Orders.refetch();
-              }
             }}
             rightSectionPointerEvents="all"
             mt="md"
@@ -245,11 +235,6 @@ export default function ListOrdersPage() {
             onChange={(event) => {
               setReciverCitySearchStr(event.currentTarget.value);
             }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Orders.refetch();
-              }
-            }}
             rightSectionPointerEvents="all"
             mt="md"
           />
@@ -258,11 +243,6 @@ export default function ListOrdersPage() {
             value={reciverProvinceSearchStr}
             onChange={(event) => {
               setReciverProvinceSearchStr(event.currentTarget.value);
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Orders.refetch();
-              }
             }}
             rightSectionPointerEvents="all"
             mt="md"
@@ -273,11 +253,6 @@ export default function ListOrdersPage() {
             onChange={(event) => {
               setReciverCountrySearchStr(event.currentTarget.value);
             }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Orders.refetch();
-              }
-            }}
             rightSectionPointerEvents="all"
             mt="md"
           />
@@ -287,11 +262,6 @@ export default function ListOrdersPage() {
             onChange={(event) => {
               setReciverAddressSearchStr(event.currentTarget.value);
             }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Orders.refetch();
-              }
-            }}
             rightSectionPointerEvents="all"
             mt="md"
           />
@@ -300,11 +270,6 @@ export default function ListOrdersPage() {
             value={reciverPostalCodeSearchStr}
             onChange={(event) => {
               setReciverPostalCodeSearchStr(event.currentTarget.value);
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Orders.refetch();
-              }
             }}
             rightSectionPointerEvents="all"
             mt="md"
@@ -323,11 +288,6 @@ export default function ListOrdersPage() {
                 event.currentTarget.value as OrderEntityProps['shippingAddress']['shippingMethod']
               );
             }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Orders.refetch();
-              }
-            }}
             rightSectionPointerEvents="all"
             mt="md"
           />
@@ -341,11 +301,6 @@ export default function ListOrdersPage() {
             onChange={(event) => {
               setPaymentMethod(event.currentTarget.value as OrderEntityProps['paymentMethod']);
             }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Orders.refetch();
-              }
-            }}
             rightSectionPointerEvents="all"
             mt="md"
           />
@@ -354,11 +309,6 @@ export default function ListOrdersPage() {
             value={promotionsUsed.join(',')}
             onChange={(event) => {
               setPromotionsUsed(event.currentTarget.value.split(','));
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Orders.refetch();
-              }
             }}
             rightSectionPointerEvents="all"
             mt="md"
@@ -461,11 +411,6 @@ export default function ListOrdersPage() {
             value={limit}
             onChange={(event) => {
               setLimit(Number(event.currentTarget.value));
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Orders.refetch();
-              }
             }}
             rightSectionPointerEvents="all"
             mt="md"

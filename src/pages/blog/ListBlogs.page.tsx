@@ -155,11 +155,6 @@ export default function ListBlogsPage() {
             onChange={(event) => {
               setLimit(Number(event.currentTarget.value));
             }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                Blogs.refetch();
-              }
-            }}
             rightSectionPointerEvents="all"
             mt="md"
             data={[

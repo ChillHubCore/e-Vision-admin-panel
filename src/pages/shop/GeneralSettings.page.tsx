@@ -210,21 +210,6 @@ export default function GeneralSettingsPage() {
           placeholder="Enter Extra Currencies Supported"
           value={CurrencyInputValue}
           onChange={(e) => setCurrencyInputValue(e.currentTarget.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              if (
-                GeneralSettingsForm.values.extraCurrenciesSupported.includes(CurrencyInputValue)
-              ) {
-                toast.error('Currency already exists');
-              } else {
-                GeneralSettingsForm.setFieldValue('extraCurrenciesSupported', [
-                  ...GeneralSettingsForm.values.extraCurrenciesSupported,
-                  CurrencyInputValue,
-                ]);
-                setCurrencyInputValue('');
-              }
-            }
-          }}
           rightSection={
             <UnstyledButton
               w="fit-content"
@@ -324,19 +309,6 @@ export default function GeneralSettingsPage() {
           placeholder="Enter User Status"
           value={UserStatusInputValue}
           onChange={(e) => setUserStatusInputValue(e.currentTarget.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              if (GeneralSettingsForm.values.userStatus.includes(UserStatusInputValue)) {
-                toast.error('User Status already exists');
-              } else {
-                GeneralSettingsForm.setFieldValue('userStatus', [
-                  ...GeneralSettingsForm.values.userStatus,
-                  UserStatusInputValue,
-                ]);
-                setUserStatusInputValue('');
-              }
-            }
-          }}
           rightSection={
             <UnstyledButton
               w="fit-content"
@@ -420,19 +392,6 @@ export default function GeneralSettingsPage() {
           placeholder="Enter Postal Options"
           value={PostalOptionsInputValue}
           onChange={(e) => setPostalOptionsInputValue(e.currentTarget.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              if (GeneralSettingsForm.values.postalOptions.includes(PostalOptionsInputValue)) {
-                toast.error('Postal Option already exists');
-              } else {
-                GeneralSettingsForm.setFieldValue('postalOptions', [
-                  ...GeneralSettingsForm.values.postalOptions,
-                  PostalOptionsInputValue,
-                ]);
-                setPostalOptionsInputValue('');
-              }
-            }
-          }}
           rightSection={
             <UnstyledButton
               w="fit-content"
@@ -485,19 +444,6 @@ export default function GeneralSettingsPage() {
           placeholder="Enter Payment Options"
           value={PaymentOptionsInputValue}
           onChange={(e) => setPaymentOptionsInputValue(e.currentTarget.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              if (GeneralSettingsForm.values.paymentOptions.includes(PaymentOptionsInputValue)) {
-                toast.error('Payment Option already exists');
-              } else {
-                GeneralSettingsForm.setFieldValue('paymentOptions', [
-                  ...GeneralSettingsForm.values.paymentOptions,
-                  PaymentOptionsInputValue,
-                ]);
-                setPaymentOptionsInputValue('');
-              }
-            }
-          }}
           rightSection={
             <UnstyledButton
               w="fit-content"
