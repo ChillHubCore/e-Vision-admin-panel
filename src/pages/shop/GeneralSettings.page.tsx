@@ -29,7 +29,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { useSelector } from 'react-redux';
 import { useSubmit, useUpload } from '@/lib/hooks';
 import { getData } from '@/lib/utils/getData';
-import { ShopSettingsProps } from './types';
+import { ShopSettingsProps } from '@/components/Dashboard/types';
 import blackBG from '@/assets/black-bg.png';
 import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 

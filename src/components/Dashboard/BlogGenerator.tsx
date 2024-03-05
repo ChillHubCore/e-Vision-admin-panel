@@ -1,4 +1,13 @@
-import { Box, Button, TextInput } from '@mantine/core';
+import {
+  Badge,
+  Box,
+  Button,
+  Center,
+  Flex,
+  TextInput,
+  Tooltip,
+  UnstyledButton,
+} from '@mantine/core';
 import { isNotEmpty, useForm } from '@mantine/form';
 import Color from '@tiptap/extension-color';
 import Subscript from '@tiptap/extension-subscript';
@@ -13,31 +22,53 @@ import React, { useEffect } from 'react';
 import Link from '@tiptap/extension-link';
 import Highlight from '@tiptap/extension-highlight';
 import { useNavigate } from 'react-router-dom';
+import { IconPlus, IconX } from '@tabler/icons-react';
+import { toast } from 'react-toastify';
 import { useSubmit } from '@/lib/hooks';
 import { RTE } from '../common/RTE';
+import { BlogEntityProps } from './types';
 
 export default function BlogGenerator({
   blogData,
   editFlag,
 }: {
-  blogData?: {
-    title: string;
-    content: string;
-  };
+  blogData?: BlogEntityProps;
   editFlag?: boolean;
 }) {
   const BlogGeneratorForm = useForm({
     initialValues: {
+      metaTitle: blogData?.metaTitle || '',
+      metaDescription: blogData?.metaDescription || '',
+      metaTags: blogData?.metaTags || ([] as string[]),
       title: blogData?.title || '',
+      slug: blogData?.slug || '',
       content: blogData?.content || '',
     },
     validate: {
+      metaTitle: isNotEmpty('Meta Title is required'),
+      metaDescription: isNotEmpty('Meta Description is required'),
+      metaTags: (value) => {
+        if (Array.isArray(value)) {
+          return null;
+        }
+        return 'Type of Value is Wrong!';
+      },
       title: isNotEmpty('Title is required'),
+      slug: (value) => {
+        if (value.trim() === '') {
+          return 'Slug is required';
+        }
+        if (value.includes(' ')) {
+          return 'Slug cannot contain spaces';
+        }
+        return null;
+      },
       content: isNotEmpty('Content is required'),
     },
   });
 
   const content = BlogGeneratorForm.values.content || '';
+  const [metaTagInput, setMetaTagInput] = React.useState('');
 
   const editor = useEditor({
     extensions: [
@@ -67,14 +98,25 @@ export default function BlogGenerator({
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    FormActions.sendRequest(
-      '/blogs',
-      BlogGeneratorForm,
-      'post',
-      'Blog created successfully!',
-      'Failed to create blog. Please try again later',
-      () => navigate('/admin/dashboard/blogs')
-    );
+    if (editFlag) {
+      FormActions.sendRequest(
+        `/blogs/${blogData?._id}`,
+        BlogGeneratorForm,
+        'put',
+        'Blog updated successfully!',
+        'Failed to update blog. Please try again later',
+        () => navigate('/admin/dashboard/blogs')
+      );
+    } else {
+      FormActions.sendRequest(
+        '/blogs',
+        BlogGeneratorForm,
+        'post',
+        'Blog created successfully!',
+        'Failed to create blog. Please try again later',
+        () => navigate('/admin/dashboard/blogs')
+      );
+    }
   };
 
   return (
@@ -84,8 +126,80 @@ export default function BlogGenerator({
       style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
     >
       <TextInput
+        placeholder="Write a Meta Title"
+        {...BlogGeneratorForm.getInputProps('metaTitle')}
+        required
+      />
+      <TextInput
+        placeholder="Write a Meta Description"
+        {...BlogGeneratorForm.getInputProps('metaDescription')}
+        required
+      />
+      <TextInput
+        name="metaTags"
+        label="Meta Tags"
+        placeholder="Enter Product Meta Tags, Press Enter to Add New Tag"
+        value={metaTagInput}
+        onChange={(e) => setMetaTagInput(e.target.value)}
+        rightSection={
+          <UnstyledButton
+            w="fit-content"
+            onClick={() => {
+              const isDuplicate = BlogGeneratorForm.values.metaTags.includes(metaTagInput);
+              if (isDuplicate) {
+                toast.error('Duplicate meta tag');
+              } else {
+                BlogGeneratorForm.setFieldValue('metaTags', [
+                  ...BlogGeneratorForm.values.metaTags,
+                  metaTagInput,
+                ]);
+                setMetaTagInput('');
+              }
+            }}
+          >
+            <Tooltip label="Add Meta Tag">
+              <IconPlus color="blue" style={{ marginTop: '0.4rem' }} />
+            </Tooltip>
+          </UnstyledButton>
+        }
+      />
+      {Array.isArray(BlogGeneratorForm.values.metaTags) &&
+        BlogGeneratorForm.values.metaTags.length > 0 && (
+          <Flex>
+            {BlogGeneratorForm.values.metaTags.map((tag, index) => (
+              <Badge
+                key={index}
+                variant="outline"
+                style={{ marginRight: '0.5rem' }}
+                rightSection={
+                  <UnstyledButton
+                    onClick={() =>
+                      BlogGeneratorForm.setFieldValue(
+                        'metaTags',
+                        (BlogGeneratorForm.values.metaTags as string[]).filter((i) => i !== tag)
+                      )
+                    }
+                  >
+                    <Center>
+                      <IconX size={15} />
+                    </Center>
+                  </UnstyledButton>
+                }
+              >
+                {tag}
+              </Badge>
+            ))}
+          </Flex>
+        )}
+      <TextInput
         placeholder="Write a Title For The Blog"
         {...BlogGeneratorForm.getInputProps('title')}
+        required
+      />
+      <TextInput
+        placeholder="Write a Slug For The Blog"
+        {...BlogGeneratorForm.getInputProps('slug')}
+        required
       />
 
       <RTE editor={editor as Editor} />
@@ -99,7 +213,7 @@ export default function BlogGenerator({
         type="submit"
         loading={FormActions.isLoading}
       >
-        Create Blog
+        {editFlag ? 'Update Blog' : 'Create Blog'}
       </Button>
     </Box>
   );

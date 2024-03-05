@@ -13,7 +13,7 @@ import {
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { IconEdit, IconEye, IconX } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
@@ -26,6 +26,7 @@ import { BlogEntityProps } from '@/components/Dashboard/types';
 
 export default function ListBlogsPage() {
   const [blogTitleSearchInput, setBlogTitleSearchInput] = useState('');
+  const [slugSearchInput, setSlugSearchInput] = useState('');
   const [timeCreatedSearchInputGTE, setTimeCreatedSearchInputGTE] = useState<Date | null>(null);
   const [timeCreatedSearchInputLTE, setTimeCreatedSearchInputLTE] = useState<Date | null>(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -44,7 +45,7 @@ export default function ListBlogsPage() {
           timeCreatedSearchInputGTE ? timeCreatedSearchInputGTE?.toISOString() : ''
         }&timeCreatedLTE=${
           timeCreatedSearchInputLTE ? timeCreatedSearchInputLTE?.toISOString() : ''
-        }&desc=${desc}$limit=${limit}&title=${blogTitleSearchInput}`
+        }&desc=${desc}$limit=${limit}&title=${blogTitleSearchInput}&slug=${slugSearchInput}`
       ),
     {
       cacheTime: 0,
@@ -71,6 +72,7 @@ export default function ListBlogsPage() {
   const rows = Blogs.data?.blogs?.map((element: BlogEntityProps) => (
     <Table.Tr key={element._id}>
       <Table.Td>{element.title}</Table.Td>
+      <Table.Td>{element.slug}</Table.Td>
       <Table.Td>{element.author.username}</Table.Td>
       <Table.Td>{new Date(element.createdAt).toLocaleString()}</Table.Td>
       <Table.Td>{new Date(element.updatedAt).toLocaleString()}</Table.Td>
@@ -130,6 +132,18 @@ export default function ListBlogsPage() {
     </Table.Tr>
   ));
 
+  useEffect(() => {
+    Blogs.refetch();
+  }, [
+    pageNumber,
+    limit,
+    desc,
+    slugSearchInput,
+    blogTitleSearchInput,
+    timeCreatedSearchInputGTE,
+    timeCreatedSearchInputLTE,
+  ]);
+
   return Blogs.isLoading ? (
     <Loader />
   ) : (
@@ -145,6 +159,13 @@ export default function ListBlogsPage() {
               setBlogTitleSearchInput(event.target.value);
             }}
             placeholder="Search blogs by their Title"
+          />
+          <TextInput
+            value={slugSearchInput}
+            onChange={(event) => {
+              setSlugSearchInput(event.target.value);
+            }}
+            placeholder="Search blogs by their Slug"
           />
         </Group>
         <Group my="sm">
@@ -184,6 +205,7 @@ export default function ListBlogsPage() {
           <Table.Thead style={{ height: 'max-content' }}>
             <Table.Tr>
               <Table.Th>Title</Table.Th>
+              <Table.Th>Slug</Table.Th>
               <Table.Th>Creator</Table.Th>
               <Table.Th>Created At</Table.Th>
               <Table.Th>Updated At</Table.Th>

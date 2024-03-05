@@ -6,12 +6,14 @@ import {
   CreateBlogPage,
   CreateOrderPage,
   CreateProductPage,
+  CreatePromotionPage,
   CreateTransactionPage,
   CreateUserPage,
   CreatorDashboardPage,
   EditBlogPage,
   EditOrderPage,
   EditProductPage,
+  EditPromotionPage,
   EditTransactionPage,
   EditUserPage,
   GeneralSettingsPage,
@@ -19,12 +21,14 @@ import {
   ListBlogsPage,
   ListOrdersPage,
   ListProductsPage,
+  ListPromotionsPage,
   ListTransactionsPage,
   ListUsersPage,
   LoginForm,
   ShowBlogPage,
   ShowOrderPage,
   ShowProductPage,
+  ShowPromotionPage,
   ShowTransactionPage,
   ShowUserPage,
   SignupPage,
@@ -468,6 +472,73 @@ export const AdminRoutes = (
             }
           >
             <EditBlogPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    {/* promotions crud */}
+    <Route
+      path="/admin/dashboard/promotions"
+      element={
+        <AdminProtected>
+          <AdminLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <ListPromotionsPage />
+            </Suspense>
+          </AdminLayout>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/promotions/create"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <CreatePromotionPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/promotions/show/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <ShowPromotionPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/promotions/edit/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <EditPromotionPage />
           </Suspense>
         </AdminProtected>
       }

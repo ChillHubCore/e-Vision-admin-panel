@@ -96,6 +96,7 @@ export interface BlogEntityProps {
   metaDescription: string;
   metaTags: string[];
   title: string;
+  slug: string;
   content: string;
   author: {
     username: string;
@@ -103,4 +104,79 @@ export interface BlogEntityProps {
   };
   updatedAt: string;
   createdAt: string;
+}
+
+export interface ShopSettingsProps {
+  name: string;
+  primaryCurrency: string;
+  extraCurrenciesSupported: string[];
+  description: string;
+  logo: string;
+  version: string;
+  userStatus: string[];
+  contactAddresses: {
+    physical: string;
+    email: string;
+    countryCode: string;
+    phone: string;
+    postalCode: string;
+  };
+  postalOptions: string[];
+  paymentOptions: string[];
+}
+export interface PromotionEntityProps {
+  promotionIdentifier: string;
+  applicableProducts: string[];
+  creator: string;
+  minTotalOrder: {
+    active: boolean;
+    price: number;
+  };
+  accessibleRoles: string[];
+  maximumDiscount: {
+    active: boolean;
+    price: number;
+  };
+  description: string;
+  active: boolean;
+  activeFrom: Date;
+  activeUntil: Date;
+  usageCap: {
+    isCaped: boolean;
+    timesUsed: number;
+    maxTimesToUse: number;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface UserEntityProps {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  birthDate: string;
+  loyaltyPoints: number;
+  shopTokenBalance: number;
+  role: 'user' | 'admin' | 'creator' | 'owner' | 'support' | 'super-admin' | 'moderator';
+  countryCode: string;
+  phone: string;
+  isEmailVerified: boolean;
+  isPhoneVerified: boolean;
+  isCreator: boolean;
+  isAdmin: boolean;
+  addresses: AddressProps[];
+  watchList: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AddressProps {
+  address: string;
+  country: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  isPrimary: boolean;
 }

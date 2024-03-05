@@ -26,3 +26,7 @@ export const CreateBlogPage = lazy(() => import('./blog/CreateBlog.page'));
 export const EditBlogPage = lazy(() => import('./blog/EditBlog.page'));
 export const ListBlogsPage = lazy(() => import('./blog/ListBlogs.page'));
 export const ShowBlogPage = lazy(() => import('./blog/ShowBlog.page'));
+export const CreatePromotionPage = lazy(() => import('./promotion/CreatePromotion.page'));
+export const EditPromotionPage = lazy(() => import('./promotion/EditPromotion.page'));
+export const ListPromotionsPage = lazy(() => import('./promotion/ListPromotions.page'));
+export const ShowPromotionPage = lazy(() => import('./promotion/ShowPromotion.page'));

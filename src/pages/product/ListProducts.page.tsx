@@ -96,7 +96,7 @@ export default function ListProductsPage() {
     }
   }
 
-  const rows = Products.data.products.map((element: ProductEntityProps) => (
+  const rows = Products.data?.products?.map((element: ProductEntityProps) => (
     <Table.Tr key={element._id}>
       <Table.Td>{element.name}</Table.Td>
       <Table.Td>{element.slug}</Table.Td>

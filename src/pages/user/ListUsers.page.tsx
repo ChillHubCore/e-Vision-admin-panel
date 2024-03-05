@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import {
   Button,
@@ -24,33 +24,8 @@ import { useSelector } from 'react-redux';
 import { getData } from '@/lib/utils/getData';
 import { eAxios } from '@/lib/utils';
 import { selectUserInfo } from '@/lib/redux/User/UserSlice';
-
-export interface UserEntityProps {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  countryCode: string;
-  phone: string;
-  isEmailVerified: boolean;
-  isPhoneVerified: boolean;
-  isCreator: boolean;
-  isAdmin: boolean;
-  addresses: AddressProps[];
-  watchList: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface AddressProps {
-  address: string;
-  country: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  isPrimary: boolean;
-}
+import { UserEntityProps } from '@/components/Dashboard/types';
+import { roles } from '@/lib/constants';
 
 export default function ListUsersPage() {
   const [nameSearchInput, setNameSearchInput] = useState<string>('');
@@ -64,6 +39,13 @@ export default function ListUsersPage() {
   const [userId, setUserId] = useState<string>('');
   const [timeCreatedSearchInputGTE, setTimeCreatedSearchInputGTE] = useState<Date | null>();
   const [timeCreatedSearchInputLTE, setTimeCreatedSearchInputLTE] = useState<Date | null>();
+  const [birthDateSearchInputGTE, setBirthDateSearchInputGTE] = useState<Date | null>();
+  const [birthDateSearchInputLTE, setBirthDateSearchInputLTE] = useState<Date | null>();
+  const [roleSearchInput, setRoleSearchInput] = useState<UserEntityProps['role'] | ''>('');
+  const [loyaltyPointsGTE, setLoyaltyPointsGTE] = useState<number | null>();
+  const [loyaltyPointsLTE, setLoyaltyPointsLTE] = useState<number | null>();
+  const [shopTokenBalanceGTE, setShopTokenBalanceGTE] = useState<number | null>();
+  const [shopTokenBalanceLTE, setShopTokenBalanceLTE] = useState<number | null>();
   const [desc, setDesc] = useState<boolean>(true);
   const [opened, { open, close }] = useDisclosure(false);
   const userInfo = useSelector(selectUserInfo);
@@ -74,11 +56,23 @@ export default function ListUsersPage() {
     'search-users',
     () =>
       getData(
-        `/user?pageNumber=${pageNumber}&firstName=${nameSearchInput}&lastName=${lastNameSearchInput}&phone=${phoneSearchInput}&email=${emailSearchInput}&limit=${limit}&timeCreatedGTE=${
+        `/user?pageNumber=${pageNumber}&firstName=${nameSearchInput || ''}&lastName=${
+          lastNameSearchInput || ''
+        }&phone=${phoneSearchInput || ''}&email=${
+          emailSearchInput || ''
+        }&limit=${limit}&timeCreatedGTE=${
           timeCreatedSearchInputGTE ? timeCreatedSearchInputGTE?.toISOString() : ''
         }&timeCreatedLTE=${
           timeCreatedSearchInputLTE ? timeCreatedSearchInputLTE?.toISOString() : ''
-        }&desc=${desc}&countryCode=${countryCodeSearchInput}`,
+        }&desc=${desc}&countryCode=${countryCodeSearchInput}&role=${
+          roleSearchInput || ''
+        }&loyaltyPointsGTE=${loyaltyPointsGTE || ''}&loyaltyPointsLTE=${
+          loyaltyPointsLTE || ''
+        }&shopTokenBalanceGTE=${shopTokenBalanceGTE || ''}&shopTokenBalanceLTE=${
+          shopTokenBalanceLTE || ''
+        }&birthDateGTE=${
+          birthDateSearchInputGTE ? birthDateSearchInputGTE.toISOString() : ''
+        }&birthDateLTE=${birthDateSearchInputLTE ? birthDateSearchInputLTE.toISOString() : ''}`,
         userInfo?.token
       ),
     { cacheTime: 0 }
@@ -95,8 +89,15 @@ export default function ListUsersPage() {
     limit,
     timeCreatedSearchInputGTE,
     timeCreatedSearchInputLTE,
+    birthDateSearchInputGTE,
+    birthDateSearchInputLTE,
     desc,
     countryCodeSearchInput,
+    roleSearchInput,
+    loyaltyPointsGTE,
+    loyaltyPointsLTE,
+    shopTokenBalanceGTE,
+    shopTokenBalanceLTE,
   ]);
 
   const handlePageChange = (event: number) => {
@@ -259,9 +260,56 @@ export default function ListUsersPage() {
           rightSectionPointerEvents="all"
           mt="md"
         />
+        <Input
+          placeholder="Loyalty Points GTE"
+          value={loyaltyPointsGTE || ''}
+          onChange={(event) => {
+            setLoyaltyPointsGTE(Number(event.currentTarget.value));
+          }}
+          rightSectionPointerEvents="all"
+          mt="md"
+        />
+        <Input
+          placeholder="Loyalty Points LTE"
+          value={loyaltyPointsLTE || ''}
+          onChange={(event) => {
+            setLoyaltyPointsLTE(Number(event.currentTarget.value));
+          }}
+          rightSectionPointerEvents="all"
+          mt="md"
+        />
+        <Input
+          placeholder="Shop Token Balance GTE"
+          value={shopTokenBalanceGTE || ''}
+          onChange={(event) => {
+            setShopTokenBalanceGTE(Number(event.currentTarget.value));
+          }}
+          rightSectionPointerEvents="all"
+          mt="md"
+        />
+        <Input
+          placeholder="Shop Token Balance LTE"
+          value={shopTokenBalanceLTE || ''}
+          onChange={(event) => {
+            setShopTokenBalanceLTE(Number(event.currentTarget.value));
+          }}
+          rightSectionPointerEvents="all"
+          mt="md"
+        />
       </Flex>
 
       <Group my="sm">
+        <NativeSelect
+          w="fit-content"
+          placeholder="Role"
+          value={roleSearchInput}
+          onChange={(event) => {
+            setRoleSearchInput(event.currentTarget.value as UserEntityProps['role']);
+          }}
+          rightSectionPointerEvents="all"
+          mt="md"
+          data={[{ value: '', label: 'All' }, ...roles]}
+        />
         <NativeSelect
           w="fit-content"
           placeholder="Limit"
@@ -293,6 +341,21 @@ export default function ListUsersPage() {
           onChange={setTimeCreatedSearchInputLTE}
           placeholder="Created Before Date input"
           rightSection={<IconX onClick={() => setTimeCreatedSearchInputLTE(null)} />}
+        />
+      </Group>
+
+      <Group my="sm">
+        <DatePickerInput
+          value={birthDateSearchInputGTE}
+          onChange={setBirthDateSearchInputGTE}
+          placeholder="Birth Date After Date input"
+          rightSection={<IconX onClick={() => setBirthDateSearchInputGTE(null)} />}
+        />
+        <DatePickerInput
+          value={birthDateSearchInputLTE}
+          onChange={setBirthDateSearchInputLTE}
+          placeholder="Birth Date Before Date input"
+          rightSection={<IconX onClick={() => setBirthDateSearchInputLTE(null)} />}
         />
       </Group>
 

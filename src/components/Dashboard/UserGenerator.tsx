@@ -1,9 +1,21 @@
-import { Box, Button, Center, PasswordInput, Switch, TextInput, Title } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Center,
+  NativeSelect,
+  PasswordInput,
+  Switch,
+  TextInput,
+  Title,
+} from '@mantine/core';
 import { hasLength, isEmail, isNotEmpty, matches, matchesField, useForm } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { DatePickerInput } from '@mantine/dates';
+import { IconX } from '@tabler/icons-react';
 import { useSubmit } from '@/lib/hooks';
-import { UserEntityProps } from '@/pages/user/ListUsers.page';
+import { UserEntityProps } from '@/components/Dashboard/types';
+import { roles } from '@/lib/constants';
 
 export default function UserGenerator({
   UserData,
@@ -17,6 +29,10 @@ export default function UserGenerator({
       firstName: UserData?.firstName || '',
       lastName: UserData?.lastName || '',
       username: UserData?.username || '',
+      birthDate: UserData?.birthDate ? new Date(UserData.birthDate) : null,
+      loyaltyPoints: UserData?.loyaltyPoints || 0,
+      shopTokenBalance: UserData?.shopTokenBalance || 0,
+      role: UserData?.role || 'user',
       email: UserData?.email || '',
       countryCode: UserData?.countryCode || '',
       phone: UserData?.phone || '',
@@ -160,6 +176,30 @@ export default function UserGenerator({
           required={!editFlag}
         />
 
+        <DatePickerInput
+          {...UserGeneratorForm.getInputProps('birthDate')}
+          placeholder="Client birth date"
+          rightSection={
+            <IconX
+              onClick={() => {
+                UserGeneratorForm.setFieldValue('birthDate', null);
+              }}
+            />
+          }
+        />
+        <NativeSelect data={roles} label="Role" {...UserGeneratorForm.getInputProps('role')} />
+        <TextInput
+          disabled={FormActions.isLoading}
+          label="Loyalty Points"
+          placeholder="Client loyalty points"
+          {...UserGeneratorForm.getInputProps('loyaltyPoints')}
+        />
+        <TextInput
+          disabled={FormActions.isLoading}
+          label="Shop Token Balance"
+          placeholder="Client shop token balance"
+          {...UserGeneratorForm.getInputProps('shopTokenBalance')}
+        />
         <PasswordInput
           disabled={FormActions.isLoading}
           label="Password"

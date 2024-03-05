@@ -56,7 +56,7 @@ export default function ProductGenerator({
     initialValues: {
       metaTitle: ProductData?.metaTitle || '',
       metaDescription: ProductData?.metaDescription || '',
-      metaTags: ProductData?.name || ([] as string[]),
+      metaTags: ProductData?.metaTags || ([] as string[]),
       name: ProductData?.name || '',
       slug: ProductData?.slug || '',
       brand: ProductData?.brand || '',
@@ -119,7 +119,6 @@ export default function ProductGenerator({
       price: {
         regularPrice: 0,
         discountedPrice: false as false | number,
-        specialOffers: [],
       },
       inStock: 0,
       availability: false,
@@ -147,12 +146,6 @@ export default function ProductGenerator({
         },
         discountedPrice: (value) => {
           if (typeof value === 'number' || value === false) {
-            return null;
-          }
-          return 'Type of Value is Wrong!';
-        },
-        specialOffers: (value) => {
-          if (Array.isArray(value)) {
             return null;
           }
           return 'Type of Value is Wrong!';
@@ -188,6 +181,7 @@ export default function ProductGenerator({
   });
   const [variantEditFlag, setVariantEditFlag] = useState(false);
   const [metaTagInput, setMetaTagInput] = useState('' as string);
+  const [variantToBeEdited, setVariantToBeEdited] = useState({ _id: '', SKU: '' });
 
   const content = ProductGeneratorForm.values.description.full;
 
@@ -415,10 +409,16 @@ export default function ProductGenerator({
             if (variantEditFlag) {
               ProductGeneratorForm.setFieldValue(
                 'variants',
-                ProductGeneratorForm.values.variants.map((i) =>
-                  i.SKU === VariantGeneratorForm.values.SKU ? VariantGeneratorForm.values : i
-                )
+                ProductGeneratorForm.values.variants.map((variant) => {
+                  if (variant.SKU === variantToBeEdited.SKU) {
+                    return VariantGeneratorForm.values;
+                  }
+                  return variant;
+                })
               );
+              setVariantEditFlag(false);
+              VariantGeneratorForm.reset();
+              setVariantToBeEdited({ _id: '', SKU: '' });
             } else {
               ProductGeneratorForm.setFieldValue('variants', [
                 ...ProductGeneratorForm.values.variants,
@@ -429,7 +429,7 @@ export default function ProductGenerator({
             close();
           }}
         >
-          Submit Variant
+          {variantEditFlag ? 'Edit' : 'Add'}
         </Button>
       </Flex>
     </Modal>
@@ -454,13 +454,14 @@ export default function ProductGenerator({
                 </Button>
                 <Button
                   onClick={() => {
+                    setVariantToBeEdited({ _id: variant._id as string, SKU: variant.SKU });
                     setVariantEditFlag(true);
+                    ProductGeneratorForm.reset();
                     VariantGeneratorForm.setValues({
                       ...variant,
                       price: {
                         ...variant.price,
                         discountedPrice: variant.price.discountedPrice || false, // Assign a default value of 0 if discountedPrice is undefined
-                        specialOffers: [],
                       },
                     });
                     setDiscountFlag(!!variant.price.discountedPrice);
@@ -611,6 +612,7 @@ export default function ProductGenerator({
               w="fit-content"
               my="lg"
               onClick={() => {
+                setVariantEditFlag(false);
                 VariantGeneratorForm.reset();
                 open();
               }}
@@ -695,9 +697,10 @@ export default function ProductGenerator({
         </Box>
         <Divider />
         <Button
-          onClick={() =>
-            ProductGeneratorForm.setFieldValue('description.full', editor?.getHTML() || '')
-          }
+          onClick={() => {
+            ProductGeneratorForm.setFieldValue('description.full', editor?.getHTML() || '');
+            console.log('errorlog', ProductGeneratorForm.errors);
+          }}
           type="submit"
           color="blue"
           size="lg"
