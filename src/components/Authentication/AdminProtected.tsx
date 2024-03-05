@@ -12,11 +12,15 @@ const AdminProtected: React.FC<AdminProtectedProps> = ({ children }) => {
   const navigate = useNavigate();
   const userInfo = useSelector(selectUserInfo);
 
-  if (!userInfo?.token || !userInfo.isAdmin) {
-    toast.error('You are not authorized!');
-
-    navigate('/');
-  }
+  React.useEffect(() => {
+    if (!userInfo?.token) {
+      toast.error('You need to login to access this page');
+      navigate('/login');
+    } else if (!userInfo?.isAdmin) {
+      toast.error('You need to be an admin to access this page');
+      navigate('/');
+    }
+  }, [userInfo]);
 
   return <>{children}</>;
 };

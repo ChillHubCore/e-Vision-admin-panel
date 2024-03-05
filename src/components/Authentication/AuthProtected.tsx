@@ -12,11 +12,12 @@ const AuthProtected: React.FC<AuthProtectedProps> = ({ children }) => {
   const navigate = useNavigate();
   const userInfo = useSelector(selectUserInfo);
 
-  if (!userInfo?.token) {
-    toast.error('You are not authorized!');
-
-    navigate('/');
-  }
+  React.useEffect(() => {
+    if (!userInfo?.token) {
+      toast.error('You need to login to access this page');
+      navigate('/login');
+    }
+  }, [userInfo]);
 
   return <>{children}</>;
 };
