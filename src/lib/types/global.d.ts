@@ -40,7 +40,7 @@ interface shippingAddressProps {
 
 interface ShoppingCartType {
   shoppingCart: {
-    cartItems: ProductType[];
+    cartItems: ShoppingCartPayloadProps[];
     paymentMethod: string;
     shippingAddress: shippingAddressProps;
   };

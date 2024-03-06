@@ -7,7 +7,7 @@ import { getData } from '@/lib/utils/getData';
 
 export default function EditBlogPage() {
   const { id } = useParams();
-  const BlogData = useQuery('search-blogs', () => getData(`/blogs?id=${id}`), {
+  const BlogData = useQuery('search-blogs', () => getData(`/blog?id=${id}`), {
     cacheTime: 0,
   });
   return BlogData.isLoading ? (

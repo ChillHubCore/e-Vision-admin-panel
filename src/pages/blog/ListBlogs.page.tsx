@@ -41,7 +41,7 @@ export default function ListBlogsPage() {
     'search-blogs',
     () =>
       getData(
-        `/blogs?pageNumber=${pageNumber}&timeCreatedGTE=${
+        `/blog?pageNumber=${pageNumber}&timeCreatedGTE=${
           timeCreatedSearchInputGTE ? timeCreatedSearchInputGTE?.toISOString() : ''
         }&timeCreatedLTE=${
           timeCreatedSearchInputLTE ? timeCreatedSearchInputLTE?.toISOString() : ''
@@ -79,7 +79,7 @@ export default function ListBlogsPage() {
       <Table.Td>
         <>
           <Modal opened={opened} onClose={close} title="Alert">
-            <p>You are About to Delete a User Are You Sure? This is Unrecoverable!</p>
+            <p>You are About to Delete a Blog Are You Sure? This is Unrecoverable!</p>
             <Group>
               <Button
                 onClick={() => {

@@ -23,8 +23,7 @@ import { useNavigate } from 'react-router-dom';
 import { VariantCard } from '../common';
 import { addToCart, clearCart, removeFromCart } from '@/lib/redux/ShoppingCart/ShoppingCart';
 import { getData } from '@/lib/utils/getData';
-import { UserEntityProps } from '@/pages/user/ListUsers.page';
-import { OrderEntityProps } from './types';
+import { OrderEntityProps, UserEntityProps } from './types';
 import { useSubmit } from '@/lib/hooks';
 import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 

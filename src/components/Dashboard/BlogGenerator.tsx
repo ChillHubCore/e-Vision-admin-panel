@@ -100,7 +100,7 @@ export default function BlogGenerator({
   const handleSubmit = () => {
     if (editFlag) {
       FormActions.sendRequest(
-        `/blogs/${blogData?._id}`,
+        `/blog/${blogData?._id}`,
         BlogGeneratorForm,
         'put',
         'Blog updated successfully!',
@@ -109,7 +109,7 @@ export default function BlogGenerator({
       );
     } else {
       FormActions.sendRequest(
-        '/blogs',
+        '/blog',
         BlogGeneratorForm,
         'post',
         'Blog created successfully!',

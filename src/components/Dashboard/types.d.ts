@@ -125,8 +125,13 @@ export interface ShopSettingsProps {
   paymentOptions: string[];
 }
 export interface PromotionEntityProps {
+  _id: string;
   promotionIdentifier: string;
-  applicableProducts: string[];
+  applicableProducts: {
+    product: ProductEntityProps;
+    variant: ProductVariantProps;
+    quantity: number;
+  }[];
   creator: string;
   minTotalOrder: {
     active: boolean;
@@ -145,6 +150,14 @@ export interface PromotionEntityProps {
     isCaped: boolean;
     timesUsed: number;
     maxTimesToUse: number;
+  };
+  percentageDiscount: {
+    active: boolean;
+    percentage: number;
+  };
+  fixedDiscount: {
+    active: boolean;
+    price: number;
   };
   createdAt: Date;
   updatedAt: Date;
