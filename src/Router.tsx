@@ -7,6 +7,7 @@ import {
   CreateOrderPage,
   CreateProductPage,
   CreatePromotionPage,
+  CreateTicketPage,
   CreateTransactionPage,
   CreateUserPage,
   CreatorDashboardPage,
@@ -14,6 +15,7 @@ import {
   EditOrderPage,
   EditProductPage,
   EditPromotionPage,
+  EditTicketPage,
   EditTransactionPage,
   EditUserPage,
   GeneralSettingsPage,
@@ -22,6 +24,7 @@ import {
   ListOrdersPage,
   ListProductsPage,
   ListPromotionsPage,
+  ListTicketsPage,
   ListTransactionsPage,
   ListUsersPage,
   LoginForm,
@@ -539,6 +542,73 @@ export const AdminRoutes = (
             }
           >
             <EditPromotionPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    {/* tickets crud */}
+    <Route
+      path="/admin/dashboard/tickets"
+      element={
+        <AdminProtected>
+          <AdminLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <ListTicketsPage />
+            </Suspense>
+          </AdminLayout>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/tickets/create"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <CreateTicketPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/tickets/show/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <ShowTransactionPage />
+          </Suspense>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/tickets/edit/:id"
+      element={
+        <AdminProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <EditTicketPage />
           </Suspense>
         </AdminProtected>
       }

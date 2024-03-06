@@ -2,7 +2,6 @@ import React from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 
 interface AuthProtectedProps {
@@ -14,10 +13,9 @@ const AuthProtected: React.FC<AuthProtectedProps> = ({ children }) => {
   const userInfo = useSelector(selectUserInfo);
 
   React.useEffect(() => {
-    if (userInfo?.token) {
+    if (userInfo) {
       navigate('/');
     }
-    toast.error('You Have Already Logged In!');
   }, [userInfo]);
 
   return <>{children}</>;

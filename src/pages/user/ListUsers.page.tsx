@@ -41,7 +41,7 @@ export default function ListUsersPage() {
   const [timeCreatedSearchInputLTE, setTimeCreatedSearchInputLTE] = useState<Date | null>();
   const [birthDateSearchInputGTE, setBirthDateSearchInputGTE] = useState<Date | null>();
   const [birthDateSearchInputLTE, setBirthDateSearchInputLTE] = useState<Date | null>();
-  const [roleSearchInput, setRoleSearchInput] = useState<UserEntityProps['role'] | ''>('');
+  const [roleSearchInput, setRoleSearchInput] = useState<number>(0);
   const [loyaltyPointsGTE, setLoyaltyPointsGTE] = useState<number | null>();
   const [loyaltyPointsLTE, setLoyaltyPointsLTE] = useState<number | null>();
   const [shopTokenBalanceGTE, setShopTokenBalanceGTE] = useState<number | null>();
@@ -151,6 +151,9 @@ export default function ListUsersPage() {
         >
           {element.isCreator ? <IconCheck color="green" /> : <IconX color="red" />}
         </UnstyledButton>
+      </Table.Td>
+      <Table.Td>
+        {element.role.label} - {element.role.value}
       </Table.Td>
       <Table.Td>{new Date(element.createdAt).toLocaleString()}</Table.Td>
       <Table.Td>{new Date(element.updatedAt).toLocaleString()}</Table.Td>
@@ -304,7 +307,7 @@ export default function ListUsersPage() {
           placeholder="Role"
           value={roleSearchInput}
           onChange={(event) => {
-            setRoleSearchInput(event.currentTarget.value as UserEntityProps['role']);
+            setRoleSearchInput(Number(event.currentTarget.value));
           }}
           rightSectionPointerEvents="all"
           mt="md"
@@ -393,6 +396,7 @@ export default function ListUsersPage() {
             <Table.Th>Phone</Table.Th>
             <Table.Th>Admin</Table.Th>
             <Table.Th>Creator</Table.Th>
+            <Table.Th>Access Level</Table.Th>
             <Table.Th>Created At</Table.Th>
             <Table.Th>Updated At</Table.Th>
             <Table.Th>Delete</Table.Th>

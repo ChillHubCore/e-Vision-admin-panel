@@ -30,3 +30,7 @@ export const CreatePromotionPage = lazy(() => import('./promotion/CreatePromotio
 export const EditPromotionPage = lazy(() => import('./promotion/EditPromotion.page'));
 export const ListPromotionsPage = lazy(() => import('./promotion/ListPromotions.page'));
 export const ShowPromotionPage = lazy(() => import('./promotion/ShowPromotion.page'));
+export const CreateTicketPage = lazy(() => import('./ticket/CreateTicket.page'));
+export const EditTicketPage = lazy(() => import('./ticket/EditTicket.page'));
+export const ListTicketsPage = lazy(() => import('./ticket/ListTickets.page'));
+export const ShowTicketPage = lazy(() => import('./ticket/ShowTicket.page'));

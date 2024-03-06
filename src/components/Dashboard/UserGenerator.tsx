@@ -32,7 +32,7 @@ export default function UserGenerator({
       birthDate: UserData?.birthDate ? new Date(UserData.birthDate) : null,
       loyaltyPoints: UserData?.loyaltyPoints || 0,
       shopTokenBalance: UserData?.shopTokenBalance || 0,
-      role: UserData?.role || 'user',
+      role: UserData?.role || ({ label: 'User', value: 1 } as { label: string; value: number }),
       email: UserData?.email || '',
       countryCode: UserData?.countryCode || '',
       phone: UserData?.phone || '',
@@ -187,7 +187,21 @@ export default function UserGenerator({
             />
           }
         />
-        <NativeSelect data={roles} label="Role" {...UserGeneratorForm.getInputProps('role')} />
+        <NativeSelect
+          data={roles}
+          label="Role"
+          value={
+            UserGeneratorForm.values.role.value === 0
+              ? roles[0].value
+              : UserGeneratorForm.values.role.value
+          }
+          onChange={(e) => {
+            UserGeneratorForm.setFieldValue('role', {
+              label: roles.find((role) => role.value === e.target.value)?.label || 'User',
+              value: Number(e.target.value),
+            });
+          }}
+        />
         <TextInput
           disabled={FormActions.isLoading}
           label="Loyalty Points"

@@ -7,3 +7,4 @@ export const ProductGenerator = lazy(() => import('./ProductGenerator'));
 export const OrderGenerator = lazy(() => import('./OrderGenerator'));
 export const BlogGenerator = lazy(() => import('./BlogGenerator'));
 export const PromotionGenerator = lazy(() => import('./PromotionGenerator'));
+export const TicketGenerator = lazy(() => import('./TicketGenerator'));

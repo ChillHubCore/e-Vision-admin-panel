@@ -172,7 +172,10 @@ export interface UserEntityProps {
   birthDate: string;
   loyaltyPoints: number;
   shopTokenBalance: number;
-  role: 'user' | 'admin' | 'creator' | 'owner' | 'support' | 'super-admin' | 'moderator';
+  role: {
+    label: string;
+    value: number;
+  };
   countryCode: string;
   phone: string;
   isEmailVerified: boolean;
@@ -192,4 +195,28 @@ export interface AddressProps {
   state: string;
   zipCode: string;
   isPrimary: boolean;
+}
+
+export interface TicketEntityProps {
+  _id: string;
+  title: string;
+  description: string;
+  attachments: string[];
+  status: 'Open' | 'Closed' | 'In-Progress' | 'Pending';
+  priority: 'Low' | 'Medium' | 'High' | 'Urgent';
+  ticketType:
+    | 'Bug/Error'
+    | 'Feature Request'
+    | 'Product Consultation'
+    | 'Order Issue'
+    | 'Transaction Issue'
+    | 'Feedback'
+    | 'Other';
+  createdBy: string;
+  assignedTo: string;
+  createdAt: string;
+  updatedAt: string;
+  closedAt?: string;
+  closedBy?: string;
+  closedNote?: string;
 }
