@@ -237,7 +237,7 @@ export default function ListPromotionsPage() {
     </Container>
   ) : (
     <Alert title="Error" color="red">
-      An error occurred while fetching promotions
+      An error occurred while fetching Promotions!
     </Alert>
   );
 }

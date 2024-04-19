@@ -213,7 +213,12 @@ export interface TicketEntityProps {
     | 'Feedback'
     | 'Other';
   createdBy: string;
-  assignedTo: string;
+  assignedTo:
+    | string
+    | {
+        _id: string;
+        username: string;
+      };
   createdAt: string;
   updatedAt: string;
   closedAt?: string;
