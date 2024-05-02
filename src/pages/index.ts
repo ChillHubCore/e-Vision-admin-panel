@@ -34,3 +34,4 @@ export const CreateTicketPage = lazy(() => import('./ticket/CreateTicket.page'))
 export const EditTicketPage = lazy(() => import('./ticket/EditTicket.page'));
 export const ListTicketsPage = lazy(() => import('./ticket/ListTickets.page'));
 export const ShowTicketPage = lazy(() => import('./ticket/ShowTicket.page'));
+export const TeamDashboardPage = lazy(() => import('./dashboard/TeamDashboard.page'));

@@ -1,9 +1,13 @@
 interface UserInfo {
-  name: string;
+  username: string;
   isCreator: boolean;
   isAdmin: boolean;
   isEmailVerified: boolean;
   isPhoneVerified: boolean;
+  role: {
+    label: string;
+    value: number;
+  };
   token: string;
 }
 

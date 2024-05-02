@@ -35,9 +35,16 @@ import {
   ShowTransactionPage,
   ShowUserPage,
   SignupPage,
+  TeamDashboardPage,
 } from './pages';
-import { AdminProtected, CreatorProtected, NoAuth } from './components/Authentication';
+import {
+  AdminProtected,
+  CreatorProtected,
+  NoAuth,
+  TeamProtected,
+} from './components/Authentication';
 import AdminLayout from './lib/HOC/AdminLayout';
+import TeamLayout from './lib/HOC/TeamLayout';
 
 export const PublicRoutes = (
   <>
@@ -633,4 +640,27 @@ export const CreatorRoutes = (
       </CreatorProtected>
     }
   />
+);
+
+export const TeamRoutes = (
+  <>
+    <Route
+      path="/team/dashboard"
+      element={
+        <TeamLayout>
+          <TeamProtected>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <TeamDashboardPage />
+            </Suspense>
+          </TeamProtected>
+        </TeamLayout>
+      }
+    />
+  </>
 );

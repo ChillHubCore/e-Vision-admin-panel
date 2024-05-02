@@ -83,6 +83,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <></>
     );
 
+  const renderTeamMemberDashboardDropdown =
+    userInfo?.token && userInfo.role.label === 'TeamMember' ? (
+      <>
+        <UnstyledButton component={Link} to="/team/dashboard" className={classes.control}>
+          Team Member Dashboard
+        </UnstyledButton>
+      </>
+    ) : (
+      <></>
+    );
+
   return (
     <AppShell
       header={{ height: 60 }}
@@ -98,6 +109,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               {renderCreatorDashboardDropdown}
               <Divider orientation="vertical" />
               {renderAdminDashboardDropdown}
+              <Divider orientation="vertical" />
+              {renderTeamMemberDashboardDropdown}
               <Divider orientation="vertical" />
               <ColorSchemeToggle />
               <Divider orientation="vertical" />

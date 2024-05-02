@@ -8,7 +8,7 @@ import { DatesProvider } from '@mantine/dates';
 import { theme } from './theme';
 import 'react-toastify/dist/ReactToastify.css';
 import { AppLayout } from './components/common';
-import { AdminRoutes, CreatorRoutes, PublicRoutes } from './Router';
+import { AdminRoutes, CreatorRoutes, PublicRoutes, TeamRoutes } from './Router';
 import store from './lib/redux/Store';
 import '@/lib/styles/global.module.scss';
 import '@mantine/dates/styles.css';
@@ -28,6 +28,7 @@ export default function App() {
                     {PublicRoutes}
                     {AdminRoutes}
                     {CreatorRoutes}
+                    {TeamRoutes}
                   </Routes>
                 </main>
                 <ToastContainer />

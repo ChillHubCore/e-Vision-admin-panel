@@ -2,6 +2,8 @@ import { TextInput, PasswordInput, Button, Box, Title, Center } from '@mantine/c
 import { hasLength, isEmail, matches, matchesField, useForm } from '@mantine/form';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
+import { DatePickerInput } from '@mantine/dates';
+import { IconX } from '@tabler/icons-react';
 import { useSubmit } from '@/lib/hooks';
 import { signIn } from '@/lib/redux/User/UserSlice';
 
@@ -25,6 +27,7 @@ const SignupPage: React.FC = () => {
       countryCode: '',
       phone: '',
       email: '',
+      birthDate: null,
       password: '',
       confirmPassword: '',
     },
@@ -120,6 +123,20 @@ const SignupPage: React.FC = () => {
           placeholder="Enter your email"
           {...SignUpForm.getInputProps('email')}
           required
+        />
+
+        <DatePickerInput
+          label="Birth Date"
+          disabled={FormActions.isLoading}
+          {...SignUpForm.getInputProps('birthDate')}
+          placeholder="Client birth date"
+          rightSection={
+            <IconX
+              onClick={() => {
+                SignUpForm.setFieldValue('birthDate', null);
+              }}
+            />
+          }
         />
 
         <PasswordInput
