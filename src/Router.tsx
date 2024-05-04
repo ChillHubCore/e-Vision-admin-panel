@@ -28,6 +28,7 @@ import {
   ListTransactionsPage,
   ListUsersPage,
   LoginForm,
+  MyResumePage,
   ShowBlogPage,
   ShowOrderPage,
   ShowProductPage,
@@ -647,8 +648,8 @@ export const TeamRoutes = (
     <Route
       path="/team/dashboard"
       element={
-        <TeamLayout>
-          <TeamProtected>
+        <TeamProtected>
+          <TeamLayout>
             <Suspense
               fallback={
                 <Center>
@@ -658,8 +659,26 @@ export const TeamRoutes = (
             >
               <TeamDashboardPage />
             </Suspense>
-          </TeamProtected>
-        </TeamLayout>
+          </TeamLayout>
+        </TeamProtected>
+      }
+    />
+    <Route
+      path="/team/dashboard/myresume"
+      element={
+        <TeamProtected>
+          <TeamLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <MyResumePage />
+            </Suspense>
+          </TeamLayout>
+        </TeamProtected>
       }
     />
   </>

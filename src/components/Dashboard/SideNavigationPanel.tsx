@@ -19,7 +19,7 @@ export default function SideNavigationPanel({
           </Link>
         ))}
       </Flex>
-      <Button hiddenFrom="md" onClick={open}>
+      <Button mb="md" hiddenFrom="md" onClick={open}>
         Open Navigation Drawer
       </Button>
       <Drawer opened={opened} onClose={close} title="Navigation Drawer" hiddenFrom="md">

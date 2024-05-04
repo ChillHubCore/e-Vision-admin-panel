@@ -168,6 +168,7 @@ export interface UserEntityProps {
   firstName: string;
   lastName: string;
   username: string;
+  profilePicture: string;
   email: string;
   birthDate: string;
   loyaltyPoints: number;
@@ -224,4 +225,51 @@ export interface TicketEntityProps {
   closedAt?: string;
   closedBy?: string;
   closedNote?: string;
+}
+
+export interface WorkSampleEntityProps {
+  name: string;
+  description: string;
+  url: string;
+  image: string;
+  technologies: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ResumeEntityProps {
+  _id: string;
+  user: string;
+  title: string;
+  workExperience: {
+    company: string;
+    position: string;
+    startDate: string;
+    endDate: string;
+    description: string;
+  }[];
+  education: {
+    institution: string;
+    degree: string;
+    startDate: string;
+    endDate: string;
+    description: string;
+  }[];
+  skills: {
+    name: string;
+    level: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+  }[];
+  certifications: {
+    name: string;
+    institution: string;
+  }[];
+  languages: {
+    name: string;
+    level: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+  }[];
+  hobbies: string[];
+  active: boolean;
+  workSamples: WorkSampleEntityProps[];
+  createdAt: string;
+  updatedAt: string;
 }
