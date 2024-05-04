@@ -11,13 +11,6 @@ interface UserInfo {
   token: string;
 }
 
-interface UserProps {
-  _id: string;
-  name: string;
-  email: boolean;
-  phone: boolean;
-}
-
 interface UserState {
   userInfo: UserInfo | null;
 }

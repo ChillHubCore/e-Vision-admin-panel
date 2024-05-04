@@ -1,3 +1,5 @@
+import { DateValue } from '@mantine/dates';
+
 export interface ProductVariantProps {
   _id?: string;
   images: string[];
@@ -233,8 +235,6 @@ export interface WorkSampleEntityProps {
   url: string;
   image: string;
   technologies: string[];
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface ResumeEntityProps {
@@ -244,15 +244,15 @@ export interface ResumeEntityProps {
   workExperience: {
     company: string;
     position: string;
-    startDate: string;
-    endDate: string;
+    startDate: DateValue;
+    endDate: DateValue;
     description: string;
   }[];
   education: {
     institution: string;
     degree: string;
-    startDate: string;
-    endDate: string;
+    startDate: DateValue;
+    endDate: DateValue;
     description: string;
   }[];
   skills: {
@@ -265,7 +265,7 @@ export interface ResumeEntityProps {
   }[];
   languages: {
     name: string;
-    level: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+    level: 'Beginner' | 'Intermediate' | 'Advanced' | 'Fluent' | 'Native';
   }[];
   hobbies: string[];
   active: boolean;

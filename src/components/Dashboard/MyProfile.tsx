@@ -74,7 +74,7 @@ export default function MyProfile({ UserData }: { UserData: UserEntityProps }) {
               disabled={uploadHandle.isLoading}
               onChange={(value) =>
                 uploadHandle.sendFile(
-                  '/upload',
+                  '/upload/compressed',
                   value as File,
                   'Image Uploaded Successfully!',
                   'Failed to upload image! Please try again.',
