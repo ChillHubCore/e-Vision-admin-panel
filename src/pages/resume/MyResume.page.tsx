@@ -20,7 +20,7 @@ export default function MyResumePage() {
   ) : (
     <div style={{ width: '100%' }}>
       <Suspense fallback={<Loader />}>
-        <ResumeGenerator ResumeData={ResumeData.data} editFlag={false} userFlag />
+        <ResumeGenerator ResumeData={ResumeData.data} />
       </Suspense>
     </div>
   );

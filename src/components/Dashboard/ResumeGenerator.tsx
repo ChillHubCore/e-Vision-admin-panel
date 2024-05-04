@@ -26,12 +26,12 @@ import blackBG from '@/assets/black-bg.png';
 
 export default function ResumeGenerator({
   ResumeData,
-  editFlag,
-  userFlag,
+  // editFlag,
+  // userFlag,
 }: {
   ResumeData: ResumeEntityProps;
-  editFlag: boolean;
-  userFlag: boolean;
+  // editFlag: boolean;
+  // userFlag: boolean;
 }) {
   const [WorkExperienceData, setWorkExperienceData] = useState<{
     company: string;
