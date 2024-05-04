@@ -24,7 +24,7 @@ import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 import { eAxios } from '@/lib/utils';
 import { BlogEntityProps } from '@/components/Dashboard/types';
 
-export default function ListBlogsPage() {
+export default function ListBlogsPage({ TeamMemberFlag }: { TeamMemberFlag?: boolean }) {
   const [blogTitleSearchInput, setBlogTitleSearchInput] = useState('');
   const [slugSearchInput, setSlugSearchInput] = useState('');
   const [timeCreatedSearchInputGTE, setTimeCreatedSearchInputGTE] = useState<Date | null>(null);
@@ -113,7 +113,13 @@ export default function ListBlogsPage() {
             display: 'flex',
             alignItems: 'center',
           }}
-          onClick={() => navigate(`/admin/dashboard/blogs/edit/${element._id}`)}
+          onClick={() =>
+            navigate(
+              TeamMemberFlag
+                ? `/team/dashboard/blogs/edit/${element._id}`
+                : `/admin/dashboard/blogs/edit/${element._id}`
+            )
+          }
         >
           <IconEdit color="blue" />
         </UnstyledButton>
@@ -124,7 +130,13 @@ export default function ListBlogsPage() {
             display: 'flex',
             alignItems: 'center',
           }}
-          onClick={() => navigate(`/admin/dashboard/blogs/show/${element._id}`)}
+          onClick={() =>
+            navigate(
+              TeamMemberFlag
+                ? `/team/dashboard/blogs/show/${element._id}`
+                : `/admin/dashboard/blogs/show/${element._id}`
+            )
+          }
         >
           <IconEye color="green" />
         </UnstyledButton>
@@ -150,7 +162,10 @@ export default function ListBlogsPage() {
     Blogs.isSuccess && (
       <Container size="xl">
         <Group justify="space-between">
-          <Button component={Link} to="/admin/dashboard/blogs/create">
+          <Button
+            component={Link}
+            to={TeamMemberFlag ? '/team/dashboard/blogs/create' : '/admin/dashboard/blogs/create'}
+          >
             Create New Blog
           </Button>
           <TextInput

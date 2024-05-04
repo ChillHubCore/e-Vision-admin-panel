@@ -31,9 +31,11 @@ import { BlogEntityProps } from './types';
 export default function BlogGenerator({
   blogData,
   editFlag,
+  teamMemberFlag,
 }: {
   blogData?: BlogEntityProps;
   editFlag?: boolean;
+  teamMemberFlag?: boolean;
 }) {
   const BlogGeneratorForm = useForm({
     initialValues: {
@@ -105,7 +107,7 @@ export default function BlogGenerator({
         'put',
         'Blog updated successfully!',
         'Failed to update blog. Please try again later',
-        () => navigate('/admin/dashboard/blogs')
+        () => navigate(teamMemberFlag ? '/team/dashboard/blogs' : '/admin/dashboard/blogs')
       );
     } else {
       FormActions.sendRequest(
@@ -114,7 +116,7 @@ export default function BlogGenerator({
         'post',
         'Blog created successfully!',
         'Failed to create blog. Please try again later',
-        () => navigate('/admin/dashboard/blogs')
+        () => navigate(teamMemberFlag ? '/team/dashboard/blogs' : '/admin/dashboard/blogs')
       );
     }
   };

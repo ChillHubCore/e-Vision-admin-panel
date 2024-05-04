@@ -681,5 +681,72 @@ export const TeamRoutes = (
         </TeamProtected>
       }
     />
+    {/* blogs crud */}
+    <Route
+      path="/team/dashboard/blogs"
+      element={
+        <TeamProtected>
+          <TeamLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <ListBlogsPage TeamMemberFlag />
+            </Suspense>
+          </TeamLayout>
+        </TeamProtected>
+      }
+    />
+    <Route
+      path="/team/dashboard/blogs/create"
+      element={
+        <TeamProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <CreateBlogPage TeamMemberFlag />
+          </Suspense>
+        </TeamProtected>
+      }
+    />
+    <Route
+      path="/team/dashboard/blogs/show/:id"
+      element={
+        <TeamProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <ShowBlogPage />
+          </Suspense>
+        </TeamProtected>
+      }
+    />
+    <Route
+      path="/team/dashboard/blogs/edit/:id"
+      element={
+        <TeamProtected>
+          <Suspense
+            fallback={
+              <Center>
+                <Loader color="green" />
+              </Center>
+            }
+          >
+            <EditBlogPage />
+          </Suspense>
+        </TeamProtected>
+      }
+    />
   </>
 );
