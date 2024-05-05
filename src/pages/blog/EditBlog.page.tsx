@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { BlogGenerator } from '@/components/Dashboard';
 import { getData } from '@/lib/utils/getData';
 
-export default function EditBlogPage() {
+export default function EditBlogPage({ TeamMemberFlag }: { TeamMemberFlag?: boolean }) {
   const { id } = useParams();
   const BlogData = useQuery('search-blogs', () => getData(`/blog?id=${id}`), {
     cacheTime: 0,
@@ -16,7 +16,11 @@ export default function EditBlogPage() {
     BlogData.isSuccess && (
       <Container size="xl">
         <Suspense fallback={<Loader />}>
-          <BlogGenerator editFlag blogData={BlogData.data.blogs[0]} />
+          <BlogGenerator
+            teamMemberFlag={TeamMemberFlag}
+            editFlag
+            blogData={BlogData.data.blogs[0]}
+          />
         </Suspense>
       </Container>
     )

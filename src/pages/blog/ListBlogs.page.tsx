@@ -45,7 +45,9 @@ export default function ListBlogsPage({ TeamMemberFlag }: { TeamMemberFlag?: boo
           timeCreatedSearchInputGTE ? timeCreatedSearchInputGTE?.toISOString() : ''
         }&timeCreatedLTE=${
           timeCreatedSearchInputLTE ? timeCreatedSearchInputLTE?.toISOString() : ''
-        }&desc=${desc}$limit=${limit}&title=${blogTitleSearchInput}&slug=${slugSearchInput}`
+        }&desc=${desc}$limit=${limit}&title=${blogTitleSearchInput}&slug=${slugSearchInput}&author=${
+          TeamMemberFlag ? userInfo?.username : ''
+        }`
       ),
     {
       cacheTime: 0,

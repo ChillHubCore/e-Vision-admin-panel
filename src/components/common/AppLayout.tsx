@@ -106,11 +106,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <Group justify="space-between" style={{ flex: 1 }}>
             <Link to="/">e-Vision Dashboard</Link>
             <Group ml="xl" gap={0} visibleFrom="sm">
+              {renderTeamMemberDashboardDropdown}
+              <Divider orientation="vertical" />
               {renderCreatorDashboardDropdown}
               <Divider orientation="vertical" />
               {renderAdminDashboardDropdown}
-              <Divider orientation="vertical" />
-              {renderTeamMemberDashboardDropdown}
               <Divider orientation="vertical" />
               <ColorSchemeToggle />
               <Divider orientation="vertical" />

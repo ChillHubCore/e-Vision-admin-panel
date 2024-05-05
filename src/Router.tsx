@@ -743,7 +743,7 @@ export const TeamRoutes = (
               </Center>
             }
           >
-            <EditBlogPage />
+            <EditBlogPage TeamMemberFlag />
           </Suspense>
         </TeamProtected>
       }
