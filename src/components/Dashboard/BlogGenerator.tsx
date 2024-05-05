@@ -15,7 +15,7 @@ import Superscript from '@tiptap/extension-superscript';
 import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
-import { Editor, useEditor } from '@tiptap/react';
+import { AnyExtension, Editor, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { Image as TiptapImage } from '@tiptap/extension-image';
 import React, { useEffect } from 'react';
@@ -74,7 +74,7 @@ export default function BlogGenerator({
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit as AnyExtension,
       Underline,
       Link,
       Superscript,

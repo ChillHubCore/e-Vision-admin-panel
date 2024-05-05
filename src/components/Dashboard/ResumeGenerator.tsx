@@ -23,6 +23,7 @@ import { IconFileLike, IconX } from '@tabler/icons-react';
 import { useSubmit, useUpload } from '@/lib/hooks';
 import { ResumeEntityProps } from './types';
 import blackBG from '@/assets/black-bg.png';
+import { socialsPlatformData } from '@/lib/constants';
 
 export default function ResumeGenerator({
   ResumeData,
@@ -73,6 +74,42 @@ export default function ResumeGenerator({
     image: '',
     technologies: [],
   });
+  const [SocialData, setSocialData] = useState<{
+    username: string;
+    url: string;
+    platform:
+      | {
+          name: 'Gmail';
+          icon: 'https://res.cloudinary.com/dn16ti55j/image/upload/v1714924609/icons/gmail_jnqb0o.png';
+        }
+      | {
+          name: 'LinkedIn';
+          icon: 'https://res.cloudinary.com/dn16ti55j/image/upload/v1714924612/icons/linkedin_olt9r1.webp';
+        }
+      | {
+          name: 'GitHub';
+          icon: 'https://res.cloudinary.com/dn16ti55j/image/upload/v1714924624/icons/github_jbvpvf.png';
+        }
+      | {
+          name: 'YouTube';
+          icon: 'https://res.cloudinary.com/dn16ti55j/image/upload/v1714924618/icons/youtube_bmnxle.jpg';
+        }
+      | {
+          name: 'Telegram';
+          icon: 'https://res.cloudinary.com/dn16ti55j/image/upload/v1714924615/icons/telegram_g5xfqx.png';
+        }
+      | {
+          name: 'Discord';
+          icon: 'https://res.cloudinary.com/dn16ti55j/image/upload/v1714924621/icons/discord_m68ils.png';
+        };
+  }>({
+    username: '',
+    url: '',
+    platform: {
+      name: 'Gmail',
+      icon: 'https://res.cloudinary.com/dn16ti55j/image/upload/v1714924609/icons/gmail_jnqb0o.png',
+    },
+  });
   const ResumeGeneratorForm = useForm({
     initialValues: {
       title: ResumeData?.title || '',
@@ -83,6 +120,7 @@ export default function ResumeGenerator({
       languages: ResumeData?.languages || ([] as ResumeEntityProps['languages']),
       hobbies: ResumeData?.hobbies || ([] as ResumeEntityProps['hobbies']),
       workSamples: ResumeData?.workSamples || ([] as ResumeEntityProps['workSamples']),
+      socials: ResumeData?.socials || ([] as ResumeEntityProps['socials']),
       active: ResumeData?.active || false,
     },
     validate: {},
@@ -100,7 +138,9 @@ export default function ResumeGenerator({
       () => navigate('/team/dashboard/myresume')
     );
   };
-  console.log('trace#001', ResumeData);
+
+  console.log('trace#002', SocialData?.platform);
+
   return (
     <Box w="100%">
       {ResumeData ? (
@@ -676,12 +716,104 @@ export default function ResumeGenerator({
               </Button>
             </Fieldset>
           ))}
+        <Fieldset
+          legend="Socials"
+          style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+        >
+          <Group justify="space-between">
+            <NativeSelect
+              data={socialsPlatformData.map((social) => ({
+                label: social.name,
+                value: social.name,
+              }))}
+              label="Platform"
+              value={SocialData?.platform.name}
+              onChange={(e) =>
+                setSocialData({
+                  ...SocialData,
+                  platform: {
+                    name: e.target.value as any,
+                    icon: socialsPlatformData.find((social) => social.name === e.target.value)
+                      ?.icon as any,
+                  },
+                })
+              }
+            />
+            <div>
+              <Image
+                alt={SocialData?.platform.name}
+                src={SocialData?.platform.icon}
+                width={30}
+                height={30}
+                radius="xl"
+              />
+            </div>
+          </Group>
+          <TextInput
+            label="Username"
+            placeholder="Username"
+            onChange={(e) => setSocialData({ ...SocialData, username: e.target.value })}
+            value={SocialData?.username}
+          />
+          <TextInput
+            label="URL"
+            placeholder="URL"
+            onChange={(e) => setSocialData({ ...SocialData, url: e.target.value })}
+            value={SocialData?.url}
+          />
+          <Button
+            w="fit-content"
+            onClick={() => {
+              ResumeGeneratorForm.setFieldValue('socials', [
+                ...ResumeGeneratorForm.values.socials,
+                SocialData,
+              ]);
+              setSocialData({
+                username: '',
+                url: '',
+                platform: {
+                  name: 'Gmail',
+                  icon: 'https://res.cloudinary.com/dn16ti55j/image/upload/v1714924609/icons/gmail_jnqb0o.png',
+                },
+              });
+            }}
+          >
+            Add Social
+          </Button>
+        </Fieldset>
+        {ResumeGeneratorForm.values.socials.length > 0 &&
+          ResumeGeneratorForm.values.socials.map((social) => (
+            <Fieldset
+              key={social.username}
+              legend={social.username}
+              style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+            >
+              <Group justify="space-between">
+                <div>
+                  <TextInput label="Platform" value={social.platform.name} disabled />
+                  <TextInput label="URL" value={social.url} disabled />
+                </div>
+              </Group>
+              <Button
+                w="fit-content"
+                onClick={() =>
+                  ResumeGeneratorForm.setFieldValue(
+                    'socials',
+                    ResumeGeneratorForm.values.socials.filter((s) => s !== social)
+                  )
+                }
+              >
+                Delete
+              </Button>
+            </Fieldset>
+          ))}
 
         <Switch
           label="Available for Work"
           {...ResumeGeneratorForm.getInputProps('active')}
           defaultChecked={ResumeData?.active || false}
         />
+
         <Button
           w="fit-content"
           type="submit"

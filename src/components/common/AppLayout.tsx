@@ -24,48 +24,60 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch();
   const renderLoginLogoutButton = userInfo?.token ? (
     <>
-      <UnstyledButton onClick={() => dispatch(signOut())} className={classes.control}>
+      <UnstyledButton
+        onClick={() => {
+          dispatch(signOut());
+          toggle();
+        }}
+        className={classes.control}
+      >
         Sign Out
       </UnstyledButton>
-
-      <Popover width={200} position="bottom" withArrow shadow="md">
-        <Popover.Target>
-          <Indicator color={shoppingCart.shoppingCart.cartItems.length > 0 ? 'cyan' : 'gray'}>
-            <UnstyledButton>
-              <IconShoppingBag />
-            </UnstyledButton>
-          </Indicator>
-        </Popover.Target>
-        <Popover.Dropdown>
-          {shoppingCart.shoppingCart.cartItems.length > 0 ? (
-            <Group align="middle" px="sm" py="md">
-              <Text size="sm">{shoppingCart.shoppingCart.cartItems.length} items in your cart</Text>
-              <Link to="/admin/dashboard/orders/create">View Cart</Link>
-            </Group>
-          ) : (
-            <Group align="middle" px="sm" py="md">
-              <Text size="sm">Your cart is empty</Text>
-              <Link to="/admin/dashboard/products">Start Shopping</Link>
-            </Group>
-          )}
-        </Popover.Dropdown>
-      </Popover>
     </>
   ) : (
     <>
-      <UnstyledButton component={Link} to="/login" className={classes.control}>
+      <UnstyledButton onClick={toggle} component={Link} to="/login" className={classes.control}>
         Login
       </UnstyledButton>
-      {' | '}
-      <UnstyledButton component={Link} to="/signup" className={classes.control}>
+      <UnstyledButton onClick={toggle} component={Link} to="/signup" className={classes.control}>
         Signup
       </UnstyledButton>
     </>
   );
 
+  const renderShoppingCartDropdown = (
+    <Popover width={200} position="bottom" withArrow shadow="md">
+      <Popover.Target>
+        <Indicator color={shoppingCart.shoppingCart.cartItems.length > 0 ? 'cyan' : 'gray'}>
+          <UnstyledButton>
+            <IconShoppingBag />
+          </UnstyledButton>
+        </Indicator>
+      </Popover.Target>
+      <Popover.Dropdown>
+        {shoppingCart.shoppingCart.cartItems.length > 0 ? (
+          <Group align="middle" px="sm" py="md">
+            <Text size="sm">{shoppingCart.shoppingCart.cartItems.length} items in your cart</Text>
+            <Link to="/admin/dashboard/orders/create">View Cart</Link>
+          </Group>
+        ) : (
+          <Group align="middle" px="sm" py="md">
+            <Text size="sm">Your cart is empty</Text>
+            <Link to="/admin/dashboard/products">Start Shopping</Link>
+          </Group>
+        )}
+      </Popover.Dropdown>
+    </Popover>
+  );
+
   const renderCreatorDashboardDropdown =
     userInfo?.token && userInfo.isCreator ? (
-      <UnstyledButton component={Link} to="/creator/dashboard" className={classes.control}>
+      <UnstyledButton
+        onClick={toggle}
+        component={Link}
+        to="/creator/dashboard"
+        className={classes.control}
+      >
         Creator Dashboard
       </UnstyledButton>
     ) : (
@@ -75,7 +87,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const renderAdminDashboardDropdown =
     userInfo?.token && userInfo.isAdmin ? (
       <>
-        <UnstyledButton component={Link} to="/admin/dashboard" className={classes.control}>
+        <UnstyledButton
+          onClick={toggle}
+          component={Link}
+          to="/admin/dashboard"
+          className={classes.control}
+        >
           Admin Dashboard
         </UnstyledButton>
       </>
@@ -86,7 +103,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const renderTeamMemberDashboardDropdown =
     userInfo?.token && userInfo.role.label === 'TeamMember' ? (
       <>
-        <UnstyledButton component={Link} to="/team/dashboard" className={classes.control}>
+        <UnstyledButton
+          onClick={toggle}
+          component={Link}
+          to="/team/dashboard"
+          className={classes.control}
+        >
           Team Member Dashboard
         </UnstyledButton>
       </>
@@ -117,17 +139,21 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <UnstyledButton className={classes.control}>Documentation</UnstyledButton>
               <Divider orientation="vertical" />
               {renderLoginLogoutButton}
+              {renderShoppingCartDropdown}
             </Group>
           </Group>
         </Group>
       </AppShell.Header>
 
       <AppShell.Navbar py="md" px={4}>
+        <Group m="sm">{renderShoppingCartDropdown}</Group>
+        {renderAdminDashboardDropdown}
         {renderCreatorDashboardDropdown}
-        <UnstyledButton className={classes.control}>Documentation</UnstyledButton>
+        {renderTeamMemberDashboardDropdown}
         {renderLoginLogoutButton}
         <Divider />
         <ColorSchemeToggle />
+        <UnstyledButton className={classes.control}>Documentation</UnstyledButton>
       </AppShell.Navbar>
 
       <AppShell.Main>{children}</AppShell.Main>

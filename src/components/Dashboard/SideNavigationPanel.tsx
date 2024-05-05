@@ -25,7 +25,7 @@ export default function SideNavigationPanel({
       <Drawer opened={opened} onClose={close} title="Navigation Drawer" hiddenFrom="md">
         <Flex direction="column" gap="1rem" className={classes.navContainer}>
           {RoutesList.map((route) => (
-            <Link key={route.route} to={route.route} className={classes.navItem}>
+            <Link onClick={close} key={route.route} to={route.route} className={classes.navItem}>
               {route.icon}
               {route.title}
             </Link>

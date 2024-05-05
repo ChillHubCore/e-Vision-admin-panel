@@ -28,7 +28,7 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'react-toastify';
 import { IconFileLike, IconPlus, IconX } from '@tabler/icons-react';
-import { Editor, useEditor } from '@tiptap/react';
+import { AnyExtension, Editor, useEditor } from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
@@ -187,7 +187,7 @@ export default function ProductGenerator({
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit as AnyExtension,
       Underline,
       Link,
       Superscript,
