@@ -28,7 +28,7 @@ import {
   ListTransactionsPage,
   ListUsersPage,
   LoginForm,
-  MyMessages,
+  MyEmailsPage,
   MyResumePage,
   ShowBlogPage,
   ShowOrderPage,
@@ -749,9 +749,9 @@ export const TeamRoutes = (
         </TeamProtected>
       }
     />
-    {/* messages crud */}
+    {/* emails crud */}
     <Route
-      path="/team/dashboard/mymessages"
+      path="/team/dashboard/myemails"
       element={
         <TeamProtected>
           <TeamLayout>
@@ -762,7 +762,7 @@ export const TeamRoutes = (
                 </Center>
               }
             >
-              <MyMessages />
+              <MyEmailsPage />
             </Suspense>
           </TeamLayout>
         </TeamProtected>

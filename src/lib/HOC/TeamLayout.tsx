@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { IconArticle, IconMessage, IconPaperclip, IconUser } from '@tabler/icons-react';
+import { IconArticle, IconMail, IconPaperclip, IconUser } from '@tabler/icons-react';
 import { Flex, Loader } from '@mantine/core';
 import { SideNavigationPanel } from '@/components/Dashboard';
 
@@ -20,7 +20,7 @@ const TeamLayout: React.FC<TeamLayoutProps> = ({ children }) => {
       icon: <IconPaperclip />,
     },
     { route: '/team/dashboard/blogs', title: 'Blogs', icon: <IconArticle /> },
-    { route: '/team/dashboard/mymessages', title: 'Messages', icon: <IconMessage /> },
+    { route: '/team/dashboard/myemails', title: 'Emails', icon: <IconMail /> },
   ];
   return (
     <Flex direction={{ base: 'column', md: 'row' }} justify="space-between">

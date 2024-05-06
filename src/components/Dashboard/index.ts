@@ -10,3 +10,4 @@ export const PromotionGenerator = lazy(() => import('./PromotionGenerator'));
 export const TicketGenerator = lazy(() => import('./TicketGenerator'));
 export const MyProfile = lazy(() => import('./MyProfile'));
 export const ResumeGenerator = lazy(() => import('./ResumeGenerator'));
+export const EmailGenerator = lazy(() => import('./EmailGenerator'));
