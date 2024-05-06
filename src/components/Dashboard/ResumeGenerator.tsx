@@ -9,6 +9,7 @@ import {
   Image,
   Loader,
   NativeSelect,
+  Stack,
   Switch,
   TagsInput,
   Textarea,
@@ -142,7 +143,7 @@ export default function ResumeGenerator({
   console.log('trace#002', SocialData?.platform);
 
   return (
-    <Box w="100%">
+    <Stack w="100%" m="sm">
       {ResumeData ? (
         <Title ta="center" order={3}>
           {ResumeData.title}
@@ -823,6 +824,6 @@ export default function ResumeGenerator({
           Update Resume
         </Button>
       </Box>
-    </Box>
+    </Stack>
   );
 }
