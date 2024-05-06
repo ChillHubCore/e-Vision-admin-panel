@@ -36,3 +36,4 @@ export const ListTicketsPage = lazy(() => import('./ticket/ListTickets.page'));
 export const ShowTicketPage = lazy(() => import('./ticket/ShowTicket.page'));
 export const TeamDashboardPage = lazy(() => import('./dashboard/TeamDashboard.page'));
 export const MyResumePage = lazy(() => import('./resume/MyResume.page'));
+export const MyMessages = lazy(() => import('./messages/MyMessages.page'));

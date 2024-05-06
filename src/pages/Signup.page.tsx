@@ -126,6 +126,7 @@ const SignupPage: React.FC = () => {
         />
 
         <DatePickerInput
+          required
           label="Birth Date"
           disabled={FormActions.isLoading}
           {...SignUpForm.getInputProps('birthDate')}

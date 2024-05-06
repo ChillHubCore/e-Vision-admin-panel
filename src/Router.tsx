@@ -28,6 +28,7 @@ import {
   ListTransactionsPage,
   ListUsersPage,
   LoginForm,
+  MyMessages,
   MyResumePage,
   ShowBlogPage,
   ShowOrderPage,
@@ -745,6 +746,25 @@ export const TeamRoutes = (
           >
             <EditBlogPage TeamMemberFlag />
           </Suspense>
+        </TeamProtected>
+      }
+    />
+    {/* messages crud */}
+    <Route
+      path="/team/dashboard/mymessages"
+      element={
+        <TeamProtected>
+          <TeamLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <MyMessages />
+            </Suspense>
+          </TeamLayout>
         </TeamProtected>
       }
     />
