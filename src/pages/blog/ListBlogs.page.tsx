@@ -1,18 +1,25 @@
 import {
   Button,
   Container,
+  Divider,
+  Flex,
   Group,
+  List,
   Loader,
   Modal,
   NativeSelect,
   Pagination,
+  Spoiler,
   Switch,
   Table,
+  Text,
   TextInput,
+  ThemeIcon,
+  Title,
   UnstyledButton,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { IconEdit, IconEye, IconX } from '@tabler/icons-react';
+import { IconArticle, IconEdit, IconEye, IconX } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
@@ -163,62 +170,131 @@ export default function ListBlogsPage({ TeamMemberFlag }: { TeamMemberFlag?: boo
   ) : (
     Blogs.isSuccess && (
       <Container size="xl">
-        <Group justify="space-between">
-          <Button
-            component={Link}
-            to={TeamMemberFlag ? '/team/dashboard/blogs/create' : '/admin/dashboard/blogs/create'}
-          >
-            Create New Blog
-          </Button>
-          <TextInput
-            value={blogTitleSearchInput}
-            onChange={(event) => {
-              setBlogTitleSearchInput(event.target.value);
-            }}
-            placeholder="Search blogs by their Title"
-          />
-          <TextInput
-            value={slugSearchInput}
-            onChange={(event) => {
-              setSlugSearchInput(event.target.value);
-            }}
-            placeholder="Search blogs by their Slug"
-          />
-        </Group>
-        <Group my="sm">
-          <NativeSelect
-            w="fit-content"
-            placeholder="Limit"
-            value={limit}
-            onChange={(event) => {
-              setLimit(Number(event.currentTarget.value));
-            }}
-            rightSectionPointerEvents="all"
-            mt="md"
-            data={[
-              { label: '10', value: '10' },
-              { label: '20', value: '20' },
-              { label: '50', value: '50' },
-              { label: '100', value: '100' },
-            ]}
-          />
-          <Switch label="Descending" checked={desc} onChange={() => setDesc(!desc)} mt="md" />
-        </Group>
-        <Group my="sm">
-          <DatePickerInput
-            value={timeCreatedSearchInputGTE}
-            onChange={setTimeCreatedSearchInputGTE}
-            placeholder="Created After Date input"
-            rightSection={<IconX onClick={() => setTimeCreatedSearchInputGTE(null)} />}
-          />
-          <DatePickerInput
-            value={timeCreatedSearchInputLTE}
-            onChange={setTimeCreatedSearchInputLTE}
-            placeholder="Created Before Date input"
-            rightSection={<IconX onClick={() => setTimeCreatedSearchInputLTE(null)} />}
-          />
-        </Group>
-        <Table withTableBorder withColumnBorders style={{ padding: '2rem' }}>
+        <Spoiler
+          pb="md"
+          maxHeight={120}
+          showLabel="Show More Filters"
+          hideLabel="Hide Filters"
+          hiddenFrom="sm"
+        >
+          <Flex gap="md" wrap="wrap" my="sm">
+            <Group justify="space-between">
+              <Button
+                component={Link}
+                to={
+                  TeamMemberFlag ? '/team/dashboard/blogs/create' : '/admin/dashboard/blogs/create'
+                }
+              >
+                Create New Blog
+              </Button>
+              <TextInput
+                value={blogTitleSearchInput}
+                onChange={(event) => {
+                  setBlogTitleSearchInput(event.target.value);
+                }}
+                placeholder="Search blogs by their Title"
+              />
+              <TextInput
+                value={slugSearchInput}
+                onChange={(event) => {
+                  setSlugSearchInput(event.target.value);
+                }}
+                placeholder="Search blogs by their Slug"
+              />
+            </Group>
+            <Group my="sm">
+              <NativeSelect
+                w="fit-content"
+                placeholder="Limit"
+                value={limit}
+                onChange={(event) => {
+                  setLimit(Number(event.currentTarget.value));
+                }}
+                rightSectionPointerEvents="all"
+                mt="md"
+                data={[
+                  { label: '10', value: '10' },
+                  { label: '20', value: '20' },
+                  { label: '50', value: '50' },
+                  { label: '100', value: '100' },
+                ]}
+              />
+              <Switch label="Descending" checked={desc} onChange={() => setDesc(!desc)} mt="md" />
+            </Group>
+            <Group my="sm">
+              <DatePickerInput
+                value={timeCreatedSearchInputGTE}
+                onChange={setTimeCreatedSearchInputGTE}
+                placeholder="Created After Date input"
+                rightSection={<IconX onClick={() => setTimeCreatedSearchInputGTE(null)} />}
+              />
+              <DatePickerInput
+                value={timeCreatedSearchInputLTE}
+                onChange={setTimeCreatedSearchInputLTE}
+                placeholder="Created Before Date input"
+                rightSection={<IconX onClick={() => setTimeCreatedSearchInputLTE(null)} />}
+              />
+            </Group>
+          </Flex>
+        </Spoiler>
+        <Flex gap="md" wrap="wrap" my="sm" visibleFrom="sm">
+          <Group justify="space-between">
+            <Button
+              component={Link}
+              to={TeamMemberFlag ? '/team/dashboard/blogs/create' : '/admin/dashboard/blogs/create'}
+            >
+              Create New Blog
+            </Button>
+            <TextInput
+              value={blogTitleSearchInput}
+              onChange={(event) => {
+                setBlogTitleSearchInput(event.target.value);
+              }}
+              placeholder="Search blogs by their Title"
+            />
+            <TextInput
+              value={slugSearchInput}
+              onChange={(event) => {
+                setSlugSearchInput(event.target.value);
+              }}
+              placeholder="Search blogs by their Slug"
+            />
+          </Group>
+          <Group my="sm">
+            <NativeSelect
+              w="fit-content"
+              placeholder="Limit"
+              value={limit}
+              onChange={(event) => {
+                setLimit(Number(event.currentTarget.value));
+              }}
+              rightSectionPointerEvents="all"
+              mt="md"
+              data={[
+                { label: '10', value: '10' },
+                { label: '20', value: '20' },
+                { label: '50', value: '50' },
+                { label: '100', value: '100' },
+              ]}
+            />
+            <Switch label="Descending" checked={desc} onChange={() => setDesc(!desc)} mt="md" />
+          </Group>
+          <Group my="sm">
+            <DatePickerInput
+              value={timeCreatedSearchInputGTE}
+              onChange={setTimeCreatedSearchInputGTE}
+              placeholder="Created After Date input"
+              rightSection={<IconX onClick={() => setTimeCreatedSearchInputGTE(null)} />}
+            />
+            <DatePickerInput
+              value={timeCreatedSearchInputLTE}
+              onChange={setTimeCreatedSearchInputLTE}
+              placeholder="Created Before Date input"
+              rightSection={<IconX onClick={() => setTimeCreatedSearchInputLTE(null)} />}
+            />
+          </Group>
+        </Flex>
+        <Table withTableBorder withColumnBorders style={{ padding: '2rem' }} visibleFrom="sm">
           <Table.Thead style={{ height: 'max-content' }}>
             <Table.Tr>
               <Table.Th>Title</Table.Th>
@@ -233,6 +309,37 @@ export default function ListBlogsPage({ TeamMemberFlag }: { TeamMemberFlag?: boo
           </Table.Thead>
           <Table.Tbody>{rows}</Table.Tbody>
         </Table>
+        <List hiddenFrom="sm">
+          {Blogs.data?.blogs?.map((element: BlogEntityProps) => (
+            <div key={element._id}>
+              <List.Item
+                p="sm"
+                my="md"
+                onClick={() =>
+                  navigate(
+                    TeamMemberFlag
+                      ? `/team/dashboard/blogs/edit/${element._id}`
+                      : `/admin/dashboard/blogs/edit/${element._id}`
+                  )
+                }
+                icon={
+                  <ThemeIcon color="blue" size={24} radius="md" mr="sm">
+                    <IconArticle />
+                  </ThemeIcon>
+                }
+              >
+                <Title style={{ width: '15rem', overflow: 'hidden' }} order={3}>
+                  {element.title}
+                </Title>
+                <Text style={{ width: '15rem', overflow: 'hidden' }} c="dimmed">
+                  {element.author.username}
+                </Text>
+                <Text>{new Date(element.createdAt).toLocaleString()}</Text>
+              </List.Item>{' '}
+              <Divider mt="sm" />
+            </div>
+          ))}
+        </List>
         <Pagination
           disabled={Blogs.isLoading}
           total={Math.ceil(Blogs.data.length / limit)}

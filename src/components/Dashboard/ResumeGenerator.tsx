@@ -140,10 +140,8 @@ export default function ResumeGenerator({
     );
   };
 
-  console.log('trace#002', SocialData?.platform);
-
   return (
-    <Stack w="100%" m="sm">
+    <Stack m="sm">
       {ResumeData ? (
         <Title ta="center" order={3}>
           {ResumeData.title}

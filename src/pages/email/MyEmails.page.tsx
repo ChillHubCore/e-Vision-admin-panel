@@ -5,6 +5,7 @@ import {
   Alert,
   Button,
   Container,
+  Divider,
   Flex,
   Group,
   Input,
@@ -338,40 +339,38 @@ export default function MyEmailsPage() {
       </Table>
       <List hiddenFrom="sm">
         {MyMails.data.emails.map((mail: EmailInterface) => (
-          <List.Item
-            p="sm"
-            bg="gray"
-            my="md"
-            style={{ opacity: mail.readFlag ? 0.8 : 1, cursor: 'pointer', borderRadius: '0.5rem' }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = mail.readFlag ? '0.6' : '0.8';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = mail.readFlag ? '0.8' : '1';
-            }}
-            onClick={() => {
-              navigate(`/team/dashboard/myemails/view/${mail._id}`);
-            }}
-            icon={
-              mail.readFlag ? (
-                <ThemeIcon color="gray" size={24} radius="xl">
-                  <IconCircleDotted style={{ width: rem(16), height: rem(16), opacity: 0.5 }} />
-                </ThemeIcon>
-              ) : (
-                <ThemeIcon color="blue" size={24} radius="xl">
-                  <IconCircleDot style={{ width: rem(16), height: rem(16) }} />
-                </ThemeIcon>
-              )
-            }
-            key={mail._id}
-          >
-            <Title order={4}>{mail.title}</Title>
-            <Text>
-              From {(mail.sender as { _id: string; username: string }).username} to{' '}
-              {(mail.receiver as { _id: string; username: string }).username}
-            </Text>
-            <Text>{new Date(mail.createdAt).toLocaleString()}</Text>
-          </List.Item>
+          <div key={mail._id}>
+            <List.Item
+              p="sm"
+              my="md"
+              style={{
+                opacity: mail.readFlag ? 0.8 : 1,
+                cursor: 'pointer',
+                borderRadius: '0.5rem',
+              }}
+              icon={
+                mail.readFlag ? (
+                  <ThemeIcon color="gray" size={24} radius="xl">
+                    <IconCircleDotted style={{ width: rem(16), height: rem(16), opacity: 0.5 }} />
+                  </ThemeIcon>
+                ) : (
+                  <ThemeIcon color="blue" size={24} radius="xl">
+                    <IconCircleDot style={{ width: rem(16), height: rem(16) }} />
+                  </ThemeIcon>
+                )
+              }
+            >
+              <Title style={{ width: '15rem', overflow: 'hidden' }} order={4}>
+                {mail.title}
+              </Title>
+              <Text c="dimmed" style={{ width: '15rem', overflow: 'hidden' }}>
+                From {(mail.sender as { _id: string; username: string }).username} to{' '}
+                {(mail.receiver as { _id: string; username: string }).username}
+              </Text>
+              <Text c="dimmed">{new Date(mail.createdAt).toLocaleString()}</Text>
+            </List.Item>
+            <Divider mt="sm" />
+          </div>
         ))}
       </List>
       <Pagination
