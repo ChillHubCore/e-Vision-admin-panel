@@ -5,6 +5,7 @@ import {
   Alert,
   Button,
   Container,
+  Divider,
   Flex,
   Group,
   Input,
@@ -17,11 +18,11 @@ import {
   Title,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { IconX } from '@tabler/icons-react';
+import { IconEye, IconRefresh, IconX } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 import { getData } from '@/lib/utils/getData';
-import { EmailGenerator } from '@/components/Dashboard';
+import { EmailGenerator, EmailViewer } from '@/components/Dashboard';
 
 interface EmailInterface {
   _id: string;
@@ -39,8 +40,10 @@ interface EmailInterface {
 
 export default function MyEmailsPage() {
   const userInfo = useSelector(selectUserInfo);
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(10);
   const [sentFlag, setSentFlag] = useState(false);
-  const [recivedFlag, setRecivedFlag] = useState(false);
+  const [receivedFlag, setReceivedFlag] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
   const [unreadOnly, setUnreadOnly] = useState(false);
   const [timeCreatedSearchInputGTE, setTimeCreatedSearchInputGTE] = useState<Date | null>(null);
@@ -48,9 +51,11 @@ export default function MyEmailsPage() {
   const [desc, setDesc] = useState(false);
   const [username, setUsername] = useState('');
   const [mailTitle, setMailTitle] = useState('');
-  const [pageNumber, setPageNumber] = useState(1);
-  const [limit, setLimit] = useState(10);
   const [opened, { open, close }] = useDisclosure(false);
+  const [emailViewer_opened, { open: emailViewer_open, close: emailViewer_close }] =
+    useDisclosure(false);
+  const [refresh, setRefresh] = useState(false);
+  const [emailToView, setEmailToView] = useState('');
 
   const MyMails = useQuery(
     'my-sent-mails',
@@ -60,7 +65,7 @@ export default function MyEmailsPage() {
           timeCreatedSearchInputGTE ? timeCreatedSearchInputGTE?.toISOString() : ''
         }&timeCreatedLTE=${
           timeCreatedSearchInputLTE ? timeCreatedSearchInputLTE?.toISOString() : ''
-        }&desc=${desc}&readOnly=${readOnly}&unreadOnly=${unreadOnly}&sentFlag=${sentFlag}&recivedFlag=${recivedFlag}&username=${username}&title=${mailTitle}`,
+        }&desc=${desc}&readOnly=${readOnly}&unreadOnly=${unreadOnly}&sentFlag=${sentFlag}&receivedFlag=${receivedFlag}&username=${username}&title=${mailTitle}`,
         userInfo?.token
       ),
     {
@@ -72,15 +77,17 @@ export default function MyEmailsPage() {
     MyMails.refetch();
   }, [
     sentFlag,
-    recivedFlag,
+    receivedFlag,
     readOnly,
     unreadOnly,
     timeCreatedSearchInputGTE,
     timeCreatedSearchInputLTE,
     desc,
     username,
-    pageNumber,
     limit,
+    mailTitle,
+    refresh,
+    pageNumber,
   ]);
 
   const handlePageChange = (event: number) => {
@@ -111,111 +118,152 @@ export default function MyEmailsPage() {
       </Table.Td>
       <Table.Td ta="center">{mail.title}</Table.Td>
       <Table.Td ta="center">{mail.readFlag ? 'Read' : 'Unread'}</Table.Td>
+      <Table.Td ta="center">{new Date(mail.createdAt).toLocaleString()}</Table.Td>
+      <Table.Td ta="center">
+        <Button
+          onClick={() => {
+            setEmailToView(mail._id);
+            emailViewer_open();
+          }}
+          variant="subtle"
+        >
+          <IconEye />
+        </Button>
+      </Table.Td>
     </Table.Tr>
   ));
 
   return MyMails.isLoading ? (
     <Loader />
   ) : MyMails.isError ? (
-    <Alert>Trouble fetching your emails. Please try again later.</Alert>
-  ) : (
-    MyMails.isSuccess && (
-      <Container size="lg">
-        <Title order={3}>My Emails</Title>
-        <Flex gap="md" wrap="wrap" my="sm">
-          <Input
-            placeholder="Search by username"
-            value={username}
-            onChange={(e) => setUsername(e.currentTarget.value)}
-          />
-          <Input
-            placeholder="Search by title"
-            value={mailTitle}
-            onChange={(e) => setMailTitle(e.currentTarget.value)}
-          />
-          <Group my="md" w="100%">
-            <DatePickerInput
-              value={timeCreatedSearchInputGTE}
-              onChange={setTimeCreatedSearchInputGTE}
-              placeholder="Created After Date input"
-              rightSection={<IconX onClick={() => setTimeCreatedSearchInputGTE(null)} />}
-            />
-            <DatePickerInput
-              value={timeCreatedSearchInputLTE}
-              onChange={setTimeCreatedSearchInputLTE}
-              placeholder="Created Before Date input"
-              rightSection={<IconX onClick={() => setTimeCreatedSearchInputLTE(null)} />}
-            />
-            <Button onClick={open}>Send an Email</Button>
-          </Group>
-          <Group my="sm">
-            <NativeSelect
-              w="fit-content"
-              placeholder="Limit"
-              value={limit}
-              onChange={(event) => {
-                setLimit(Number(event.currentTarget.value));
-              }}
-              rightSectionPointerEvents="all"
-              mt="md"
-              data={[
-                { label: '10', value: '10' },
-                { label: '20', value: '20' },
-                { label: '50', value: '50' },
-                { label: '100', value: '100' },
-              ]}
-            />
-            <Switch label="Descending" checked={desc} onChange={() => setDesc(!desc)} mt="md" />
-            <Switch
-              label="Sent Only Emails"
-              checked={sentFlag}
-              onChange={() => setSentFlag(!sentFlag)}
-              mt="md"
-            />
-            <Switch
-              label="Recived Only Emails"
-              checked={recivedFlag}
-              onChange={() => setRecivedFlag(!recivedFlag)}
-              mt="md"
-            />
-            <Switch
-              label="Opened Only"
-              checked={readOnly}
-              onChange={() => setReadOnly(!readOnly)}
-              mt="md"
-            />
-            <Switch
-              label="Unopened Only"
-              checked={unreadOnly}
-              onChange={() => setUnreadOnly(!unreadOnly)}
-              mt="md"
-            />
-          </Group>
-        </Flex>
-        <Table withTableBorder withColumnBorders style={{ padding: '2rem' }}>
-          <Table.Thead style={{ height: 'max-content' }}>
-            <Table.Tr>
-              <Table.Th ta="center">Sender</Table.Th>
-              <Table.Th ta="center">Reciver</Table.Th>
-              <Table.Th ta="center">Title</Table.Th>
-              <Table.Th ta="center">Read Flag</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
-        <Pagination
-          disabled={MyMails.isLoading}
-          total={MyMails.data.length / limit}
-          value={pageNumber}
-          onChange={(event) => handlePageChange(event)}
-          mt="sm"
-        />
-        <>
-          <Modal opened={opened} onClose={close} title="Write an Email">
-            <EmailGenerator />
-          </Modal>
-        </>
-      </Container>
+    MyMails.data && (
+      <Alert color="red">{(MyMails.error as Error)?.message || 'Failed to fetch data'}</Alert>
     )
+  ) : (
+    <Container size="lg">
+      <Title order={3}>My Emails</Title>
+      <Flex gap="md" wrap="wrap" my="sm">
+        <Input
+          placeholder="Search by username"
+          value={username}
+          onChange={(e) => setUsername(e.currentTarget.value)}
+        />
+        <Input
+          placeholder="Search by title"
+          value={mailTitle}
+          onChange={(e) => setMailTitle(e.currentTarget.value)}
+        />
+        <Group my="md" w="100%">
+          <DatePickerInput
+            value={timeCreatedSearchInputGTE}
+            onChange={setTimeCreatedSearchInputGTE}
+            placeholder="Created After Date input"
+            rightSection={<IconX onClick={() => setTimeCreatedSearchInputGTE(null)} />}
+          />
+          <DatePickerInput
+            value={timeCreatedSearchInputLTE}
+            onChange={setTimeCreatedSearchInputLTE}
+            placeholder="Created Before Date input"
+            rightSection={<IconX onClick={() => setTimeCreatedSearchInputLTE(null)} />}
+          />
+          <Button onClick={open}>Send an Email</Button>
+          <Button
+            onClick={() => {
+              MyMails.refetch();
+            }}
+          >
+            {MyMails.isLoading ? <Loader /> : <IconRefresh />}
+          </Button>
+        </Group>
+        <Group my="sm">
+          <NativeSelect
+            w="fit-content"
+            placeholder="Limit"
+            value={limit}
+            onChange={(event) => {
+              setLimit(Number(event.currentTarget.value));
+            }}
+            rightSectionPointerEvents="all"
+            mt="md"
+            data={[
+              { label: '10', value: '10' },
+              { label: '20', value: '20' },
+              { label: '50', value: '50' },
+              { label: '100', value: '100' },
+            ]}
+          />
+          <Switch label="Descending" checked={desc} onChange={() => setDesc(!desc)} mt="md" />
+          <Switch
+            label="Sent Only Emails"
+            checked={sentFlag}
+            onChange={() => setSentFlag(!sentFlag)}
+            mt="md"
+          />
+          <Switch
+            label="Recived Only Emails"
+            checked={receivedFlag}
+            onChange={() => setReceivedFlag(!receivedFlag)}
+            mt="md"
+          />
+          <Switch
+            label="Opened Only"
+            checked={readOnly}
+            onChange={() => setReadOnly(!readOnly)}
+            mt="md"
+          />
+          <Switch
+            label="Unopened Only"
+            checked={unreadOnly}
+            onChange={() => setUnreadOnly(!unreadOnly)}
+            mt="md"
+          />
+        </Group>
+      </Flex>
+
+      <Table withTableBorder withColumnBorders style={{ padding: '2rem' }}>
+        <Table.Thead style={{ height: 'max-content' }}>
+          <Table.Tr>
+            <Table.Th ta="center">Sender</Table.Th>
+            <Table.Th ta="center">Reciver</Table.Th>
+            <Table.Th ta="center">Title</Table.Th>
+            <Table.Th ta="center">Read Flag</Table.Th>
+            <Table.Th ta="center">Created At</Table.Th>
+            <Table.Th ta="center">View</Table.Th>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>{rows}</Table.Tbody>
+      </Table>
+      <Pagination
+        disabled={MyMails.isLoading}
+        total={MyMails.data.length / limit + 1}
+        value={pageNumber}
+        onChange={(event) => {
+          handlePageChange(event);
+        }}
+        mt="sm"
+      />
+
+      <>
+        <Modal opened={opened} onClose={close} title="Write an Email">
+          <EmailGenerator
+            functionToCall={() => {
+              setRefresh(!refresh);
+              close();
+            }}
+          />
+        </Modal>
+      </>
+      <>
+        <Modal opened={emailViewer_opened} onClose={emailViewer_close} title="Email Viewer">
+          <Divider my="md" />
+          <EmailViewer
+            functionToCall={() => {
+              setRefresh(!refresh);
+            }}
+            id={emailToView}
+          />
+        </Modal>
+      </>
+    </Container>
   );
 }

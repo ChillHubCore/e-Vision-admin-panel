@@ -14,7 +14,7 @@ import Highlight from '@tiptap/extension-highlight';
 import { useSubmit } from '@/lib/hooks';
 import { RTE } from '../common/RTE';
 
-export default function EmailGenerator() {
+export default function EmailGenerator({ functionToCall }: { functionToCall: () => void }) {
   const EmailGeneratorForm = useForm({
     initialValues: {
       receiver: '',
@@ -32,7 +32,8 @@ export default function EmailGenerator() {
       EmailGeneratorForm,
       'post',
       'Email Sent Successfully',
-      'Failed to send Email'
+      'Failed to send Email',
+      functionToCall
     );
   };
   const content = '';
