@@ -406,7 +406,7 @@ export default function ListUsersPage() {
       </Table>
       <Pagination
         disabled={Users.isLoading}
-        total={Users.data.length / limit}
+        total={Math.ceil(Users.data.length / limit)}
         value={pageNumber}
         onChange={(event) => handlePageChange(event)}
         mt="sm"

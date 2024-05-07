@@ -47,6 +47,7 @@ import {
 } from './components/Authentication';
 import AdminLayout from './lib/HOC/AdminLayout';
 import TeamLayout from './lib/HOC/TeamLayout';
+import EmailViewPage from './pages/email/EmailView.page';
 
 export const PublicRoutes = (
   <>
@@ -763,6 +764,24 @@ export const TeamRoutes = (
               }
             >
               <MyEmailsPage />
+            </Suspense>
+          </TeamLayout>
+        </TeamProtected>
+      }
+    />
+    <Route
+      path="/team/dashboard/myemails/view/:id"
+      element={
+        <TeamProtected>
+          <TeamLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <EmailViewPage />
             </Suspense>
           </TeamLayout>
         </TeamProtected>

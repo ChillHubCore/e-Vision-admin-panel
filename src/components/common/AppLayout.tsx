@@ -2,9 +2,10 @@ import { useDisclosure } from '@mantine/hooks';
 import {
   AppShell,
   Burger,
-  Divider,
+  Button,
   Group,
   Indicator,
+  Menu,
   Popover,
   Text,
   UnstyledButton,
@@ -78,7 +79,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         to="/creator/dashboard"
         className={classes.control}
       >
-        Creator Dashboard
+        Creators
       </UnstyledButton>
     ) : (
       <></>
@@ -93,7 +94,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           to="/admin/dashboard"
           className={classes.control}
         >
-          Admin Dashboard
+          Admins
         </UnstyledButton>
       </>
     ) : (
@@ -109,7 +110,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           to="/team/dashboard"
           className={classes.control}
         >
-          Team Member Dashboard
+          Team Members
         </UnstyledButton>
       </>
     ) : (
@@ -127,18 +128,30 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <Group justify="space-between" style={{ flex: 1 }}>
             <Link to="/">e-Vision Dashboard</Link>
-            <Group ml="xl" gap={0} visibleFrom="sm">
-              {renderTeamMemberDashboardDropdown}
-              <Divider orientation="vertical" />
-              {renderCreatorDashboardDropdown}
-              <Divider orientation="vertical" />
-              {renderAdminDashboardDropdown}
-              <Divider orientation="vertical" />
+            <Group ml="xl" gap={0} style={{ gap: 20 }} align="center" justify="center">
+              <Menu shadow="md">
+                <Menu.Target>
+                  <Button visibleFrom="sm" color="gray">
+                    Menu
+                  </Button>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                  {userInfo ? (
+                    <>
+                      <Menu.Label>Dashboards</Menu.Label>
+                      <Menu.Item>{renderTeamMemberDashboardDropdown}</Menu.Item>
+                      {/* <Menu.Item>{renderCreatorDashboardDropdown}</Menu.Item> */}
+                      <Menu.Item>{renderAdminDashboardDropdown}</Menu.Item>
+                      <Menu.Divider />
+                    </>
+                  ) : null}
+
+                  <Menu.Label>Actions</Menu.Label>
+                  {renderLoginLogoutButton}
+                </Menu.Dropdown>
+              </Menu>
               <ColorSchemeToggle />
-              <Divider orientation="vertical" />
-              <UnstyledButton className={classes.control}>Documentation</UnstyledButton>
-              <Divider orientation="vertical" />
-              {renderLoginLogoutButton}
               {renderShoppingCartDropdown}
             </Group>
           </Group>
@@ -146,14 +159,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </AppShell.Header>
 
       <AppShell.Navbar py="md" px={4}>
-        <Group m="sm">{renderShoppingCartDropdown}</Group>
         {renderAdminDashboardDropdown}
         {renderCreatorDashboardDropdown}
         {renderTeamMemberDashboardDropdown}
         {renderLoginLogoutButton}
-        <Divider />
-        <ColorSchemeToggle />
-        <UnstyledButton className={classes.control}>Documentation</UnstyledButton>
       </AppShell.Navbar>
 
       <AppShell.Main>{children}</AppShell.Main>

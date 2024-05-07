@@ -446,7 +446,7 @@ export default function ListTransactionsPage() {
         </Table>
         <Pagination
           disabled={Transactions.isLoading}
-          total={Transactions.data.length / limit}
+          total={Math.ceil(Transactions.data.length / limit)}
           value={pageNumber}
           onChange={(event) => handlePageChange(event)}
           mt="sm"

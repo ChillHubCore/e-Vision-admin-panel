@@ -319,7 +319,7 @@ export default function ListProductsPage() {
         </Table>
         <Pagination
           disabled={Products.isLoading}
-          total={Products.data.length / limit}
+          total={Math.ceil(Products.data.length / limit)}
           value={pageNumber}
           onChange={(event) => handlePageChange(event)}
           mt="sm"

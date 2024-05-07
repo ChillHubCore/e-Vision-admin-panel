@@ -212,7 +212,7 @@ export default function OrderGenerator({
               </Table>
               <Pagination
                 disabled={Users.isLoading}
-                total={Users.data.length / 10}
+                total={Math.ceil(Users.data.length / 10)}
                 value={pageNumber}
                 onChange={(event) => handlePageChange(event)}
                 mt="sm"

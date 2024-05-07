@@ -458,7 +458,7 @@ export default function ListOrdersPage() {
         </Table>
         <Pagination
           disabled={Orders.isLoading}
-          total={Orders.data.length / limit}
+          total={Math.ceil(Orders.data.length / limit)}
           value={pageNumber}
           onChange={(event) => handlePageChange(event)}
           mt="sm"

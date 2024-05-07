@@ -235,7 +235,7 @@ export default function ListBlogsPage({ TeamMemberFlag }: { TeamMemberFlag?: boo
         </Table>
         <Pagination
           disabled={Blogs.isLoading}
-          total={Blogs.data.length / limit}
+          total={Math.ceil(Blogs.data.length / limit)}
           value={pageNumber}
           onChange={(event) => setPageNumber(event)}
           mt="sm"
