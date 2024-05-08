@@ -3,8 +3,10 @@ import {
   Box,
   Button,
   Center,
+  Divider,
   Flex,
   TextInput,
+  Title,
   Tooltip,
   UnstyledButton,
 } from '@mantine/core';
@@ -127,20 +129,29 @@ export default function BlogGenerator({
       onSubmit={BlogGeneratorForm.onSubmit(handleSubmit)}
       style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
     >
+      <Divider mt="md" />
+      <Title order={3}>Blog Details</Title>
+      <Divider />
       <TextInput
-        placeholder="Write a Meta Title"
-        {...BlogGeneratorForm.getInputProps('metaTitle')}
+        label="Write a Title For The Blog"
+        placeholder="Write a Title For The Blog"
+        {...BlogGeneratorForm.getInputProps('title')}
         required
       />
       <TextInput
-        placeholder="Write a Meta Description"
-        {...BlogGeneratorForm.getInputProps('metaDescription')}
+        label="Write a Slug For The Blog"
+        placeholder="Write a Slug For The Blog"
+        {...BlogGeneratorForm.getInputProps('slug')}
         required
       />
+      <Divider mt="md" />
+      <Title order={3}>Metadata Details For SEO (Search Engine Optimization)</Title>
+      <Divider />
+
       <TextInput
         name="metaTags"
         label="Meta Tags"
-        placeholder="Enter Product Meta Tags, Press Enter to Add New Tag"
+        placeholder="Enter Blog Meta Tags, Press Enter to Add New Tag"
         value={metaTagInput}
         onChange={(e) => setMetaTagInput(e.target.value)}
         rightSection={
@@ -194,16 +205,20 @@ export default function BlogGenerator({
           </Flex>
         )}
       <TextInput
-        placeholder="Write a Title For The Blog"
-        {...BlogGeneratorForm.getInputProps('title')}
+        label="Write a Meta Title"
+        placeholder="Write a Meta Title"
+        {...BlogGeneratorForm.getInputProps('metaTitle')}
         required
       />
       <TextInput
-        placeholder="Write a Slug For The Blog"
-        {...BlogGeneratorForm.getInputProps('slug')}
+        label="Write a Meta Description"
+        placeholder="Write a Meta Description"
+        {...BlogGeneratorForm.getInputProps('metaDescription')}
         required
       />
-
+      <Divider mt="md" />
+      <Title order={3}>Blog Content</Title>
+      <Divider />
       <RTE editor={editor as Editor} />
 
       <Button
