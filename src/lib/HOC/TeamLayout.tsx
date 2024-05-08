@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { IconArticle, IconMail, IconPaperclip, IconUser } from '@tabler/icons-react';
 import { Flex, Loader } from '@mantine/core';
 import { SideNavigationPanel } from '@/components/Dashboard';
+import UserIntegrity from './UserIntegrity';
 
 interface TeamLayoutProps {
   children: React.ReactNode;
@@ -27,7 +28,7 @@ const TeamLayout: React.FC<TeamLayoutProps> = ({ children }) => {
       <Suspense fallback={<Loader />}>
         <SideNavigationPanel RoutesList={TeamRoutes} />
       </Suspense>
-      {children}
+      <UserIntegrity>{children}</UserIntegrity>
     </Flex>
   );
 };

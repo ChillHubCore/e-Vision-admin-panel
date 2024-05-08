@@ -305,30 +305,27 @@ export default function ProductGenerator({
           />
 
           {VariantGeneratorForm.values.images.length > 0 &&
-            VariantGeneratorForm.values.images.map((image) => {
-              console.log(image);
-              return (
-                <div key={image}>
-                  <Image
-                    src={image as string}
-                    h={100}
-                    w={100}
-                    alt="product image"
-                    style={{ objectFit: 'cover' }}
-                  />
-                  <UnstyledButton
-                    onClick={() => {
-                      VariantGeneratorForm.setFieldValue(
-                        'images',
-                        VariantGeneratorForm.values.images.filter((i) => i !== image)
-                      );
-                    }}
-                  >
-                    <IconX color="red" />
-                  </UnstyledButton>
-                </div>
-              );
-            })}
+            VariantGeneratorForm.values.images.map((image) => (
+              <div key={image}>
+                <Image
+                  src={image as string}
+                  h={100}
+                  w={100}
+                  alt="product image"
+                  style={{ objectFit: 'cover' }}
+                />
+                <UnstyledButton
+                  onClick={() => {
+                    VariantGeneratorForm.setFieldValue(
+                      'images',
+                      VariantGeneratorForm.values.images.filter((i) => i !== image)
+                    );
+                  }}
+                >
+                  <IconX color="red" />
+                </UnstyledButton>
+              </div>
+            ))}
         </Group>
         <Box>
           <Group>
@@ -699,7 +696,6 @@ export default function ProductGenerator({
         <Button
           onClick={() => {
             ProductGeneratorForm.setFieldValue('description.full', editor?.getHTML() || '');
-            console.log('errorlog', ProductGeneratorForm.errors);
           }}
           type="submit"
           color="blue"

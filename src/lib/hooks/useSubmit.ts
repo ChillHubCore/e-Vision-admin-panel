@@ -49,7 +49,6 @@ const useSubmit = <T>() => {
       }
       // Handle successful response
     } catch (err: AxiosError | any) {
-      console.log(err as AxiosError);
       toast.error(
         err.response?.data?.message || err.message || errorMessage || 'Failed to send request'
       );

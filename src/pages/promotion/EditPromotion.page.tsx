@@ -28,7 +28,6 @@ export default function EditPromotionPage() {
     ...PromotionData.data,
     applicableProducts: updatedApplicableProducts,
   };
-  PromotionData.data && console.log(PromotionData.data[0]);
   return PromotionData.isLoading ? (
     <Loader />
   ) : PromotionData.isSuccess ? (

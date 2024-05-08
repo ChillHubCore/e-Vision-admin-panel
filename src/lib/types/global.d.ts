@@ -18,6 +18,7 @@ interface UserState {
 type CustomError = {
   message: string;
   response?: {
+    status: number;
     data: {
       message: string;
     };

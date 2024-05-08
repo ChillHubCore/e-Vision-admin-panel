@@ -16,6 +16,7 @@ import {
 } from '@tabler/icons-react';
 import { Flex, Loader } from '@mantine/core';
 import { SideNavigationPanel } from '@/components/Dashboard';
+import UserIntegrity from './UserIntegrity';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -54,7 +55,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       <Suspense fallback={<Loader />}>
         <SideNavigationPanel RoutesList={AdminRoutes} />
       </Suspense>
-      {children}
+      <UserIntegrity>{children}</UserIntegrity>
     </Flex>
   );
 };

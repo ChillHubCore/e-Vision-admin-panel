@@ -139,7 +139,6 @@ export default function ListTransactionsPage() {
   }
 
   const handleSubmitCardToCardResult = () => {
-    console.log(CardToCardPaymentResultForm.values);
     FormActions.sendRequest(
       `/transaction/${selectedTransactionId}/submit-payment-result`,
       CardToCardPaymentResultForm,

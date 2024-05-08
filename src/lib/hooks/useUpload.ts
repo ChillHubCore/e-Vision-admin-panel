@@ -27,7 +27,6 @@ const useUpload = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log(response);
       setData(response.data);
       setSuccess(true);
       toast.success(successMessage);
@@ -36,14 +35,12 @@ const useUpload = () => {
       }
       // Handle successful response
     } catch (err: AxiosError | any) {
-      console.log(err as AxiosError);
       toast.error(errorMessage);
       setError(err);
     } finally {
       setIsLoading(false);
     }
   };
-  console.log('tracecode#uu32', data);
   return { data, isLoading, error, sendFile, success };
 };
 
