@@ -341,6 +341,9 @@ export default function MyEmailsPage() {
         {MyMails.data.emails.map((mail: EmailInterface) => (
           <div key={mail._id}>
             <List.Item
+              onClick={() => {
+                navigate(`/team/dashboard/myemails/view/${mail._id}`);
+              }}
               p="sm"
               my="md"
               style={{
