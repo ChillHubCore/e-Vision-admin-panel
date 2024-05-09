@@ -187,6 +187,11 @@ export interface UserEntityProps {
   isAdmin: boolean;
   addresses: AddressProps[];
   watchList: string[];
+  telegramInfo?: {
+    chatUsername: string;
+    chatId?: string;
+    verified: boolean;
+  };
   createdAt: string;
   updatedAt: string;
 }

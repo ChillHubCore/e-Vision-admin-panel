@@ -3,9 +3,11 @@ import {
   Button,
   Fieldset,
   FileInput,
+  Flex,
   Group,
   Image,
   Loader,
+  Modal,
   Text,
   TextInput,
   Title,
@@ -14,10 +16,16 @@ import { hasLength, isEmail, isNotEmpty, useForm } from '@mantine/form';
 import { IconFileLike } from '@tabler/icons-react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useDisclosure } from '@mantine/hooks';
 import { UserEntityProps } from './types';
 import { useSubmit, useUpload } from '@/lib/hooks';
+import { eAxios } from '@/lib/utils';
+import { selectUserInfo } from '@/lib/redux/User/UserSlice';
 
 export default function MyProfile({ UserData }: { UserData: UserEntityProps }) {
+  const userInfo = useSelector(selectUserInfo);
   const UserProfileForm = useForm({
     initialValues: {
       firstName: UserData?.firstName,
@@ -44,6 +52,10 @@ export default function MyProfile({ UserData }: { UserData: UserEntityProps }) {
   const uploadHandle = useUpload();
   const navigate = useNavigate();
 
+  const [tgInfo, setTgInfo] = useState<string>(UserData.telegramInfo?.chatUsername || '');
+  const [tgCode, setTgCode] = useState<string>('');
+  const [opened, { open, close }] = useDisclosure(false);
+
   const handleSubmit = () => {
     if (UserProfileForm.values.confirmPassword.trim() !== UserProfileForm.values.password.trim()) {
       toast.error('Passwords do not match!');
@@ -58,6 +70,46 @@ export default function MyProfile({ UserData }: { UserData: UserEntityProps }) {
       () => navigate('/team/dashboard')
     );
   };
+
+  const handleUpdateTelegram = () => {
+    if (tgInfo.trim() === '') {
+      toast.error('Telegram Chat Username is required!');
+      return;
+    }
+    FormActions.sendRequest(
+      '/user/update/telegram',
+      {
+        values: {
+          chatUsername: tgInfo,
+        },
+      },
+      'put',
+      'Telegram Username Updated Successfully!',
+      'Failed to update Telegram Username! Please try again.',
+      () => navigate('/team/dashboard')
+    );
+  };
+
+  const verifyTelegram = async () => {
+    if (UserData.telegramInfo?.verified) {
+      toast.error('Telegram is already verified!');
+      return;
+    }
+    try {
+      const response = await eAxios.request({
+        url: '/user/verify/telegram',
+        method: 'get',
+        headers: {
+          Authorization: `Bearer ${userInfo?.token || localStorage.getItem('access_token')}`,
+        },
+      });
+      setTgCode(response.data.message);
+      open();
+    } catch (err) {
+      toast.error('Failed to verify Telegram!');
+    }
+  };
+
   return (
     <div>
       <Title order={3}>
@@ -179,6 +231,43 @@ export default function MyProfile({ UserData }: { UserData: UserEntityProps }) {
             }
             error={UserProfileForm.errors.confirmPassword}
           />
+        </Fieldset>
+        <Fieldset
+          legend="Connect Telegram"
+          m="sm"
+          style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}
+        >
+          <Group justify="space-between">
+            <TextInput
+              label="Telegram Chat Username"
+              placeholder="johndoe"
+              value={tgInfo}
+              onChange={(event) => setTgInfo(event.currentTarget.value)}
+            />
+            <Button onClick={handleUpdateTelegram}>Connect</Button>
+          </Group>
+          <Group justify="space-between">
+            <Text>
+              Telegram is {UserData.telegramInfo?.verified === true ? 'Verified' : 'Not Verified'}
+            </Text>
+            <Button disabled={UserData.telegramInfo?.verified} onClick={verifyTelegram}>
+              {UserData.telegramInfo?.verified === false ? 'Verify' : 'Verified'}
+            </Button>
+          </Group>
+          <Modal opened={opened} onClose={close} title="Telegram Verification Token">
+            <Flex direction="column" gap="md">
+              <strong>{tgCode}</strong>
+              Send This Code To <a href="https://t.me/CH_NetworkBot">@CH_NetworkBot</a>
+              <Button
+                target="_blank"
+                rel="noopener noreferrer"
+                component="a"
+                href="https://t.me/CH_NetworkBot"
+              >
+                Open Chill-Hub Network Telegram Bot
+              </Button>
+            </Flex>
+          </Modal>
         </Fieldset>
         <Button m="md" w="max-content" type="submit" disabled={FormActions.isLoading}>
           Update Profile
