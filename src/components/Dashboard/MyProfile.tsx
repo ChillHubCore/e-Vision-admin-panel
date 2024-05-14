@@ -251,7 +251,7 @@ export default function MyProfile({ UserData }: { UserData: UserEntityProps }) {
               Telegram is {UserData.telegramInfo?.verified === true ? 'Verified' : 'Not Verified'}
             </Text>
             <Button disabled={UserData.telegramInfo?.verified} onClick={verifyTelegram}>
-              {UserData.telegramInfo?.verified === false ? 'Verify' : 'Verified'}
+              {UserData.telegramInfo?.verified === true ? 'Verified' : 'Verify'}
             </Button>
           </Group>
           <Modal opened={opened} onClose={close} title="Telegram Verification Token">

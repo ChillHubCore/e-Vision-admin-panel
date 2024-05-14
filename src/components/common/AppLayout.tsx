@@ -71,19 +71,19 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </Popover>
   );
 
-  const renderCreatorDashboardDropdown =
-    userInfo?.token && userInfo.isCreator ? (
-      <UnstyledButton
-        onClick={toggle}
-        component={Link}
-        to="/creator/dashboard"
-        className={classes.control}
-      >
-        Creators
-      </UnstyledButton>
-    ) : (
-      <></>
-    );
+  // const renderCreatorDashboardDropdown =
+  //   userInfo?.token && userInfo.isCreator ? (
+  //     <UnstyledButton
+  //       onClick={toggle}
+  //       component={Link}
+  //       to="/creator/dashboard"
+  //       className={classes.control}
+  //     >
+  //       Creators
+  //     </UnstyledButton>
+  //   ) : (
+  //     <></>
+  //   );
 
   const renderAdminDashboardDropdown =
     userInfo?.token && userInfo.isAdmin ? (
@@ -160,7 +160,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       <AppShell.Navbar py="md" px={4}>
         {renderAdminDashboardDropdown}
-        {renderCreatorDashboardDropdown}
+        {/* {renderCreatorDashboardDropdown} */}
         {renderTeamMemberDashboardDropdown}
         {renderLoginLogoutButton}
       </AppShell.Navbar>
