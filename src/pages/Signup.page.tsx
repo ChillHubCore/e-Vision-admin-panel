@@ -1,5 +1,5 @@
 import { TextInput, PasswordInput, Button, Box, Title, Center } from '@mantine/core';
-import { hasLength, isEmail, matches, matchesField, useForm } from '@mantine/form';
+import { isEmail, matches, matchesField, useForm } from '@mantine/form';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { DatePickerInput } from '@mantine/dates';
@@ -32,10 +32,10 @@ const SignupPage: React.FC = () => {
       confirmPassword: '',
     },
     validate: {
-      username: hasLength({ min: 4, max: 255 }, 'Username must be 4-10 characters long'),
-      firstName: hasLength({ min: 2, max: 255 }, 'First Name must be 2-10 characters long'),
-      lastName: hasLength({ min: 2, max: 255 }, 'Last Name must be 2-10 characters long'),
-      countryCode: hasLength({ min: 2, max: 255 }, 'Country Code must be 2-10 characters long'),
+      // username: hasLength({ min: 4, max: 255 }, 'Username must be 4-10 characters long'),
+      // firstName: hasLength({ min: 2, max: 255 }, 'First Name must be 2-10 characters long'),
+      // lastName: hasLength({ min: 2, max: 255 }, 'Last Name must be 2-10 characters long'),
+      // countryCode: hasLength({ min: 2, max: 255 }, 'Country Code must be 2-10 characters long'),
       email: isEmail('Invalid email'),
       password: matches(/^(?=.*[a-z])(?=.*[A-Z]).{8,}$/, 'Password is too weak'),
       confirmPassword: matchesField('password', 'Passwords are not the same'),
