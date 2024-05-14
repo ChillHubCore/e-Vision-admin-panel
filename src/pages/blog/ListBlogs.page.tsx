@@ -19,7 +19,7 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { IconArticle, IconEdit, IconEye, IconX } from '@tabler/icons-react';
+import { IconArticle, IconEdit, IconX } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
@@ -133,7 +133,7 @@ export default function ListBlogsPage({ TeamMemberFlag }: { TeamMemberFlag?: boo
           <IconEdit color="blue" />
         </UnstyledButton>
       </Table.Td>
-      <Table.Td>
+      {/* <Table.Td>
         <UnstyledButton
           style={{
             display: 'flex',
@@ -149,7 +149,7 @@ export default function ListBlogsPage({ TeamMemberFlag }: { TeamMemberFlag?: boo
         >
           <IconEye color="green" />
         </UnstyledButton>
-      </Table.Td>
+      </Table.Td> */}
     </Table.Tr>
   ));
 
@@ -304,7 +304,7 @@ export default function ListBlogsPage({ TeamMemberFlag }: { TeamMemberFlag?: boo
               <Table.Th>Updated At</Table.Th>
               <Table.Th>Delete</Table.Th>
               <Table.Th>Edit</Table.Th>
-              <Table.Th>View</Table.Th>
+              {/* <Table.Th>View</Table.Th> */}
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>{rows}</Table.Tbody>
