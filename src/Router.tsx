@@ -5,6 +5,7 @@ import {
   AdminDashboardPage,
   CreateBlogPage,
   CreateOrderPage,
+  CreatePage,
   CreateProductPage,
   CreatePromotionPage,
   CreateTicketPage,
@@ -13,6 +14,7 @@ import {
   CreatorDashboardPage,
   EditBlogPage,
   EditOrderPage,
+  EditPage,
   EditProductPage,
   EditPromotionPage,
   EditTicketPage,
@@ -22,6 +24,7 @@ import {
   HomePage,
   ListBlogsPage,
   ListOrdersPage,
+  ListPages,
   ListProductsPage,
   ListPromotionsPage,
   ListTicketsPage,
@@ -32,6 +35,7 @@ import {
   MyResumePage,
   ShowBlogPage,
   ShowOrderPage,
+  ShowPage,
   ShowProductPage,
   ShowPromotionPage,
   ShowTransactionPage,
@@ -620,6 +624,79 @@ export const AdminRoutes = (
           >
             <EditTicketPage />
           </Suspense>
+        </AdminProtected>
+      }
+    />
+    {/* pages crud */}
+    <Route
+      path="/admin/dashboard/pages"
+      element={
+        <AdminProtected>
+          <AdminLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <ListPages />
+            </Suspense>
+          </AdminLayout>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/pages/edit/:id"
+      element={
+        <AdminProtected>
+          <AdminLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <EditPage />
+            </Suspense>
+          </AdminLayout>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/pages/create"
+      element={
+        <AdminProtected>
+          <AdminLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <CreatePage />
+            </Suspense>
+          </AdminLayout>
+        </AdminProtected>
+      }
+    />
+    <Route
+      path="/admin/dashboard/pages/show/:id"
+      element={
+        <AdminProtected>
+          <AdminLayout>
+            <Suspense
+              fallback={
+                <Center>
+                  <Loader color="green" />
+                </Center>
+              }
+            >
+              <ShowPage />
+            </Suspense>
+          </AdminLayout>
         </AdminProtected>
       }
     />

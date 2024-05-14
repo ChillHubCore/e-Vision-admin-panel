@@ -6,6 +6,7 @@ import {
   IconManualGearbox,
   IconMenuOrder,
   IconMoneybag,
+  IconPageBreak,
   IconReportSearch,
   IconSettings,
   IconSettings2,
@@ -26,6 +27,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const AdminRoutes = [
     { route: '/admin/dashboard', title: 'Dashboard', icon: <IconDashboard /> },
     { route: '/admin/dashboard/users', title: 'Users', icon: <IconUser /> },
+    { route: '/admin/dashboard/pages', title: 'Pages', icon: <IconPageBreak /> },
     { route: '/admin/dashboard/products', title: 'Products', icon: <IconShoppingBag /> },
     { route: '/admin/dashboard/orders', title: 'Orders', icon: <IconMenuOrder /> },
     { route: '/admin/dashboard/transactions', title: 'Transactions', icon: <IconMoneybag /> },

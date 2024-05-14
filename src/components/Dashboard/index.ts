@@ -12,3 +12,4 @@ export const MyProfile = lazy(() => import('./MyProfile'));
 export const ResumeGenerator = lazy(() => import('./ResumeGenerator'));
 export const EmailGenerator = lazy(() => import('./EmailGenerator'));
 export const EmailViewer = lazy(() => import('./EmailViewer'));
+export const PageGenerator = lazy(() => import('./PageGenerator'));

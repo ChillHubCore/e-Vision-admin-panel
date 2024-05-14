@@ -37,3 +37,7 @@ export const ShowTicketPage = lazy(() => import('./ticket/ShowTicket.page'));
 export const TeamDashboardPage = lazy(() => import('./dashboard/TeamDashboard.page'));
 export const MyResumePage = lazy(() => import('./resume/MyResume.page'));
 export const MyEmailsPage = lazy(() => import('./email/MyEmails.page'));
+export const CreatePage = lazy(() => import('./pages/CreatePage.page'));
+export const EditPage = lazy(() => import('./pages/EditPage.page'));
+export const ListPages = lazy(() => import('./pages/ListPages.page'));
+export const ShowPage = lazy(() => import('./pages/ShowPage.page'));
