@@ -309,8 +309,11 @@ export interface ResumeEntityProps {
 }
 
 export interface PageEntityProps {
+  _id: string;
   title: string;
   slug: string;
   description: string;
   keywords: string[];
+  active: boolean;
+  createdAt: string;
 }
