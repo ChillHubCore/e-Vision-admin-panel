@@ -36,6 +36,7 @@ export default function ListPagesPage() {
   const [desc, setDesc] = useState(true);
   const [pageTitleSearchInput, setPageTitleSearchInput] = useState('');
   const [slugSearchInput, setSlugSearchInput] = useState('');
+  const [descriptionSearchInput, setDescriptionSearchInput] = useState('');
   const [timeCreatedSearchInputGTE, setTimeCreatedSearchInputGTE] = useState<Date | null>(null);
   const [timeCreatedSearchInputLTE, setTimeCreatedSearchInputLTE] = useState<Date | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -49,7 +50,7 @@ export default function ListPagesPage() {
           timeCreatedSearchInputGTE ? timeCreatedSearchInputGTE?.toISOString() : ''
         }&timeCreatedLTE=${
           timeCreatedSearchInputLTE ? timeCreatedSearchInputLTE?.toISOString() : ''
-        }&desc=${desc}&limit=${limit}&title=${pageTitleSearchInput}&slug=${slugSearchInput}`
+        }&desc=${desc}&limit=${limit}&title=${pageTitleSearchInput}&slug=${slugSearchInput}&description=${descriptionSearchInput}`
       ),
     {
       cacheTime: 0,
@@ -136,6 +137,11 @@ export default function ListPagesPage() {
                 value={slugSearchInput}
                 onChange={(event) => setSlugSearchInput(event.currentTarget.value)}
               />
+              <TextInput
+                placeholder="Search by description"
+                value={descriptionSearchInput}
+                onChange={(event) => setDescriptionSearchInput(event.currentTarget.value)}
+              />
             </Group>
             <Group w="100%" my="sm">
               <NativeSelect
@@ -186,6 +192,11 @@ export default function ListPagesPage() {
               placeholder="Search by slug"
               value={slugSearchInput}
               onChange={(event) => setSlugSearchInput(event.currentTarget.value)}
+            />
+            <TextInput
+              placeholder="Search by description"
+              value={descriptionSearchInput}
+              onChange={(event) => setDescriptionSearchInput(event.currentTarget.value)}
             />
           </Group>
           <Group w="100%" my="sm">
