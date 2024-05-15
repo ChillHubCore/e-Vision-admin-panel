@@ -4,7 +4,7 @@ import { PageGenerator } from '@/components/Dashboard';
 
 export default function CreatePagePage() {
   return (
-    <Container size="xl">
+    <Container w="100%" size="xl">
       <Suspense fallback={<Loader />}>
         <PageGenerator />
       </Suspense>

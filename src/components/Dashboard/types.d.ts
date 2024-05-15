@@ -307,3 +307,10 @@ export interface ResumeEntityProps {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface PageEntityProps {
+  title: string;
+  slug: string;
+  description: string;
+  keywords: string[];
+}
