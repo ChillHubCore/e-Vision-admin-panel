@@ -14,10 +14,16 @@ import Highlight from '@tiptap/extension-highlight';
 import { useSubmit } from '@/lib/hooks';
 import { RTE } from '../common/RTE';
 
-export default function EmailGenerator({ functionToCall }: { functionToCall: () => void }) {
+export default function EmailGenerator({
+  functionToCall,
+  receiverUser,
+}: {
+  functionToCall: () => void;
+  receiverUser?: string;
+}) {
   const EmailGeneratorForm = useForm({
     initialValues: {
-      receiver: '',
+      receiver: receiverUser || '',
       title: '',
       content: '',
       attachments: [] as string[],
@@ -63,6 +69,7 @@ export default function EmailGenerator({ functionToCall }: { functionToCall: () 
       style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
     >
       <TextInput
+        disabled={!!receiverUser}
         label="Input Receiver Username"
         placeholder="Receiver"
         {...EmailGeneratorForm.getInputProps('receiver')}

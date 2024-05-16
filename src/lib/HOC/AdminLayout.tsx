@@ -1,15 +1,15 @@
 import React, { Suspense } from 'react';
 import {
   IconArticle,
-  IconBrandCampaignmonitor,
+  // IconBrandCampaignmonitor,
   IconDashboard,
-  IconManualGearbox,
+  // IconManualGearbox,
   IconMenuOrder,
   IconMoneybag,
   IconPageBreak,
-  IconReportSearch,
+  // IconReportSearch,
   IconSettings,
-  IconSettings2,
+  // IconSettings2,
   IconShoppingBag,
   IconSlashes,
   IconTicket,
@@ -34,23 +34,23 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     { route: '/admin/dashboard/blogs', title: 'Blogs', icon: <IconArticle /> },
     { route: '/admin/dashboard/promotions', title: 'Promotions', icon: <IconSlashes /> },
     { route: '/admin/dashboard/tickets', title: 'Tickets', icon: <IconTicket /> },
-    {
-      route: '/admin/dashboard/campaign-manager',
-      title: 'Campaign Manager',
-      icon: <IconBrandCampaignmonitor />,
-    },
-    {
-      route: '/admin/dashboard/sellers-manager',
-      title: 'Sellers Manager',
-      icon: <IconManualGearbox />,
-    },
-    {
-      route: '/admin/dashboard/personal-settings',
-      title: 'Personal Settings',
-      icon: <IconSettings2 />,
-    },
+    // {
+    //   route: '/admin/dashboard/campaign-manager',
+    //   title: 'Campaign Manager',
+    //   icon: <IconBrandCampaignmonitor />,
+    // },
+    // {
+    //   route: '/admin/dashboard/sellers-manager',
+    //   title: 'Sellers Manager',
+    //   icon: <IconManualGearbox />,
+    // },
+    // {
+    //   route: '/admin/dashboard/personal-settings',
+    //   title: 'Personal Settings',
+    //   icon: <IconSettings2 />,
+    // },
     { route: '/admin/dashboard/shop-settings', title: 'Shop Settings', icon: <IconSettings /> },
-    { route: '/admin/dashboard/reports', title: 'Reports', icon: <IconReportSearch /> },
+    // { route: '/admin/dashboard/reports', title: 'Reports', icon: <IconReportSearch /> },
   ];
   return (
     <Flex direction={{ base: 'column', md: 'row' }} justify="space-between">
